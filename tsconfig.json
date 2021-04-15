@@ -1,0 +1,39 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "experimentalDecorators": false,
+    "useDefineForClassFields": true,
+    "downlevelIteration": true,
+    "baseUrl": "./src",
+    "typeRoots": ["./src/types"],
+    "paths": {
+      "@/components/*": ["components/*"],
+      "@/store/*": ["store/*"],
+      "@/store": ["store/"],
+      "@/pages/*": ["pages/*"],
+      "@/lib/*": ["lib/*"],
+      "@/types/*": ["types/*"],
+      "@/types": ["types/"],
+      "@/middleware/*": ["middleware/*"]
+    }
+  },
+  "exclude": ["node_modules", ".next", "out"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.js"],
+  "plugins": [
+    {
+      "name": "typescript-tailwindcssinjs-plugin"
+    }
+  ]
+}

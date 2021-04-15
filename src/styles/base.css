@@ -1,0 +1,8 @@
+@import url('https://cdnjs.cloudflare.com/ajax/libs/inter-ui/3.18.0/inter.css');
+@tailwind base;
+@tailwind utilities;
+
+body {
+  @apply antialiased;
+  @apply bg-background text-foreground;
+}

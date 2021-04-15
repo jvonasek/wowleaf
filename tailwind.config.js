@@ -1,0 +1,26 @@
+module.exports = {
+  theme: {
+    fontFamily: {
+      sans: [
+        'Inter',
+        '-apple-system',
+        'BlinkMacSystemFont',
+        'Segoe UI',
+        'Roboto',
+        'Helvetica',
+        'Arial',
+        'sans-serif',
+      ],
+      mono: ['Menlo', 'Monaco', 'Courier New', 'monospace'],
+    },
+  },
+  purge: [
+    './src/components/**/*.{js,ts,jsx,tsx}',
+    './src/pages/**/*.{js,ts,jsx,tsx}',
+  ],
+  plugins: [
+    require('tailwindcss-theming')({
+      strategy: 'class',
+    }),
+  ],
+}

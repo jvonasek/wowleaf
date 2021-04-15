@@ -1,0 +1,61 @@
+version: '3'
+services:
+  redis:
+    image: redis:6.0.9-alpine
+    restart: always
+    container_name: redis
+    ports:
+      - 6379:6379
+  redis-commander:
+    container_name: redis-commander
+    hostname: redis-commander
+    image: rediscommander/redis-commander:latest
+    restart: always
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - 8081:8081
+  db:
+    image: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    #  links:
+    #    - postgraphile
+    build:
+      context: ./db
+    volumes:
+      - /home/razz/db:/var/lib/postgresql/data/pgdata
+    environment:
+      POSTGRES_PASSWORD: kilik
+
+  #  postgraphile:
+  #    ports:
+  #      - 5000:5000
+  #    image: graphile/postgraphile:4.9.0
+  #    build:
+  #      context: ./graphql
+  #    command:
+  #      [
+  #        '--cors',
+  #        '--connection',
+  #        'postgres://postgres:kilik@db:5432/wow_data',
+  #        '--port',
+  #        '5000',
+  #        '--schema',
+  #        'public',
+  #        '--watch',
+  #        '--retry-on-init-fail',
+  #        '--enhance-graphiql',
+  #        '--dynamic-json',
+  #        '--append-plugins',
+  #        'postgraphile-plugin-connection-filter,postgraphile-plugin-json-structure',
+  #      ]
+
+  adminer:
+    image: adminer
+    restart: always
+    environment:
+      - ADMINER_DESIGN=esterka
+    ports:
+      - 8080:8080
