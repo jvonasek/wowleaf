@@ -1,4 +1,4 @@
-import { createPersistedStore } from './createStore'
+import { createPersistedStore } from '@/lib/createStore'
 import { combine } from 'zustand/middleware'
 
 export enum Theme {

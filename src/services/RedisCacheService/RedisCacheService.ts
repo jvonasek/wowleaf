@@ -60,18 +60,22 @@ class RedisCacheService {
     console.log(`[REDIS] [${pattern}] deleted from redis`)
     const res = await this.redisScan('0', 'MATCH', pattern)
     const keys = res[1]
-    return this.redisUnlink(keys)
+    return keys && keys.length ? this.redisUnlink(keys) : 0
   }
 
   async save<T = GenericObject>({
     key,
     expiration,
+    purge = false,
     payload,
   }: {
     key: string
-    payload: () => Promise<T>
     expiration: number
+    purge: boolean
+    payload: () => Promise<T>
   }): Promise<T> {
+    if (purge) await this.delete(key)
+
     const exists = await this.exists(key)
     if (exists) {
       return await this.get<T>(key)

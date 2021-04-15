@@ -11,6 +11,8 @@
     "build-storybook": "build-storybook --no-dll"
   },
   "dependencies": {
+    "@headlessui/react": "^1.0.0",
+    "@heroicons/react": "^1.0.1",
     "@moxy/next-layout": "^2.2.2",
     "@next/mdx": "^10.0.1",
     "@prisma/client": "^2.10.1",
@@ -28,6 +30,7 @@
     "react-query-devtools": "^2.6.1",
     "redis": "^3.0.2",
     "statuses": "^2.0.0",
+    "superstruct": "^0.15.1",
     "tailwindcss": "^2.1.1",
     "zustand": "3.3.3"
   },

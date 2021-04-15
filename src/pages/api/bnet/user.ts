@@ -11,6 +11,7 @@ const handle: NextApiHandler = (req, res) =>
   cacheAPI(req, res, {
     key: { name: req.url, userSpecific: true },
     expiration: ms('1 day'),
+    requireAuth: true,
     method: async (req, res, token: JWToken) => {
       const wow = new WoWAPI({
         debug: true,

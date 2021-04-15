@@ -14,6 +14,7 @@ export interface CacheAPIOptions<R> {
   key: RedisCacheKey | RedisCacheKeyFactory
   expiration?: number
   requireAuth?: boolean
+  purge?: boolean
   method: (
     req: NextApiRequest,
     res: NextApiResponse,
@@ -27,14 +28,14 @@ const cacheAPI = async <R>(
   res: NextApiResponse,
   {
     key,
-    requireAuth = true,
+    requireAuth = false,
     expiration = ms('1 hour'),
+    purge = false,
     method,
     callback,
   }: CacheAPIOptions<R>
 ): Promise<void> => {
   const token = await getJWT(req)
-  console.log({ token })
 
   if (requireAuth && !token) {
     res.status(401).json(responseErrorMessage(401))
@@ -47,6 +48,7 @@ const cacheAPI = async <R>(
   const data = await cache.save<R>({
     key: redisKey,
     expiration,
+    purge,
     payload: async () => await method(req, res, token),
   })
 

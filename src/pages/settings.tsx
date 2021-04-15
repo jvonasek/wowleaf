@@ -26,8 +26,8 @@ const createCharacter = ({
   realmSlug,
   name,
 }: CharacterSelectionProps) =>
-  fetch(`/api/character/${region}/${realmSlug}/${name}`, {
-    method: 'POST',
+  fetch(`/api/bnet/character/${region}/${realmSlug}/${name}`, {
+    method: 'PUT',
   })
 
 const Settings: React.FC<SettingsProps> = ({ providers }) => {
