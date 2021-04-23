@@ -1,8 +1,23 @@
 @import url('https://cdnjs.cloudflare.com/ajax/libs/inter-ui/3.18.0/inter.css');
 @tailwind base;
+@tailwind components;
 @tailwind utilities;
 
 body {
   @apply antialiased;
   @apply bg-background text-foreground;
+}
+
+[data-wh-icon-added] del {
+  display: none !important;
+}
+
+[data-wh-icon-added] .iconmedium {
+  width: 36px;
+  height: 36px;
+}
+
+[data-wh-icon-added] .iconmedium ins {
+  left: 0;
+  top: 0;
 }

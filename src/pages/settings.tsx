@@ -46,8 +46,6 @@ const Settings: React.FC<SettingsProps> = ({ providers }) => {
     }
   }, [selection, mutate])
 
-  console.log(characters)
-
   return (
     <>
       <pre>{JSON.stringify(session, null, 2)}</pre>

@@ -1,5 +1,5 @@
-import requireAuth, { NextApiHandlerWithJWT } from 'middlewares/requireAuth'
-import { PrismaClient } from '@prisma/client'
+import requireAuth, { NextApiHandlerWithJWT } from '@/middlewares/requireAuth'
+import { PrismaClient } from '@/prisma/app-client'
 
 import responseErrorMessage from '@/lib/responseErrorMessage'
 

@@ -2,7 +2,7 @@ import { NextApiHandler } from 'next'
 import { add } from 'date-fns'
 import NextAuth from 'next-auth'
 import Adapters from 'next-auth/adapters'
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@/prisma/app-client'
 import { BattleNetRegion } from 'battlenet-api'
 import { RedisCacheService } from '../../../services'
 

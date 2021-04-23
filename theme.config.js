@@ -42,6 +42,9 @@ const colors = {
 
 const palette = {
   default: {
+    white: colors.white,
+    black: colors.black,
+    transparent: colors.transparent,
     accent: {
       lighter: colors.accent4,
       DEFAULT: colors.accent5,
@@ -68,12 +71,12 @@ const palette = {
     'on-neutral': colors.neutral4,
   },
   light: {
-    background: '#ffffff',
+    background: '#f2f5fa',
     foreground: {
       DEFAULT: '#272727',
       muted: '#757575',
     },
-    surface: '#f2f5fa',
+    surface: '#ffffff',
     'accent-alt': {
       lighter: colors.accent1,
       DEFAULT: colors.accent2,
@@ -82,12 +85,12 @@ const palette = {
     'on-accent-alt': colors.accent5,
   },
   dark: {
-    background: '#0b0e11',
+    background: '#151a21',
     foreground: {
       DEFAULT: '#dee3ea',
-      muted: '#5d7290',
+      muted: '#a8b7cc',
     },
-    surface: '#151a21',
+    surface: '#0b0e11',
     'accent-alt': {
       lighter: colors.accent7,
       DEFAULT: colors.accent8,

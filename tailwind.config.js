@@ -16,9 +16,11 @@ module.exports = {
   },
   purge: [
     './src/components/**/*.{js,ts,jsx,tsx}',
+    './src/modules/**/*.{js,ts,jsx,tsx}',
     './src/pages/**/*.{js,ts,jsx,tsx}',
   ],
   plugins: [
+    require('@tailwindcss/forms'),
     require('tailwindcss-theming')({
       strategy: 'class',
     }),

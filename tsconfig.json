@@ -16,17 +16,19 @@
     "experimentalDecorators": false,
     "useDefineForClassFields": true,
     "downlevelIteration": true,
-    "baseUrl": "src",
+    "baseUrl": "./",
     "typeRoots": ["./src/types"],
     "paths": {
-      "@/components/*": ["components/*"],
-      "@/modules/*": ["modules/*"],
-      "@/store/*": ["store/*"],
-      "@/pages/*": ["pages/*"],
-      "@/lib/*": ["lib/*"],
-      "@/types/*": ["types/*"],
-      "@/types": ["types/"],
-      "@/middleware/*": ["middleware/*"]
+      "@/components/*": ["src/components/*"],
+      "@/modules/*": ["src/modules/*"],
+      "@/store/*": ["src/store/*"],
+      "@/pages/*": ["src/pages/*"],
+      "@/lib/*": ["src/lib/*"],
+      "@/hooks/*": ["src/hooks/*"],
+      "@/types/*": ["src/types/*"],
+      "@/types": ["src/types/"],
+      "@/middlewares/*": ["src/middlewares/*"],
+      "@/prisma/*": ["prisma/generated/*"]
     }
   },
   "exclude": ["node_modules", ".next", "out"],

@@ -1,4 +1,9 @@
-import { ReactNode, ButtonHTMLAttributes, DetailedHTMLProps } from 'react'
+import {
+  forwardRef,
+  ReactNode,
+  ButtonHTMLAttributes,
+  DetailedHTMLProps,
+} from 'react'
 import cx from 'classnames'
 
 const VARIANT_MAP = {
@@ -12,9 +17,9 @@ const VARIANT_MAP = {
 }
 
 const SIZE_MAP = {
-  small: cx('px-2 py-1 text-xs'),
-  medium: cx('py-2 px-5 text-sm'),
-  large: cx('py-3 px-6 text-sm'),
+  small: cx('px-2 py-1 text-xs rounded'),
+  medium: cx('py-2 px-5 text-sm rounded-lg'),
+  large: cx('py-3 px-6 text-sm rounded-lg'),
 }
 
 export type ButtonProps = DetailedHTMLProps<
@@ -26,22 +31,21 @@ export type ButtonProps = DetailedHTMLProps<
   children?: ReactNode
 }
 
-export const Button: React.FC<ButtonProps> = ({
-  children,
-  variant = 'primary',
-  size = 'medium',
-  ...props
-}) => {
-  return (
-    <button
-      {...props}
-      className={cx(
-        'inline-flex items-center leading-4 rounded font-bold uppercase whitespace-no-wrap',
-        VARIANT_MAP[variant],
-        SIZE_MAP[size]
-      )}
-    >
-      {children}
-    </button>
-  )
-}
+export const Button: React.FC<ButtonProps> = forwardRef(
+  ({ children, variant = 'primary', size = 'medium', ...props }, ref) => {
+    return (
+      <button
+        ref={ref}
+        {...props}
+        className={cx(
+          'inline-flex items-center leading-4 font-bold uppercase whitespace-no-wrap',
+          'focus:ring focus:ring-accent-alt-darker focus:outline-none',
+          VARIANT_MAP[variant],
+          SIZE_MAP[size]
+        )}
+      >
+        {children}
+      </button>
+    )
+  }
+)

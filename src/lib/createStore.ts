@@ -4,7 +4,7 @@ import { pipe } from 'ramda'
 
 const isServer = typeof window === 'undefined'
 
-export const createStore = create
+export const createStore = pipe(devtools, create)
 export const createPersistedStore = isServer
   ? create
   : pipe(persist, devtools, create)

@@ -3,34 +3,35 @@ import { Button } from '@/components/Button'
 import { DateTime } from '@/components/DateTime'
 
 export type CharacterCardProps = {
-  className?: string
   onClick: (realmSlug: string, name: string) => void
 } & CharacterProps
 
 export const CharacterCard: React.FC<CharacterCardProps> = ({
-  className,
   name,
   level,
-  playableRace,
-  playableClass,
+  race,
+  guildName,
+  characterClass,
   onClick,
-  realmSlug,
-  lastLogin,
-  createdAt,
+  realm,
   updatedAt,
 }): JSX.Element => (
   <div className="bg-surface p-3 rounded-md">
-    <div className="flex justify-between items-center">
-      <p className="text-lg font-bold">{name}</p>
+    <div className="flex justify-between items-start">
+      <div>
+        <p className="text-lg font-bold">{name}</p>
+        {guildName && <p className="text-sm">&lt;{guildName}&gt;</p>}
+      </div>
+
       {updatedAt && (
         <span className="text-xs text-on-background-muted">
-          {<DateTime date={updatedAt} relative />}
+          {<DateTime date={new Date(updatedAt)} relative />}
         </span>
       )}
     </div>
-    <p>
-      {playableRace} {playableClass} Level {level}
+    <p className="text-sm">
+      {race} {characterClass} Level {level}
     </p>
-    {onClick && <Button onClick={() => onClick(realmSlug, name)}>ADD</Button>}
+    {onClick && <Button onClick={() => onClick(realm.slug, name)}>ADD</Button>}
   </div>
 )

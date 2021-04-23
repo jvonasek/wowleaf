@@ -8,7 +8,13 @@ import { LayoutPrimary } from '@/components/LayoutPrimary'
 
 import '../styles/base.css'
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+})
 
 class RootApp extends App {
   render(): JSX.Element {

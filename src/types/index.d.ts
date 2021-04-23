@@ -27,6 +27,35 @@ export type Achievement = {
   rewardItemId: number | null
 }
 
+export type Criterion = {
+  id: number
+  description: string | null
+  amount: number | null
+  showProgressBar: boolean | null
+  isGold: boolean | null
+  operatorId: string | null
+  factionId: string | null
+  achievementId: number | null
+  parentCriteriaId: number | null
+}
+
+export type CriterionWithProgress = Omit<Criterion, 'amount'> & {
+  partialAmount: number
+  totalAmount: number
+  isCompleted: boolean
+}
+
+export type AchievementWithCriteria = Achievement & {
+  criteria: Array<Criterion>
+}
+
+export type AchievementWithProgress = Achievement & {
+  isCompleted: boolean
+  progress: number
+  completedTimestamp: number
+  criteria: Array<CriterionWithProgress>
+}
+
 export type AchievementCategory = {
   id: number
   name: string
@@ -40,16 +69,25 @@ export type AchievementCategory = {
   achievements: Array<Achievement>
 }
 
+export type Realm = {
+  name: string
+  id: number
+  slug: string
+}
+
 export type CharacterProps = {
   id: number
   name: string
-  realmId: number
-  realmSlug: string
-  level: number
+  characterClass: CharacterClass
+  race: CharacterRace
   faction: CharacterFaction
   gender: CharacterGender
-  playableClass: CharacterClass
-  playableRace: CharacterRace
+  guildName: string
+  realm: Realm
+  level: number
+  lastLogin?: string
+  updatedAt?: string
+  createdAt?: string
 }
 
 export type BattleNetUser = {
@@ -75,5 +113,11 @@ export type SessionProviders = {
 declare module 'next-auth' {
   export interface Session {
     battlenet: BattleNetUser
+  }
+}
+
+declare global {
+  interface Window {
+    $WowheadPower: any
   }
 }

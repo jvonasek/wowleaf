@@ -1,12 +1,13 @@
 import { NextApiHandler } from 'next'
-import { WoWAPI } from 'battlenet-api'
+import { WoWAPI, BattleNetResponse, Achievement } from 'battlenet-api'
 import ms from 'ms.macro'
 
 import cacheAPI from '@/lib/cacheAPI'
 import getCachedAccessToken from '@/lib/getCachedAccessToken'
+import { normalizeBattleNetData } from '@/lib/normalizeBattleNetData'
 
 const handle: NextApiHandler = (req, res) =>
-  cacheAPI(req, res, {
+  cacheAPI<BattleNetResponse>(req, res, {
     key: req.url,
     expiration: ms('1 hour'),
     method: async (req) => {
@@ -19,10 +20,10 @@ const handle: NextApiHandler = (req, res) =>
       })
       return await wow.getCharacterAchievements(realm, name)
     },
-    callback: (result: any) => {
+    callback: (result) => {
       if (result.error) return result
 
-      return result.data
+      return normalizeBattleNetData('characterAchievements')(result.data)
     },
   })
 

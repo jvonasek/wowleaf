@@ -27,7 +27,7 @@ class RedisCacheService {
   }
 
   async get<T = GenericObject>(key: string): Promise<T | null> {
-    console.log(`[REDIS] [${key}] getting from redis`)
+    console.log(`[REDIS] [GET] [${key}]`)
     return await this.redisGet(key).then((value: string | null) => {
       try {
         return JSON.parse(value)
@@ -49,15 +49,15 @@ class RedisCacheService {
 
     console.log(
       success
-        ? `[REDIS] [${key}] setting to redis with ${seconds} seconds expiration`
-        : `[REDIS] [${key}] failure`
+        ? `[REDIS] [SET:${seconds}s] [${key}]`
+        : `[REDIS] [SET:fail][${key}]`
     )
 
     return success
   }
 
   async delete(pattern: string): Promise<number> {
-    console.log(`[REDIS] [${pattern}] deleted from redis`)
+    console.log(`[REDIS] [DEL] [${pattern}]`)
     const res = await this.redisScan('0', 'MATCH', pattern)
     const keys = res[1]
     return keys && keys.length ? this.redisUnlink(keys) : 0
@@ -71,7 +71,7 @@ class RedisCacheService {
   }: {
     key: string
     expiration: number
-    purge: boolean
+    purge?: boolean
     payload: () => Promise<T>
   }): Promise<T> {
     if (purge) await this.delete(key)
