@@ -1,29 +1,27 @@
-import { NextApiHandler } from 'next'
 import { coerce, create, number, string, object } from 'superstruct'
 
-import { prismaApiHandler } from '@/lib/prismaApiHandler'
+import { createPrismaHandler } from '@/lib/createPrismaHandler'
 import prisma, { AchievementCategory } from '@/prisma/wow'
 
 const CategoryRouteStruct = object({
   id: coerce(number(), string(), (value) => parseFloat(value)),
 })
 
-const handle: NextApiHandler = async (req, res) => {
-  const { id } = create(req.query, CategoryRouteStruct)
-  return prismaApiHandler<AchievementCategory[]>(req, res, {
-    selector: async () =>
-      await prisma.achievementCategory.findMany({
-        where: {
-          parentCategoryId: id,
-          isGuildCategory: false,
+const handle = createPrismaHandler<AchievementCategory[]>({
+  selector: async (req) => {
+    const { id } = create(req.query, CategoryRouteStruct)
+    return await prisma.achievementCategory.findMany({
+      where: {
+        parentCategoryId: id,
+        isGuildCategory: false,
+      },
+      orderBy: [
+        {
+          displayOrder: 'asc',
         },
-        orderBy: [
-          {
-            displayOrder: 'asc',
-          },
-        ],
-      }),
-  })
-}
+      ],
+    })
+  },
+})
 
 export default handle

@@ -1,14 +1,12 @@
-import requireAuth, { NextApiHandlerWithJWT } from '@/middlewares/requireAuth'
-
-import { prismaApiHandler } from '@/lib/prismaApiHandler'
+import { createPrismaHandler } from '@/lib/createPrismaHandler'
 import prisma, { Character } from '@/prisma/app'
 
-const handle: NextApiHandlerWithJWT = async (req, res, token) =>
-  prismaApiHandler<Character[]>(req, res, {
-    selector: async () =>
-      await prisma.character.findMany({
-        where: { userId: token.id },
-      }),
-  })
+const handle = createPrismaHandler<Character[]>({
+  requireAuth: true,
+  selector: async (req, res, token) =>
+    await prisma.character.findMany({
+      where: { userId: token.id },
+    }),
+})
 
-export default requireAuth(handle)
+export default handle

@@ -20,7 +20,7 @@ export const AchievementCard: React.FC<AchievementWithProgress> = ({
   isCompleted,
   completedTimestamp,
   criteria,
-  progress,
+  progress = 0,
   isAccountWide,
   rewardDescription,
   rewardItemId,
@@ -115,9 +115,9 @@ export const AchievementCard: React.FC<AchievementWithProgress> = ({
         onClose={closeDialog}
         size="large"
       >
-        {!!criteria?.childCriteria.length && (
+        {!!criteria?.childCriteria?.length && (
           <div className="grid grid-cols-2 text-sm leading-8">
-            {criteria.childCriteria.map((criterion) => (
+            {criteria.childCriteria?.map((criterion) => (
               <AchievementCriterion key={criterion.id} {...criterion} />
             ))}
           </div>

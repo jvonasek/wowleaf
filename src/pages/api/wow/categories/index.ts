@@ -1,22 +1,19 @@
-import { NextApiHandler } from 'next'
-
-import { prismaApiHandler } from '@/lib/prismaApiHandler'
+import { createPrismaHandler } from '@/lib/createPrismaHandler'
 import prisma, { AchievementCategory } from '@/prisma/wow'
 
-const handle: NextApiHandler = async (req, res) =>
-  prismaApiHandler<AchievementCategory[]>(req, res, {
-    selector: async () =>
-      await prisma.achievementCategory.findMany({
-        where: {
-          parentCategoryId: null,
-          isGuildCategory: false,
+const handle = createPrismaHandler<AchievementCategory[]>({
+  selector: async () =>
+    await prisma.achievementCategory.findMany({
+      where: {
+        parentCategoryId: null,
+        isGuildCategory: false,
+      },
+      orderBy: [
+        {
+          displayOrder: 'asc',
         },
-        orderBy: [
-          {
-            displayOrder: 'asc',
-          },
-        ],
-      }),
-  })
+      ],
+    }),
+})
 
 export default handle

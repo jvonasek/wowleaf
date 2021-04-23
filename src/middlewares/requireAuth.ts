@@ -1,28 +1,22 @@
 import { NextApiRequest, NextApiResponse } from 'next'
+import { NextHandler } from 'next-connect'
 
 import getJWT from '@/lib/getJWT'
 import { responseErrorMessage } from '@/lib/responseErrorMessage'
 
-import { JWToken } from '@/types'
-
-export type NextApiHandlerWithJWT<T = any> = (
+const requireAuth = (enabled = true) => async (
   req: NextApiRequest,
-  res: NextApiResponse<T>,
-  token: JWToken
-) => void | Promise<void>
-
-const requireAuth = (next: NextApiHandlerWithJWT) => async (
-  req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
+  next: NextHandler
 ): Promise<void> => {
   const token = await getJWT(req)
 
-  if (!token) {
+  if (enabled && !token) {
     res.status(401).json(responseErrorMessage(401))
     return
   }
 
-  return next(req, res, token)
+  return next()
 }
 
 export default requireAuth

@@ -11,7 +11,8 @@ import { BNET_REGIONS_MAP } from '@/lib/constants'
 
 export type CharacterSearchProps = void
 
-const fetchRealms = () => fetch('/api/wow/realms').then((res) => res.json())
+const fetchRealms = () =>
+  fetch('/api/wow/realms', { method: 'GET' }).then((res) => res.json())
 
 export const CharacterSearch: React.FC<CharacterSearchProps> = () => {
   const [regions, setRegions] = useState([])

@@ -30,7 +30,14 @@ const useCharacterAchievements = () => {
     isSuccess: isCharacterAchievementsSuccess,
     data: characterAchievements,
   } = useQuery(
-    'BnetCharacterAchievements',
+    [
+      'BnetCharacterAchievements',
+      {
+        region,
+        realm,
+        name,
+      },
+    ],
     () =>
       fetch(
         `/api/bnet/character/${region}/${realm}/${name}/achievements`
@@ -59,7 +66,11 @@ const useCharacterAchievements = () => {
     isAchievementsSuccess,
   ])
 
-  if (status.isSuccess && !!achievements.length) {
+  if (
+    status.isSuccess &&
+    !!achievements.length &&
+    !!characterAchievements.length
+  ) {
     const characterAchievementsById = groupBy(prop('id'), characterAchievements)
     return {
       ...status,
