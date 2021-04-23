@@ -1,20 +1,16 @@
 import { NextApiHandler } from 'next'
 
-import responseErrorMessage from '@/lib/responseErrorMessage'
-import prisma from '@/prisma/wow'
+import { prismaApiHandler } from '@/lib/prismaApiHandler'
+import prisma, { Realm } from '@/prisma/wow'
 
-const handle: NextApiHandler = async (req, res) => {
-  const realms = await prisma.realm.findMany({
-    orderBy: {
-      name: 'asc',
-    },
+const handle: NextApiHandler = async (req, res) =>
+  prismaApiHandler<Realm[]>(req, res, {
+    selector: async () =>
+      await prisma.realm.findMany({
+        orderBy: {
+          name: 'asc',
+        },
+      }),
   })
-
-  if (realms) {
-    res.status(200).json(realms)
-  } else {
-    res.status(404).json(responseErrorMessage(404))
-  }
-}
 
 export default handle

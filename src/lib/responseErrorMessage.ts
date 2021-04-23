@@ -6,10 +6,8 @@ export type ResponseErrorMessage = {
   message: string
 }
 
-const responseErrorMessage = (code: number): ResponseErrorMessage => ({
+export const responseErrorMessage = (code: number): ResponseErrorMessage => ({
   error: true,
   code,
   message: status(code),
 })
-
-export default responseErrorMessage

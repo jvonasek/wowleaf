@@ -3,7 +3,7 @@ import ms from 'ms.macro'
 
 import { RedisCacheService } from '../services'
 import getJWT from '@/lib/getJWT'
-import responseErrorMessage from '@/lib/responseErrorMessage'
+import { responseErrorMessage } from '@/lib/responseErrorMessage'
 import { JWToken } from '@/types'
 import createRedisKey, {
   RedisCacheKey,

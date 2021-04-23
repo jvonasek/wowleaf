@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 
 import getJWT from '@/lib/getJWT'
-import responseErrorMessage from '@/lib/responseErrorMessage'
+import { responseErrorMessage } from '@/lib/responseErrorMessage'
 
 import { JWToken } from '@/types'
 

@@ -1,4 +1,5 @@
 import { PrismaClient } from '../../../prisma/generated/wow-client'
+export * from '../../../prisma/generated/wow-client'
 
 const prisma = new PrismaClient({
   log: ['info'],
