@@ -5,15 +5,13 @@ import {
   LocalizedCharacter,
   BattleNetRegion,
 } from 'battlenet-api'
-import { PrismaClient } from '@/prisma/app-client'
 import ms from 'ms.macro'
 
 import { JWToken } from '@/types'
 import cacheAPI from '@/lib/cacheAPI'
 import { normalizeBattleNetData } from '@/lib/normalizeBattleNetData'
 import getCachedAccessToken from '@/lib/getCachedAccessToken'
-
-const prisma = new PrismaClient()
+import prisma from '@/prisma/app'
 
 type CharacterResponse = BattleNetResponse<LocalizedCharacter>
 

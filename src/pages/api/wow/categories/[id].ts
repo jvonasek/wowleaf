@@ -1,10 +1,8 @@
 import { NextApiHandler } from 'next'
-import { PrismaClient } from '@/prisma/wow-client'
 import { coerce, create, number, string, object } from 'superstruct'
 
 import responseErrorMessage from '@/lib/responseErrorMessage'
-
-const prisma = new PrismaClient()
+import prisma from '@/prisma/wow'
 
 const CategoryRouteStruct = object({
   id: coerce(number(), string(), (value) => parseFloat(value)),

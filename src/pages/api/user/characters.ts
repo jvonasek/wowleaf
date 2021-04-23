@@ -1,9 +1,7 @@
 import requireAuth, { NextApiHandlerWithJWT } from '@/middlewares/requireAuth'
-import { PrismaClient } from '@/prisma/app-client'
+import prisma from '@/prisma/app'
 
 import responseErrorMessage from '@/lib/responseErrorMessage'
-
-const prisma = new PrismaClient()
 
 const handle: NextApiHandlerWithJWT = async (req, res, token) => {
   const characters = await prisma.character.findMany({

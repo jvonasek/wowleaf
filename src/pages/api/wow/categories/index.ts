@@ -1,9 +1,7 @@
 import { NextApiHandler } from 'next'
-import { PrismaClient } from '@/prisma/wow-client'
 
 import responseErrorMessage from '@/lib/responseErrorMessage'
-
-const prisma = new PrismaClient()
+import prisma from '@/prisma/wow'
 
 const handle: NextApiHandler = async (req, res) => {
   const categories = await prisma.achievementCategory.findMany({

@@ -2,15 +2,13 @@ import { NextApiHandler } from 'next'
 import { add } from 'date-fns'
 import NextAuth from 'next-auth'
 import Adapters from 'next-auth/adapters'
-import { PrismaClient } from '@/prisma/app-client'
 import { BattleNetRegion } from 'battlenet-api'
 import { RedisCacheService } from '../../../services'
 
 import { JWToken } from '@/types'
+import prisma from '@/prisma/app'
 
 const BNET_TOKEN_EXPIRY = { hours: 24 }
-
-const prisma = new PrismaClient()
 
 const getNameFromProfile = (profile: any) =>
   profile?.battletag?.split?.('#')[0] ?? ''

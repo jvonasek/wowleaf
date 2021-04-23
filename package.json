@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "storybook": "start-storybook -p 6006 --no-dll",
-    "build-storybook": "build-storybook --no-dll"
+    "build-storybook": "build-storybook --no-dll",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@headlessui/react": "^1.0.0",
