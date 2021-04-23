@@ -19,7 +19,7 @@ const ThemeSwitch: React.FC = () => {
             key={theme}
             variant={theme === currentTheme ? 'primary' : 'secondary'}
             onClick={theme === Theme.Light ? setLight : setDark}
-            size="large"
+            size="small"
           >
             {theme}
           </Button>

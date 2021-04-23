@@ -7,11 +7,11 @@ const handle: NextApiHandler = async (req, res) =>
   prismaApiHandler<Achievement[]>(req, res, {
     selector: async () =>
       await prisma.achievement.findMany({
-        where: {
+        /* where: {
           rewardDescription: {
             not: null,
           },
-        },
+        }, */
         include: {
           criteria: true,
           achievementAssets: true,

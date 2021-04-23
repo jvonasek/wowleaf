@@ -17,9 +17,9 @@ const VARIANT_MAP = {
 }
 
 const SIZE_MAP = {
-  small: cx('px-2 py-1 text-xs rounded'),
-  medium: cx('py-2 px-5 text-sm rounded-lg'),
-  large: cx('py-3 px-6 text-sm rounded-lg'),
+  small: cx('px-2.5 py-1.5 text-xs rounded'),
+  medium: cx('py-2.5 px-5 text-sm rounded'),
+  large: cx('py-4 px-7 text-sm rounded'),
 }
 
 export type ButtonProps = DetailedHTMLProps<

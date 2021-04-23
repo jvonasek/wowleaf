@@ -13,7 +13,9 @@ const TheDialog: Story<DialogProps> = (args) => <Dialog {...args} />
 
 export const Default: Story = () => {
   const [open, setOpen] = useState(true)
-  const [size, setSize] = useState('small')
+  const [size, setSize] = useState<DialogProps['size']>('small')
+
+  const sizes: DialogProps['size'][] = ['small', 'medium', 'large']
 
   function closeDialog() {
     setOpen(false)
@@ -25,43 +27,25 @@ export const Default: Story = () => {
   }
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gradient-to-r from-accent-alt-lighter to-accent-alt-darker">
-      <div className="flex flex-col space-y-4">
-        <Button
-          size="large"
-          variant="secondary"
-          onClick={() => openDialog('small')}
-        >
-          Open small dialog
-        </Button>
-
-        <Button
-          size="large"
-          variant="secondary"
-          onClick={() => openDialog('medium')}
-        >
-          Open medium dialog
-        </Button>
-
-        <Button
-          size="large"
-          variant="secondary"
-          onClick={() => openDialog('large')}
-        >
-          Open large dialog
-        </Button>
-      </div>
-
+      <Button
+        size="large"
+        variant="secondary"
+        onClick={() => openDialog('medium')}
+      >
+        Open dialog
+      </Button>
       <TheDialog
         open={open}
         onClose={closeDialog}
         size={size}
         title="Payment successful"
         description="Your payment has been successfully submitted. We’ve sent your an email with all of the details of your order."
-      >
-        <Button onClick={() => setSize('small')}>small</Button>
-        <Button onClick={() => setSize('medium')}>medium</Button>
-        <Button onClick={() => setSize('large')}>large</Button>
-      </TheDialog>
+        buttons={sizes.map((size) => ({
+          name: size,
+          children: size,
+          onClick: () => setSize(size),
+        }))}
+      ></TheDialog>
     </div>
   )
 }
