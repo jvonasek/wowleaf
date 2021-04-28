@@ -1,31 +1,29 @@
 import { useState } from 'react'
 import { DateTime } from '@/components/DateTime'
-import { Disclosure } from '@headlessui/react'
 import cx from 'classnames'
 import { ArrowSmRightIcon, StarIcon } from '@heroicons/react/solid'
 
-import { AchievementCriterion } from '@/components/AchievementCriterion'
-
 import { Button } from '@/components/Button'
 import { Dialog } from '@/components/Dialog'
-import { Achievement, AchievementWithProgress } from '@/types'
+import { Achievement } from './types'
 import { getHslColorByPercent } from '@/lib/utils'
+
+import { AchievementCriteriaList } from './AchievementCriteriaList'
+import { useAchievementProgress } from './hooks/useAchievementProgress'
 
 export type AchievementCardProps = Achievement
 
-export const AchievementCard: React.FC<AchievementWithProgress> = ({
-  id,
-  name,
-  description,
-  isCompleted,
-  completedTimestamp,
-  criteria,
-  progress = 0,
-  isAccountWide,
-  rewardDescription,
-  rewardItemId,
-  achievementAssets,
-}) => {
+export const AchievementCard: React.FC<Achievement> = (props) => {
+  const {
+    id,
+    name,
+    description,
+    criteria,
+    rewardDescription,
+    rewardItemId,
+    achievementAssets,
+  } = props
+
   const [dialogOpen, setDialogOpen] = useState(false)
   function closeDialog() {
     setDialogOpen(false)
@@ -34,6 +32,13 @@ export const AchievementCard: React.FC<AchievementWithProgress> = ({
   function openDialog() {
     setDialogOpen(true)
   }
+
+  const {
+    percent,
+    isCompleted,
+    criteria: criteriaProgress,
+  } = useAchievementProgress(props)
+
   return (
     <>
       <div className="grid grid-cols-12 gap-4">
@@ -48,13 +53,7 @@ export const AchievementCard: React.FC<AchievementWithProgress> = ({
             />
           )}
           <div>
-            <span
-              className={cx('font-bold', {
-                'text-positive': isCompleted,
-              })}
-            >
-              {name}
-            </span>
+            <span className={isCompleted ? 'text-positive' : ''}>{name}</span>
             <span className="block text-sm text-foreground-muted">
               {description}{' '}
             </span>
@@ -84,22 +83,24 @@ export const AchievementCard: React.FC<AchievementWithProgress> = ({
           )}
         </div>
         <div className="col-span-3 flex items-center">
-          <div className="w-full">
-            <div className="flex items-center">
-              <div className="h-2 w-full rounded-full bg-background">
-                <div
-                  className="h-2 rounded-l-full"
-                  style={{
-                    width: `${progress}%`,
-                    backgroundColor: getHslColorByPercent(progress),
-                  }}
-                ></div>
+          {
+            <div className="w-full">
+              <div className="flex items-center">
+                <div className="h-2 w-full rounded-full bg-background">
+                  <div
+                    className="h-2 rounded-l-full"
+                    style={{
+                      width: `${percent}%`,
+                      backgroundColor: getHslColorByPercent(percent),
+                    }}
+                  ></div>
+                </div>
+                <span className="text-sm text-foreground-muted ml-3 w-12">
+                  {percent}%
+                </span>
               </div>
-              <span className="text-sm text-foreground-muted ml-3 w-12">
-                {progress}%
-              </span>
             </div>
-          </div>
+          }
         </div>
         <div className="col-span-1 flex items-center justify-end">
           <Button variant="secondary" onClick={openDialog}>
@@ -115,37 +116,45 @@ export const AchievementCard: React.FC<AchievementWithProgress> = ({
         onClose={closeDialog}
         size="large"
       >
-        {!!criteria?.childCriteria?.length && (
-          <div className="grid grid-cols-2 text-sm leading-8">
-            {criteria.childCriteria?.map((criterion) => (
-              <AchievementCriterion key={criterion.id} {...criterion} />
-            ))}
-          </div>
-        )}
-        <div className="space-x-3 text-sm text-foreground-muted mt-3">
-          <span>[{id}]</span>
-          {isAccountWide && <span>[ACCOUNT WIDE]</span>}
-          {isCompleted && progress !== 100 && (
-            <span>[COMPLETED ON ANOTHER CHAR]</span>
-          )}
-          {completedTimestamp && (
-            <span>
-              [<DateTime date={new Date(completedTimestamp)} />]
-            </span>
-          )}
-          <span>
-            [
-            <a
-              href={`https://www.wowhead.com/achievement=${id}`}
-              target="_blank"
-              rel="noreferrer"
-            >
-              wowhead.com
-            </a>
-            ]
-          </span>
-        </div>
+        <AchievementCriteriaList
+          criteria={criteria}
+          criteriaProgress={criteriaProgress}
+        />
       </Dialog>
     </>
+  )
+}
+
+function AchievementMetaData({
+  id,
+  isAccountWide,
+  isCompleted,
+  progress,
+  completedTimestamp,
+}) {
+  return (
+    <div className="space-x-3 text-sm text-foreground-muted mt-3">
+      <span>[{id}]</span>
+      {isAccountWide && <span>[ACCOUNT WIDE]</span>}
+      {isCompleted && progress !== 100 && (
+        <span>[COMPLETED ON ANOTHER CHAR]</span>
+      )}
+      {completedTimestamp && (
+        <span>
+          [<DateTime date={new Date(completedTimestamp)} />]
+        </span>
+      )}
+      <span>
+        [
+        <a
+          href={`https://www.wowhead.com/achievement=${id}`}
+          target="_blank"
+          rel="noreferrer"
+        >
+          wowhead.com
+        </a>
+        ]
+      </span>
+    </div>
   )
 }

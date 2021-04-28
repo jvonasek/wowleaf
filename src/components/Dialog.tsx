@@ -106,15 +106,13 @@ export const Dialog: React.FC<DialogProps> = ({
 
                 <div className="mt-2">{children}</div>
 
-                <div
-                  className={cx({
-                    'space-x-4 mt-4': !!buttons.length,
-                  })}
-                >
-                  {buttons.map(({ name, ...props }) => (
-                    <Button key={name} {...props} />
-                  ))}
-                </div>
+                {!!buttons.length && (
+                  <div className="space-x-4 mt-4">
+                    {buttons.map(({ name, ...props }) => (
+                      <Button key={name} {...props} />
+                    ))}
+                  </div>
+                )}
 
                 <button
                   type="button"

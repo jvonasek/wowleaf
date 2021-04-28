@@ -1,3 +1,5 @@
+import { groupBy, map, head } from 'ramda'
+
 export const isServer = typeof window === 'undefined'
 
 export const noop = (): void => undefined
@@ -22,4 +24,21 @@ export const getHslColorByPercent = (
   const hue = start + (end - start) * proportion
 
   return `hsl(${hue}, ${saturation}%, ${lightness}%)`
+}
+
+type ObjectWithId = {
+  id: number | string
+} & {
+  [x: string]: any
+}
+
+export function groupById<T extends ObjectWithId>(
+  list: T[]
+): Record<string, T> {
+  if (!list) {
+    return {}
+  }
+
+  const group = groupBy((item) => Number(item.id).toString(), list)
+  return map<typeof group, Record<string, T>>(head, group)
 }

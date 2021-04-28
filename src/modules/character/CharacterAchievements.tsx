@@ -1,10 +1,14 @@
 import { useState, useEffect } from 'react'
 import { useQuery } from 'react-query'
-import { clamp, groupBy, prop } from 'ramda'
+import { clamp, groupBy, prop, head, compose, map, evolve } from 'ramda'
 import { percentage, round } from '@/lib/utils'
 import { CRITERIA_OPERATOR_MAP } from '@/lib/constants'
+import { LocalizedCharacterAchievement } from 'battlenet-api'
 
-import { AchievementCard } from '@/components/AchievementCard'
+import {
+  AchievementCard,
+  AchievementCardProps,
+} from '@/modules/achievement/AchievementCard'
 import {
   AchievementWithProgress,
   AchievementWithCriteria,
@@ -12,24 +16,19 @@ import {
 } from '@/types'
 
 import { useCharacterStore } from './store/useCharacterStore'
+import { CharacterAchievementsRecord } from './types'
+import { useCharacterAchievementsStore } from './store/useCharacterAchievementsStore'
 import { useWowheadLinks } from '@/hooks/useWowheadLinks'
 
-const useCharacterAchievements = () => {
-  const { region, realm, name } = useCharacterStore()
-  const [status, setStatus] = useState({
-    isLoading: false,
-    isSuccess: false,
-  })
+const useCharacterAchievements = ({ region, realm, name }) => {
+  const { set } = useCharacterAchievementsStore()
+  const [status, setStatus] = useState({ isSet: false })
 
   const queryOptions = {
     enabled: !!(region && realm && name),
   }
 
-  const {
-    isLoading: isCharacterAchievementsLoading,
-    isSuccess: isCharacterAchievementsSuccess,
-    data: characterAchievements,
-  } = useQuery(
+  const { data, isLoading, isSuccess } = useQuery<CharacterAchievementsRecord>(
     [
       'BnetCharacterAchievements',
       {
@@ -39,169 +38,90 @@ const useCharacterAchievements = () => {
       },
     ],
     () =>
-      fetch(
-        `/api/bnet/character/${region}/${realm}/${name}/achievements`
-      ).then((res) => res.json()),
-    queryOptions
-  )
-
-  const {
-    isLoading: isAchievementsLoading,
-    isSuccess: isAchievementsSuccess,
-    data: achievements,
-  } = useQuery<AchievementWithCriteria[]>(
-    'WoWAchievements',
-    () => fetch(`/api/wow/achievements`).then((res) => res.json()),
+      fetch(`/api/bnet/character/${region}/${realm}/${name}/achievements`).then(
+        async (res) => {
+          const data = await res.json()
+          return transformCharacterAchievementsData(data)
+        }
+      ),
     queryOptions
   )
 
   useEffect(() => {
-    const isLoading = isCharacterAchievementsLoading || isAchievementsLoading
-    const isSuccess = isCharacterAchievementsSuccess && isAchievementsSuccess
-    setStatus({ isLoading, isSuccess })
-  }, [
-    isCharacterAchievementsLoading,
-    isCharacterAchievementsSuccess,
-    isAchievementsLoading,
-    isAchievementsSuccess,
-  ])
-
-  if (
-    status.isSuccess &&
-    !!achievements.length &&
-    !!characterAchievements.length
-  ) {
-    const characterAchievementsById = groupBy(prop('id'), characterAchievements)
-    return {
-      ...status,
-      data: achievements
-        ?.map<AchievementWithProgress>(
-          (achievement: AchievementWithCriteria) => {
-            const characterAchievement =
-              characterAchievementsById[achievement.id]?.[0]
-
-            const characterCriteriaById = groupBy(
-              prop('id'),
-              characterAchievement?.criteria?.child_criteria || []
-            )
-
-            const operator = CRITERIA_OPERATOR_MAP[achievement.criteriaOperator]
-
-            const childCriteria =
-              achievement?.criteria?.map(
-                ({ id, amount: totalAmount, ...criterion }) => {
-                  const { amount = 0, is_completed: isCompleted = false } =
-                    characterCriteriaById[id]?.[0] || {}
-
-                  const showProgressBar =
-                    totalAmount <= 0 ? false : criterion.showProgressBar
-
-                  let partialAmount: number
-
-                  if (showProgressBar) {
-                    partialAmount = amount
-                  } else {
-                    partialAmount = isCompleted ? 1 : 0
-                  }
-
-                  return {
-                    id,
-                    ...criterion,
-                    showProgressBar,
-                    totalAmount: showProgressBar ? totalAmount : 1,
-                    partialAmount,
-                    isCompleted,
-                  }
-                }
-              ) || []
-
-            const criteria = {
-              crit: achievement,
-              id: characterAchievement?.criteria?.id,
-              partialAmount: characterAchievement?.criteria?.amount || 0,
-              totalAmount: achievement.requiredCriteriaAmount || 1,
-              childCriteria,
-              isCompleted:
-                characterAchievement?.criteria?.is_completed || false,
-            }
-
-            // overall achievement progress
-            const criteriaProgress = childCriteria.reduce(
-              (prev, { totalAmount, partialAmount }) =>
-                prev +
-                percentage(
-                  clamp(0, totalAmount, partialAmount),
-                  totalAmount,
-                  1
-                ),
-              0
-            )
-
-            const criteriaCompleted = childCriteria.reduce(
-              (prev, { isCompleted }) => prev + (isCompleted ? 1 : 0),
-              0
-            )
-
-            // average achievement progress
-            const childCriteriaOverallProgress =
-              operator === 'ANY' && achievement.requiredCriteriaAmount > 0
-                ? round(
-                    percentage(
-                      clamp(
-                        0,
-                        achievement.requiredCriteriaAmount,
-                        criteriaCompleted
-                      ),
-                      achievement.requiredCriteriaAmount,
-                      1
-                    )
-                  )
-                : round(criteriaProgress / childCriteria.length, 1) || 0
-
-            const progress = childCriteria.length
-              ? childCriteriaOverallProgress
-              : percentage(
-                  clamp(0, criteria.totalAmount, criteria.partialAmount),
-                  criteria.totalAmount,
-                  1
-                )
-            const isCompleted = !!characterAchievement?.completed_timestamp
-
-            return {
-              ...achievement,
-              criteria,
-              progress:
-                isCompleted && achievement.isAccountWide ? 100 : progress,
-              isCompleted,
-              completedTimestamp: characterAchievement?.completed_timestamp,
-              merged: characterAchievement,
-            }
-          }
-        )
-        .filter(({ progress }) => progress !== 100)
-        .sort((a, b) => b.progress - a.progress)
-        .slice(0, 200),
+    if (isSuccess) {
+      set(data)
+      setStatus({ isSet: true })
     }
-  }
+  }, [data, set, isSuccess])
 
   return {
-    ...status,
-    data: [],
+    isLoading: isLoading && !status.isSet,
+    isSuccess: isSuccess && status.isSet,
   }
 }
 
 export const CharacterAchievements: React.FC = () => {
-  const { isLoading, isSuccess, data } = useCharacterAchievements()
+  const { region, realm, name } = useCharacterStore()
+  const {
+    //isLoading: isAchievementsLoading,
+    isSuccess: isAchievementsSuccess,
+    data: achievements,
+  } = useQuery<AchievementCardProps[]>('WoWAchievements', () =>
+    fetch(`/api/wow/achievements`).then((res) => res.json())
+  )
+
+  const {
+    isSuccess: isCharacterAchievementsSuccess,
+  } = useCharacterAchievements({ region, realm, name })
+
   useWowheadLinks({
-    refresh: isSuccess,
+    refresh: isAchievementsSuccess,
   })
+
+  const isSuccess = isAchievementsSuccess && isCharacterAchievementsSuccess
+
   return (
     <div className="space-y-7">
       {isSuccess &&
-        !!data.length &&
-        data.map((achievement) => (
+        achievements.map((achievement) => (
           <AchievementCard key={achievement.id} {...achievement} />
         ))}
     </div>
   )
+}
+
+function transformCharacterAchievementsData(
+  data: LocalizedCharacterAchievement[]
+) {
+  const achievements = data.map(({ id, completed_timestamp, criteria }) => ({
+    id,
+    isCompleted: !!completed_timestamp,
+    completedTimestamp: completed_timestamp,
+    criteria: transformCriteriaObject(criteria),
+  }))
+
+  const group = groupBy((a) => Number(a.id).toString(), achievements)
+  return map<typeof group, CharacterAchievementsRecord>(head, group)
+
+  function transformCriteriaObject(
+    criteria: LocalizedCharacterAchievement['criteria']
+  ) {
+    if (criteria) {
+      const { id, amount, is_completed, child_criteria } = criteria
+      const criterion = {
+        id: id,
+        amount: amount || 0,
+        isCompleted: !!is_completed,
+      }
+
+      if (child_criteria) {
+        return {
+          ...criterion,
+          childCriteria: child_criteria?.map(transformCriteriaObject),
+        }
+      }
+
+      return criterion
+    }
+  }
 }

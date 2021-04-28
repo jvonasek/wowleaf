@@ -9,6 +9,7 @@ const handle = createPrismaHandler<Achievement[]>({
           not: null,
         },
       }, */
+      take: 200,
       include: {
         criteria: true,
         achievementAssets: true,

@@ -9,6 +9,7 @@ export const useCharacterStore = createStore(
       region: 'eu',
       realm: '',
       name: '',
+      progress: {},
     } as CharacterParams,
     (set) => ({ set })
   )
