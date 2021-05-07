@@ -1,23 +1,15 @@
-import { Achievement, Criterion, AchievementAsset } from '@/prisma/wow'
+import {
+  Achievement as BaseAchievement,
+  Criterion,
+  AchievementAsset,
+} from '@/prisma/wow'
 
-export type Achievement = Achievement & {
+export type Achievement = BaseAchievement & {
   criteria: Criterion[]
   achievementAssets: AchievementAsset[]
 }
 
-export type AchievementCriterionProgress = {
-  id: number
-  total: number
-  partial: number
-  percent: number
-  isCompleted: boolean
-  showProgressBar: boolean
-}
-
-export type AchievementProgress = {
-  id?: number
-  completedTimestamp?: number
-  criteria: Record<string, AchievementCriterionProgress>
-  isCompleted: boolean
-  percent: number
+export type AchievementsQueryResult = {
+  byId: Record<string, Achievement>
+  ids: number[]
 }

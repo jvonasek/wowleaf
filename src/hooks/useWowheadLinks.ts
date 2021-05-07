@@ -16,6 +16,7 @@ const options = {
 export const useWowheadLinks = ({ refresh } = options): void => {
   useEffect(() => {
     if (refresh && wh && typeof wh.refreshLinks === 'function') {
+      console.log('refreshing wowh')
       wh.refreshLinks()
     }
   }, [refresh])

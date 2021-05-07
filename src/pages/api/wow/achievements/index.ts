@@ -9,7 +9,12 @@ const handle = createPrismaHandler<Achievement[]>({
           not: null,
         },
       }, */
-      take: 200,
+      /* where: {
+        id: {
+          in: [14868, 14498],
+        },
+      }, */
+      take: 323,
       include: {
         criteria: true,
         achievementAssets: true,

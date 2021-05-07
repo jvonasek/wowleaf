@@ -3,7 +3,7 @@ import { Story, Meta } from '@storybook/react'
 import {
   AchievementCard,
   AchievementCardProps,
-} from '@/components/AchievementCard'
+} from '@/modules/achievement/AchievementCard'
 
 export default {
   title: 'Components/AchievementCard',

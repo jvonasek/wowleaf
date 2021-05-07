@@ -1,6 +1,7 @@
 import { useQuery } from 'react-query'
 import { getSession } from 'next-auth/client'
 import { NextPage } from 'next'
+import Link from 'next/link'
 
 import { CharacterCard } from '@/components/CharacterCard'
 import { CharacterSearch } from '@/modules/character-search/CharacterSearch'
@@ -16,6 +17,8 @@ const Index: NextPage = () => {
   return (
     <div>
       <div className="mb-4">
+        <Link href="/character/eu/argent-dawn/razzelle">Razzelle</Link>
+        <Link href="/character/us/kelthuzad/asmongold">Asmongold</Link>
         <CharacterSearch />
       </div>
       <div className="grid grid-cols-4 gap-3">

@@ -1,5 +1,5 @@
 import { NextApiHandler } from 'next'
-import { WoWAPI, BattleNetResponse, Achievement } from 'battlenet-api'
+import { WoWAPI, BattleNetResponse } from 'battlenet-api'
 import ms from 'ms.macro'
 
 import cacheAPI from '@/lib/cacheAPI'

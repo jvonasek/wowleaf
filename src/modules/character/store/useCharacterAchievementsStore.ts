@@ -1,11 +1,36 @@
 import { createStore } from '@/lib/createStore'
 import { combine } from 'zustand/middleware'
 
-import { CharacterAchievementsRecord } from '../types'
+import { CharacterAchievementProgress } from '../types'
+
+export type CharacterAchievementsState = {
+  [x: string]: {
+    byId: Record<string, CharacterAchievementProgress>
+    ids: number[]
+  }
+}
+
+export const initialAchievementProgress: CharacterAchievementProgress = {
+  id: -1,
+  name: '',
+  percent: 0,
+  partial: 0,
+  required: 0,
+  criteria: {},
+  completedTimestamp: undefined,
+  isCompleted: false,
+  showOverallProgressBar: false,
+}
 
 export const useCharacterAchievementsStore = createStore(
-  combine({} as CharacterAchievementsRecord, (set, get) => ({
+  combine({} as CharacterAchievementsState, (set, get) => ({
     set,
-    get: (id: string) => get()?.[id],
+    get: (id: number | string, characterKey: string) => {
+      const state = get()
+      return (
+        state?.[characterKey]?.byId?.[Number(id).toString()] ||
+        initialAchievementProgress
+      )
+    },
   }))
 )

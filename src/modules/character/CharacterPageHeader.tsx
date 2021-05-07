@@ -7,7 +7,14 @@ import { useCharacterStore } from './store/useCharacterStore'
 export const CharacterPageHeader: React.FC = () => {
   const { region, realm, name } = useCharacterStore()
   const { isSuccess, data: character } = useQuery(
-    'BnetCharacter',
+    [
+      'BnetCharacter',
+      {
+        region,
+        realm,
+        name,
+      },
+    ],
     () =>
       fetch(`/api/bnet/character/${region}/${realm}/${name}`, {
         method: 'GET',

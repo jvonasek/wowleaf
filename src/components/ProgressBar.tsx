@@ -19,9 +19,9 @@ export const ProgressBar: React.FC<ProgressBarProps> = memo(
     const centerdLabelThreshold = percentage <= 20
 
     return (
-      <div className="bg-background rounded relative h-6">
+      <div className="bg-background rounded-full relative h-6">
         <div
-          className="bg-accent flex justify-center items-center rounded h-6"
+          className="bg-accent flex justify-center items-center rounded-full h-6"
           role="progressbar"
           aria-valuenow={current}
           aria-valuemin={0}
