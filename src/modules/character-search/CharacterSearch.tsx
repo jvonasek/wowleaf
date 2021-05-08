@@ -7,8 +7,6 @@ import { Button } from '@/components/Button'
 import { FormInput } from '@/components/FormInput'
 import { FormSelect } from '@/components/FormSelect'
 
-import { BNET_REGIONS_MAP } from '@/lib/constants'
-
 const fetchRealms = () =>
   fetch('/api/wow/realms', { method: 'GET' }).then((res) => res.json())
 
@@ -65,7 +63,7 @@ export const CharacterSearch: React.FC = () => {
             label: region,
             options: realms[region].map(({ name, slug }) => ({
               label: name,
-              value: `${BNET_REGIONS_MAP[region]}_${slug}`,
+              value: `${region}_${slug}`,
             })),
           })),
         ]}

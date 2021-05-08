@@ -34,18 +34,14 @@ function normalizeCharacter(char: LocalizedCharacter): CharacterProps {
   return {
     id: char.id,
     name: char.name,
-    characterClass: char.character_class.name,
-    race: char.race.name,
+    classId: char.character_class.id,
+    raceId: char.race.id,
     faction: char.faction.type,
     gender: char.gender.type,
-    realm: {
-      name: char.realm.name,
-      id: char.realm.id,
-      slug: char.realm.slug,
-    },
-    guildName: char.guild && char.guild.name,
+    realmSlug: char.realm.slug,
+    guild: char?.guild?.name,
+    covenantId: char?.covenant_progress?.chosen_covenant?.id,
     level: char.level,
-    lastLogin: new Date(char.last_login_timestamp).toISOString(),
   }
 }
 
@@ -64,18 +60,12 @@ function normalizeUserProfile(res: UserProfile): CharacterProps[] {
     .map((char) => ({
       id: char.id,
       name: char.name,
-      characterClass: char.playable_class.name,
-      race: char.playable_race.name,
+      classId: char.playable_class.id,
+      raceId: char.playable_race.id,
       faction: char.faction.type,
       gender: char.gender.type,
-      realm: {
-        name: char.realm.name,
-        id: char.realm.id,
-        slug: char.realm.slug,
-      },
-      guildName: '',
+      realmSlug: char.realm.slug,
       level: char.level,
-      lastLogin: undefined,
     }))
     .sort((a, b) => b.level - a.level)
 }

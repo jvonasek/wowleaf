@@ -9,8 +9,6 @@ export interface GenericObject {
 
 export type CharacterFaction = 'ALLIANCE' | 'HORDE'
 export type CharacterGender = 'MALE' | 'FEMALE'
-export type CharacterRace = string
-export type CharacterClass = string
 
 export type Achievement = {
   id: number
@@ -78,14 +76,14 @@ export type Realm = {
 export type CharacterProps = {
   id: number
   name: string
-  characterClass: CharacterClass
-  race: CharacterRace
+  classId: number
+  raceId: number
   faction: CharacterFaction
   gender: CharacterGender
-  guildName: string
-  realm: Realm
+  guild?: string
+  realmSlug: string
   level: number
-  lastLogin?: string
+  covenantId?: number
   updatedAt?: string
   createdAt?: string
 }

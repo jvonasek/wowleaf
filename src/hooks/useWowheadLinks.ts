@@ -1,12 +1,6 @@
 import { useEffect } from 'react'
 import { isServer } from '@/lib/utils'
 
-declare global {
-  interface Window {
-    $WowheadPower: any
-  }
-}
-
 const wh = !isServer && window.$WowheadPower
 
 const options = {

@@ -4,6 +4,8 @@ import { CharacterProps } from '@/types'
 import { Button } from '@/components/Button'
 import { DateTime } from '@/components/DateTime'
 
+import { CHARACTER_CLASS_MAP, CHARACTER_RACE_MAP } from '@/lib/constants'
+
 export type CharacterCardProps = {
   onClick: (realmSlug: string, name: string) => void
 } & CharacterProps
@@ -11,20 +13,20 @@ export type CharacterCardProps = {
 export const CharacterCard: React.FC<CharacterCardProps> = ({
   name,
   level,
-  race,
-  guildName,
-  characterClass,
+  raceId,
+  guild,
+  classId,
   onClick,
-  realm,
+  realmSlug,
   updatedAt,
 }): JSX.Element => (
   <div className="bg-surface p-3 rounded-md">
     <div className="flex justify-between items-start">
       <div>
-        <p className="text-lg font-bold">
+        <p className={`text-lg font-bold text-class-${classId}`}>
           <Link href={`/character/eu/argent-dawn/${name}`}>{name}</Link>
         </p>
-        {guildName && <p className="text-sm">&lt;{guildName}&gt;</p>}
+        {guild && <p className="text-sm">&lt;{guild}&gt;</p>}
       </div>
 
       {updatedAt && (
@@ -34,8 +36,8 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
       )}
     </div>
     <p className="text-sm">
-      {race} {characterClass} Level {level}
+      {CHARACTER_RACE_MAP[raceId]} {CHARACTER_CLASS_MAP[classId]} Level {level}
     </p>
-    {onClick && <Button onClick={() => onClick(realm.slug, name)}>ADD</Button>}
+    {onClick && <Button onClick={() => onClick(realmSlug, name)}>ADD</Button>}
   </div>
 )

@@ -37,8 +37,8 @@ model AchievementCategory {
 }
 
 model AchievementCriterion {
-  achievementId Int         @map("achievement_id")
-  criteriaId    Int         @map("criteria_id")
+  achievementId Int        @map("achievement_id")
+  criteriaId    Int        @map("criteria_id")
   achievement   Achievement @relation("achievement_criteriaToachievements", fields: [achievementId], references: [id])
   criterion     Criterion   @relation("achievement_criteriaTocriteria", fields: [criteriaId], references: [id])
 
@@ -106,19 +106,20 @@ model UpdateError {
   meta      Json?
   entity    Json?
   error     String?
-  createdAt DateTime @default(now())
+  createdAt DateTime @default(now()) @db.Timestamp(6)
 
   @@map("update_errors")
 }
 
 model Realm {
-  id         Int         @id
-  region     String?
-  name       String?
-  slug       String?
-  timezone   String?
-  category   String?
-  type       String?
+  id          Int     @id
+  region      String
+  regionName  String? @map("region_name")
+  name        String
+  slug        String
+  timezone    String?
+  category    String?
+  type        String?
 
   @@map("realms")
 }

@@ -10,16 +10,16 @@ datasource db {
 
 model Account {
   id                 Int       @id @default(autoincrement())
-  compoundId         String    @unique @map("compound_id")
+  compoundId         String    @unique @map("compound_id") @db.VarChar(255)
   userId             Int       @map("user_id")
-  providerType       String    @map("provider_type")
-  providerId         String    @map("provider_id")
-  providerAccountId  String    @map("provider_account_id")
+  providerType       String    @map("provider_type") @db.VarChar(255)
+  providerId         String    @map("provider_id") @db.VarChar(255)
+  providerAccountId  String    @map("provider_account_id") @db.VarChar(255)
   refreshToken       String?   @map("refresh_token")
   accessToken        String?   @map("access_token")
-  accessTokenExpires DateTime? @map("access_token_expires")
-  createdAt          DateTime  @default(now()) @map("created_at")
-  updatedAt          DateTime  @default(now()) @map("updated_at")
+  accessTokenExpires DateTime? @map("access_token_expires") @db.Timestamptz(6)
+  createdAt          DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
 
   @@index([providerAccountId], name: "provider_account_id")
   @@index([providerId], name: "provider_id")
@@ -30,56 +30,54 @@ model Account {
 model Session {
   id           Int      @id @default(autoincrement())
   userId       Int      @map("user_id")
-  expires      DateTime
-  sessionToken String   @unique @map("session_token")
-  accessToken  String   @unique @map("access_token")
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @default(now()) @map("updated_at")
+  expires      DateTime @db.Timestamptz(6)
+  sessionToken String   @unique @map("session_token") @db.VarChar(255)
+  accessToken  String   @unique @map("access_token") @db.VarChar(255)
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
 
   @@map("sessions")
 }
 
 model User {
-  id            Int         @id @default(autoincrement())
-  name          String?
-  email         String?     @unique
-  emailVerified DateTime?   @map("email_verified")
-  image         String?
-  createdAt     DateTime    @default(now()) @map("created_at")
-  updatedAt     DateTime    @default(now()) @updatedAt @map("updated_at")
-  characters    Character[] @relation("charactersTousers")
+  id            Int          @id @default(autoincrement())
+  name          String?      @db.VarChar(255)
+  email         String?      @unique @db.VarChar(255)
+  emailVerified DateTime?    @map("email_verified") @db.Timestamptz(6)
+  image         String?      @db.VarChar(255)
+  createdAt     DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt     DateTime     @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  characters    Character[]  @relation("charactersTousers")
 
   @@map("users")
 }
 
 model VerificationRequest {
   id         Int      @id @default(autoincrement())
-  identifier String
-  token      String   @unique
-  expires    DateTime
-  createdAt  DateTime @default(now()) @map("created_at")
-  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
+  identifier String   @db.VarChar(255)
+  token      String   @unique @db.VarChar(255)
+  expires    DateTime @db.Timestamptz(6)
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
 
   @@map("verification_requests")
 }
 
-
 model Character {
-  id             Int       @id
-  userId         Int       @map("user_id")
-  name           String?
-  race           String?
-  characterClass String?   @map("class")
-  faction        String?
-  gender         String?
-  guildName      String?   @map("guild_name")
-  level          Int?
-  realmId        Int?      @map("realm_id")
-  lastLogin      DateTime? @map("last_login")
-  createdAt      DateTime  @default(now()) @map("created_at")
-  updatedAt      DateTime  @updatedAt @map("updated_at")
-  user           User      @relation("charactersTousers", fields: [userId], references: [id])
+  id          Int      @id
+  userId      Int?     @map("user_id")
+  name        String
+  raceId      Int      @map("race_id")
+  classId     Int      @map("class_id")
+  faction     String
+  gender      String
+  guild       String?
+  level       Int
+  realmSlug   String   @map("realm_slug")
+  covenantId  Int?     @map("covenant_id")
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+  user        User?    @relation("charactersTousers", fields: [userId], references: [id])
 
   @@map("characters")
 }
-
