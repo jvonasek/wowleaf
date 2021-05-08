@@ -23,7 +23,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
   <div className="bg-surface p-3 rounded-md">
     <div className="flex justify-between items-start">
       <div>
-        <p className={`text-lg font-bold text-class-${classId}`}>
+        <p className="text-lg font-bold">
           <Link href={`/character/eu/argent-dawn/${name}`}>{name}</Link>
         </p>
         {guild && <p className="text-sm">&lt;{guild}&gt;</p>}
@@ -36,8 +36,16 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
       )}
     </div>
     <p className="text-sm">
-      {CHARACTER_RACE_MAP[raceId]} {CHARACTER_CLASS_MAP[classId]} Level {level}
+      {CHARACTER_RACE_MAP[raceId]}{' '}
+      <span className={`font-bold text-class-${classId}`}>
+        {CHARACTER_CLASS_MAP[classId]}
+      </span>{' '}
+      Level {level}
     </p>
-    {onClick && <Button onClick={() => onClick(realmSlug, name)}>ADD</Button>}
+    {onClick && (
+      <Button variant="secondary" onClick={() => onClick(realmSlug, name)}>
+        ADD
+      </Button>
+    )}
   </div>
 )

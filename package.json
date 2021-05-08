@@ -8,8 +8,7 @@
     "build": "next build",
     "start": "next start",
     "storybook": "start-storybook -p 6006 --no-dll",
-    "build-storybook": "build-storybook --no-dll",
-    "postinstall": "prisma generate"
+    "build-storybook": "build-storybook --no-dll"
   },
   "dependencies": {
     "@headlessui/react": "^1.0.0",
@@ -76,7 +75,7 @@
     "storybook-css-modules-preset": "^1.0.2",
     "styled-jsx-plugin-postcss": "^3.0.2",
     "stylelint-config-recommended": "^3.0.0",
-    "tailwindcss-theming": "^3.0.0-beta.3",
+    "tailwindcss-theme-swapper": "^0.3.0",
     "tsconfig-paths-webpack-plugin": "^3.3.0",
     "typescript": "^4.0.3"
   }
