@@ -60,22 +60,24 @@ function normalizeUserProfile(res: UserProfile): CharacterProps[] {
     return prev.concat(account.characters)
   }, [] as WoWAccountCharacter[])
 
-  return characters.map((char) => ({
-    id: char.id,
-    name: char.name,
-    characterClass: char.playable_class.name,
-    race: char.playable_race.name,
-    faction: char.faction.type,
-    gender: char.gender.type,
-    realm: {
-      name: char.realm.name,
-      id: char.realm.id,
-      slug: char.realm.slug,
-    },
-    guildName: '',
-    level: char.level,
-    lastLogin: undefined,
-  }))
+  return characters
+    .map((char) => ({
+      id: char.id,
+      name: char.name,
+      characterClass: char.playable_class.name,
+      race: char.playable_race.name,
+      faction: char.faction.type,
+      gender: char.gender.type,
+      realm: {
+        name: char.realm.name,
+        id: char.realm.id,
+        slug: char.realm.slug,
+      },
+      guildName: '',
+      level: char.level,
+      lastLogin: undefined,
+    }))
+    .sort((a, b) => b.level - a.level)
 }
 
 function normalizeCharacterAchievements(res: any): any {

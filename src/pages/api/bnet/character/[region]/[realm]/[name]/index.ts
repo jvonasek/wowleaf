@@ -56,14 +56,12 @@ async function saveCharacterToDb(
   character: LocalizedCharacter,
   token: JWToken
 ) {
+  console.log(character)
   const { realm, ...char } = normalizeBattleNetData('character')(character)
   const data = {
     ...char,
     user: {
       connect: { id: token.id },
-    },
-    realm: {
-      connect: { id: realm.id },
     },
   }
 

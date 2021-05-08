@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { useQuery } from 'react-query'
+import { useState, useEffect, useRef, useMemo } from 'react'
+import { useQuery, useQueries } from 'react-query'
 import { LocalizedCharacterAchievement } from 'battlenet-api'
 import { pluck, clamp, prop, ascend, descend, sortWith } from 'ramda'
 import { groupById, percentage, round } from '@/lib/utils'
@@ -19,7 +19,10 @@ import {
   CharacterParams,
 } from '../types'
 
-import { Achievement } from '@/modules/achievement/types'
+import {
+  Achievement,
+  AchievementsQueryResult,
+} from '@/modules/achievement/types'
 
 type CharacterAchievementsHookProps = {
   isLoading: boolean
@@ -27,7 +30,7 @@ type CharacterAchievementsHookProps = {
 }
 
 type CharacterQueryOptions = {
-  enabled: boolean
+  enabled?: boolean
 }
 
 type SortDir = 'DESC' | 'ASC'
@@ -35,83 +38,109 @@ type SortDir = 'DESC' | 'ASC'
 const sorter = (propName: string, dir: SortDir) =>
   (dir === 'DESC' ? descend : ascend)(prop(propName))
 
-export const useCharacterAchievementsQuery = (
-  { region, realm, name, characterKey }: CharacterParams,
-  { enabled = false }: CharacterQueryOptions
-): CharacterAchievementsHookProps => {
-  const { set } = useCharacterAchievementsStore()
-  const [status, setStatus] = useState({ isSet: false })
-
-  const {
-    data: characterAchievements,
-    isLoading,
-    isSuccess,
-  } = useQuery<CharacterAchievementsQueryResult>(
-    [
-      'BnetCharacterAchievements',
-      {
-        region,
-        realm,
-        name,
-      },
-    ],
-    () =>
-      fetch(`/api/bnet/character/${region}/${realm}/${name}/achievements`).then(
-        async (res) => {
-          const data = await res.json()
-          return transformCharacterAchievementsData(data)
-        }
-      ),
-    {
-      enabled,
+const fetchCharacter = ({ region, realm, name }) =>
+  fetch(`/api/bnet/character/${region}/${realm}/${name}/achievements`).then(
+    async (res) => {
+      const data = await res.json()
+      return transformCharacterAchievementsData(data)
     }
   )
 
-  const achievements = useAchievementsStore()
+export const useCharacterAchievementsQuery = (
+  characters: CharacterParams[],
+  { enabled = false }: CharacterQueryOptions = {}
+): CharacterAchievementsHookProps => {
+  const achievementsData = useAchievementsStore()
+  const { set } = useCharacterAchievementsStore()
+  const [status, setStatus] = useState({ isSet: false })
+
+  const queries = useQueries(
+    characters.map(({ region, realm, name, characterKey }) => {
+      const queryEnabled = enabled && !!characterKey
+      return {
+        queryKey: ['BnetCharacterAchievements', characterKey],
+        queryFn: () => fetchCharacter({ region, realm, name }),
+        enabled: queryEnabled,
+      }
+    })
+  )
+
+  const isSuccess = queries.every((q) => q.isSuccess)
+  const isLoading = queries.some((q) => q.isLoading)
 
   useEffect(() => {
     if (isSuccess) {
-      const achievementProgress = achievements.ids.map((id) =>
-        createAchievementProgress(
-          achievements.byId[id],
-          characterAchievements.byId[id]
-        )
+      const characterData = queries.map(({ data }, index) => ({
+        data,
+        character: characters[index],
+      }))
+
+      const characterProgressArray = createCharacterProgressArray(
+        characterData,
+        achievementsData
       )
 
-      const sortProps: Record<string, SortDir>[] = [
-        {
-          percent: 'DESC',
-        },
-        {
-          name: 'ASC',
-        },
-      ]
+      console.log(characterData)
 
-      const filtered = achievementProgress.filter(
-        ({ percent }) => percent < 100
+      const charactersToSet = characterProgressArray.reduce(
+        (prev, character) => {
+          return {
+            ...prev,
+            ...character,
+          }
+        },
+        {}
       )
 
-      const sorted = sortWith<CharacterAchievementProgress>(
-        sortProps.map((s) => {
-          return sorter(Object.keys(s)[0], Object.values(s)[0])
-        })
-      )(filtered)
+      //console.log(charactersToSet)
 
-      set({
-        [characterKey]: {
-          byId: groupById(achievementProgress),
-          ids: pluck('id', sorted),
-        },
-      })
-
+      set(charactersToSet)
       setStatus({ isSet: true })
     }
-  }, [characterKey, achievements, characterAchievements, set, isSuccess])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccess, achievementsData, set])
 
   return {
     isLoading: isLoading && !status.isSet,
     isSuccess: isSuccess && status.isSet,
   }
+}
+
+function createCharacterProgressArray(
+  characters,
+  achievements: AchievementsQueryResult
+) {
+  return characters.map(({ data, character: { characterKey } }) => {
+    const achievementProgress = achievements.ids.map((id) =>
+      createAchievementProgress(achievements.byId[id], data.byId[id])
+    )
+
+    const sortProps: Record<string, SortDir>[] = [
+      {
+        percent: 'DESC',
+      },
+      {
+        name: 'ASC',
+      },
+    ]
+
+    const filtered = achievementProgress.filter(
+      ({ percent, isCompleted }) => percent < 100 && !isCompleted
+    )
+
+    const sorted = sortWith<CharacterAchievementProgress>(
+      sortProps.map((s) => {
+        return sorter(Object.keys(s)[0], Object.values(s)[0])
+      })
+    )(filtered)
+
+    return {
+      [characterKey]: {
+        byId: groupById(achievementProgress),
+        ids: pluck('id', sorted),
+      },
+    }
+  })
 }
 
 function transformCharacterAchievementsData(

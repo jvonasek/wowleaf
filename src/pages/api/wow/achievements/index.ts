@@ -14,6 +14,9 @@ const handle = createPrismaHandler<Achievement[]>({
           in: [14868, 14498],
         },
       }, */
+      where: {
+        categoryId: 14805,
+      },
       take: 323,
       include: {
         criteria: true,

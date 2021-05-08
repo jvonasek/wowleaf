@@ -19,3 +19,8 @@ export const CRITERIA_OPERATOR_MAP = {
   8: 'ANY',
   9: 'SUM_CHILDREN_WEIGHT',
 }
+
+export enum Faction {
+  Alliance = 'ALLIANCE',
+  Horde = 'HORDE',
+}

@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 import { CharacterProps } from '@/types'
 import { Button } from '@/components/Button'
 import { DateTime } from '@/components/DateTime'
@@ -19,7 +21,9 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
   <div className="bg-surface p-3 rounded-md">
     <div className="flex justify-between items-start">
       <div>
-        <p className="text-lg font-bold">{name}</p>
+        <p className="text-lg font-bold">
+          <Link href={`/character/eu/argent-dawn/${name}`}>{name}</Link>
+        </p>
         {guildName && <p className="text-sm">&lt;{guildName}&gt;</p>}
       </div>
 

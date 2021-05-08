@@ -9,12 +9,10 @@ import { FormSelect } from '@/components/FormSelect'
 
 import { BNET_REGIONS_MAP } from '@/lib/constants'
 
-export type CharacterSearchProps = void
-
 const fetchRealms = () =>
   fetch('/api/wow/realms', { method: 'GET' }).then((res) => res.json())
 
-export const CharacterSearch: React.FC<CharacterSearchProps> = () => {
+export const CharacterSearch: React.FC = () => {
   const [regions, setRegions] = useState([])
   const [realms, setRealms] = useState({})
   const [selection, setSelection] = useState({

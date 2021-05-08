@@ -4,7 +4,6 @@ import { AchievementCard } from '@/modules/achievement/AchievementCard'
 import { useCharacterAchievementsStore } from './store/useCharacterAchievementsStore'
 import { useCharacterStore } from './store/useCharacterStore'
 import { useCharacterAchievementsQuery } from './hooks/useCharacterAchievementsQuery'
-import { useAchievementsQuery } from '@/modules/achievement/hooks/useAchievementsQuery'
 import { useAchievementsStore } from '@/modules/achievement/store/useAchievementsStore'
 
 import { useWowheadLinks } from '@/hooks/useWowheadLinks'
@@ -23,19 +22,12 @@ export const CharacterAchievements: React.FC = () => {
     )
   )
 
-  const { isSuccess: isAchievementsSuccess } = useAchievementsQuery()
-
-  const charQueryEnabled = isAchievementsSuccess && !!(region && realm && name)
-  const {
-    isSuccess: isCharacterAchievementsSuccess,
-  } = useCharacterAchievementsQuery(
-    { region, realm, name, characterKey },
+  const { isSuccess } = useCharacterAchievementsQuery(
+    [{ region, realm, name, characterKey }],
     {
-      enabled: charQueryEnabled,
+      enabled: !!characterKey,
     }
   )
-
-  const isSuccess = isAchievementsSuccess && isCharacterAchievementsSuccess
 
   useWowheadLinks({ refresh: isSuccess && !!ids.length })
 

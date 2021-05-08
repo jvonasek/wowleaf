@@ -1,31 +1,32 @@
 import { useQuery } from 'react-query'
 import { getSession } from 'next-auth/client'
 import { NextPage } from 'next'
-import Link from 'next/link'
 
 import { CharacterCard } from '@/components/CharacterCard'
 import { CharacterSearch } from '@/modules/character-search/CharacterSearch'
+import { DashboardPage } from '@/modules/dashboard/DashboardPage'
+import { AchievementsGate } from '@/modules/achievement/AchievementsGate'
 
 const getUserCharacters = () =>
   fetch(`/api/user/characters`).then((res) => res.json())
 
 const Index: NextPage = () => {
-  const { isLoading, data: characters } = useQuery(
+  const { isSuccess, data: characters } = useQuery(
     'UserCharacters',
     getUserCharacters
   )
   return (
     <div>
       <div className="mb-4">
-        <Link href="/character/eu/argent-dawn/razzelle">Razzelle</Link>
-        <Link href="/character/us/kelthuzad/asmongold">Asmongold</Link>
         <CharacterSearch />
       </div>
       <div className="grid grid-cols-4 gap-3">
-        {!isLoading &&
-          characters.length > 0 &&
+        {isSuccess &&
           characters.map((char) => <CharacterCard key={char.id} {...char} />)}
       </div>
+      <AchievementsGate>
+        {isSuccess && <DashboardPage characters={characters} />}
+      </AchievementsGate>
     </div>
   )
 }
