@@ -1,0 +1,16 @@
+Todo:
+  Single Character:
+    ☐ Achievement Filtering and Sorting (by completion %, by reward type, by expansion)
+  Dashboard / Multi Character View:
+    ☐ Fetch only necessary fields for all achievements
+    ☐ Create dashboard with helpful statistics (expansion based?)
+  UI:
+    ☐ Create layout system that doesn't re-render all page
+    ☐ Create better color scheme / theme
+    ☐ Rework progress bar
+  Auth:
+    ☐ Customize auth pages
+  Database:
+    Achievement:
+      ☐ Add expansion field
+

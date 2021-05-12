@@ -1,38 +1,42 @@
+import { useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 
-export const AchievementCategories: React.FC = () => {
-  const router = useRouter()
+export type AchievementCategoriesProps = {
+  category?: string[]
+  basePath?: string
+}
 
-  const {
-    category,
-    parentId = category?.[0],
-    categoryId = category?.[1],
-  } = router.query
+export const AchievementCategories: React.FC<AchievementCategoriesProps> = ({
+  category,
+  basePath = '',
+}) => {
+  const [categories, setCategories] = useState([])
 
-  const isCategoryIndex = true //!!parentId && !!categoryId
+  const isRoot = !category
 
   const { isSuccess, data } = useQuery(
-    'WoWAchievementCategories',
+    ['WoWAchievementCategories', category || 'index'],
     () =>
       fetch(
-        isCategoryIndex
-          ? `/api/wow/categories/`
-          : `/api/wow/categories/${categoryId || parentId}`
-      ).then((res) => res.json()),
-    {
-      enabled: isCategoryIndex, // || !!(categoryId || parentId),
-    }
+        `/api/wow/categories/${(category && category.join('/')) || ''}`
+      ).then((res) => res.json())
   )
+
+  useEffect(() => {
+    if (isSuccess && data) {
+      const categoryList = isRoot ? data : data.otherAchievementCategories
+      setCategories(categoryList)
+    }
+  }, [isSuccess, data, setCategories, isRoot])
 
   return (
     <div className="space-y-3">
+      {data && <strong>{data.name}</strong>}
       {isSuccess &&
-        !!data.length &&
-        data.map(({ id, name }) => (
+        categories.map(({ id, name, slug }) => (
           <div className="bg-surface p-3 rounded" key={id}>
-            <Link href={`${router.asPath}/achievements/${id}`}>{name}</Link>
+            <Link href={`/${basePath}/achievements/${slug}`}>{name}</Link>
           </div>
         ))}
     </div>

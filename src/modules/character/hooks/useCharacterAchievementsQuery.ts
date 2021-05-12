@@ -1,8 +1,8 @@
-import { useState, useEffect, useRef, useMemo } from 'react'
-import { useQuery, useQueries } from 'react-query'
+import { useState, useEffect } from 'react'
 import { LocalizedCharacterAchievement } from 'battlenet-api'
 import { pluck, clamp, prop, ascend, descend, sortWith } from 'ramda'
 import { groupById, percentage, round } from '@/lib/utils'
+import { useQueriesTyped } from '@/lib/useQueriesTyped'
 import { CRITERIA_OPERATOR_MAP } from '@/lib/constants'
 
 import { useAchievementsStore } from '@/modules/achievement/store/useAchievementsStore'
@@ -54,7 +54,7 @@ export const useCharacterAchievementsQuery = (
   const { set } = useCharacterAchievementsStore()
   const [status, setStatus] = useState({ isSet: false })
 
-  const queries = useQueries(
+  const queries = useQueriesTyped(
     characters.map(({ region, realm, name, characterKey }) => {
       const queryEnabled = enabled && !!characterKey
       return {
@@ -82,7 +82,7 @@ export const useCharacterAchievementsQuery = (
 
       console.log(characterData)
 
-      const charactersToSet = characterProgressArray.reduce(
+      const charactersAchievements = characterProgressArray.reduce(
         (prev, character) => {
           return {
             ...prev,
@@ -92,9 +92,7 @@ export const useCharacterAchievementsQuery = (
         {}
       )
 
-      //console.log(charactersToSet)
-
-      set(charactersToSet)
+      set(charactersAchievements)
       setStatus({ isSet: true })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -107,7 +105,10 @@ export const useCharacterAchievementsQuery = (
 }
 
 function createCharacterProgressArray(
-  characters,
+  characters: Array<{
+    data: CharacterAchievementsQueryResult
+    character: CharacterParams
+  }>,
   achievements: AchievementsQueryResult
 ) {
   return characters.map(({ data, character: { characterKey } }) => {
@@ -125,7 +126,7 @@ function createCharacterProgressArray(
     ]
 
     const filtered = achievementProgress.filter(
-      ({ percent, isCompleted }) => percent < 100 && !isCompleted
+      ({ percent, isCompleted }) => true //percent < 100 && !isCompleted
     )
 
     const sorted = sortWith<CharacterAchievementProgress>(
@@ -137,7 +138,7 @@ function createCharacterProgressArray(
     return {
       [characterKey]: {
         byId: groupById(achievementProgress),
-        ids: pluck('id', sorted),
+        ids: pluck('id', sorted).slice(0, 300),
       },
     }
   })

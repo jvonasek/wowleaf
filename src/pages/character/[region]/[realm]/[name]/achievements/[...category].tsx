@@ -1,3 +1,8 @@
-import { CharacterPage } from '@/modules/character/CharacterPage'
+import {
+  CharacterPage,
+  getServerSideProps,
+} from '@/modules/character/CharacterPage'
 
 export default CharacterPage
+
+export { getServerSideProps }

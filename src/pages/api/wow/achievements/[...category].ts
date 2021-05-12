@@ -1,33 +1,30 @@
+import { create, string, object, array } from 'superstruct'
 import { createPrismaHandler } from '@/lib/createPrismaHandler'
 import prisma, { Achievement } from '@/prisma/wow'
 
+const CategoryRouteStruct = object({
+  category: array(string()),
+})
+
 const handle = createPrismaHandler<Achievement[]>({
-  selector: async () => {
+  selector: async (req) => {
+    const { category } = create(req.query, CategoryRouteStruct)
     return await prisma.achievement.findMany({
+      where: {
+        achievementCategory: {
+          slug: category.join('/'),
+        },
+      },
       include: {
         criteria: true,
         achievementAssets: true,
       },
       orderBy: [
         {
-          id: 'asc',
+          displayOrder: 'desc',
         },
       ],
     })
   },
 })
 export default handle
-
-// minimum required for progress, 80kb
-/* select: {
-  id: true,
-  criteria: {
-    select: {
-      id: true,
-      amount: true,
-      showProgressBar: true,
-    },
-  },
-  criteriaOperator: true,
-  requiredCriteriaAmount: true,
-}, */

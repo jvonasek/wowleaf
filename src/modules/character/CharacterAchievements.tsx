@@ -1,5 +1,6 @@
 import { useCallback } from 'react'
 import { AchievementCard } from '@/modules/achievement/AchievementCard'
+import { CharacterAchievementsFilter } from './CharacterAchievementsFilter'
 
 import { useCharacterAchievementsStore } from './store/useCharacterAchievementsStore'
 import { useCharacterStore } from './store/useCharacterStore'
@@ -32,8 +33,13 @@ export const CharacterAchievements: React.FC = () => {
   useWowheadLinks({ refresh: isSuccess && !!ids.length })
 
   return (
-    <div className="space-y-7">
-      {isSuccess && ids.map((id) => <AchievementCard key={id} {...get(id)} />)}
+    <div>
+      <CharacterAchievementsFilter />
+      {isSuccess && <span>Achievements: {ids.length}</span>}
+      <div className="space-y-7">
+        {isSuccess &&
+          ids.map((id) => <AchievementCard key={id} {...get(id)} />)}
+      </div>
     </div>
   )
 }

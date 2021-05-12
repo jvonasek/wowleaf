@@ -7,20 +7,28 @@ import { useAchievementsStore } from '../store/useAchievementsStore'
 
 import { Achievement } from '../types'
 
-const fetchWoWAchievements = () =>
-  fetch('/api/wow/achievements').then((res) => res.json())
+const fetchWoWAchievements = (category) =>
+  fetch(
+    `/api/wow/achievements/${(category && category.join('/')) || ''}`
+  ).then((res) => res.json())
 
-type AchievementsHookProps = {
+type AchievementHookOptions = {
+  category?: string[]
+}
+
+type AchievementsHookResult = {
   isLoading: boolean
   isSuccess: boolean
 }
 
-export const useAchievementsQuery = (): AchievementsHookProps => {
+export const useAchievementsQuery = ({
+  category,
+}: AchievementHookOptions): AchievementsHookResult => {
   const { set } = useAchievementsStore()
 
   const { isSuccess, isLoading, data } = useQuery<Achievement[]>(
-    'WoWAchievements',
-    fetchWoWAchievements
+    ['WoWAchievements', category || 'index'],
+    () => fetchWoWAchievements(category)
   )
 
   useEffect(() => {

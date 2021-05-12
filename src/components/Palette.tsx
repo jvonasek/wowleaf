@@ -2,32 +2,32 @@ const definitions = [
   {
     name: 'Backgrounds',
     palette: {
-      background: ['background', 'foreground'],
-      surface: ['surface', 'foreground'],
+      background: ['bg-background', 'text-foreground'],
+      surface: ['bg-surface', 'text-foreground'],
     },
   },
   {
     name: 'Accent',
     palette: {
-      lighter: ['accent-lighter', 'on-accent'],
-      default: ['accent', 'on-accent'],
-      darker: ['accent-darker', 'on-accent'],
+      lighter: ['bg-accent-lighter', 'text-on-accent'],
+      default: ['bg-accent', 'text-on-accent'],
+      darker: ['bg-accent-darker', 'text-on-accent'],
     },
   },
   {
     name: 'Alternative Accent',
     palette: {
-      lighter: ['accent-alt-lighter', 'on-accent-alt'],
-      default: ['accent-alt', 'on-accent-alt'],
-      darker: ['accent-alt-darker', 'on-accent-alt'],
+      lighter: ['bg-accent-alt-lighter', 'text-on-accent-alt'],
+      default: ['bg-accent-alt', 'text-on-accent-alt'],
+      darker: ['bg-accent-alt-darker', 'text-on-accent-alt'],
     },
   },
   {
     name: 'Reaction',
     palette: {
-      positive: ['positive', 'on-positive'],
-      negative: ['negative', 'on-negative'],
-      neutral: ['neutral', 'on-neutral'],
+      positive: ['bg-positive', 'text-on-positive'],
+      negative: ['bg-negative', 'text-on-negative'],
+      neutral: ['bg-neutral', 'text-on-neutral'],
     },
   },
 ]
@@ -43,7 +43,7 @@ export const Palette: React.FC = () => (
           {Object.values(palette).map(([bg, text], index) => (
             <div key={`${bg}-${text}`}>
               <div
-                className={`flex h-48 justify-center items-center bg-${bg} text-${text}`}
+                className={`flex h-48 justify-center items-center ${bg} ${text}`}
               >
                 <span className="font-bold uppercase text-xl">
                   {Object.keys(palette)[index]}

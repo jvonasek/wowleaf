@@ -105,7 +105,7 @@ export const AchievementCard: React.FC<Achievement> = memo(
                     href={`https://www.wowhead.com/item=${rewardItemId}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="block w-11 h-11 border-2 p-0.5 rounded-lg overflow-hidden"
+                    className="block w-11 h-11 border-current border-2 p-0.5 rounded-lg overflow-hidden"
                     data-wh-icon-size="medium"
                     data-wh-rename-link="false"
                   />

@@ -22,6 +22,7 @@ model AchievementAsset {
 model AchievementCategory {
   id                         Int                   @id
   name                       String
+  slug                       String
   isGuildCategory            Boolean?              @map("is_guild_category")
   displayOrder               Int?                  @map("display_order")
   parentCategoryId           Int?                  @map("parent_category_id")
@@ -37,8 +38,8 @@ model AchievementCategory {
 }
 
 model AchievementCriterion {
-  achievementId Int        @map("achievement_id")
-  criteriaId    Int        @map("criteria_id")
+  achievementId Int         @map("achievement_id")
+  criteriaId    Int         @map("criteria_id")
   achievement   Achievement @relation("achievement_criteriaToachievements", fields: [achievementId], references: [id])
   criterion     Criterion   @relation("achievement_criteriaTocriteria", fields: [criteriaId], references: [id])
 
