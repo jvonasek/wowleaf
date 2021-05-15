@@ -1,9 +1,13 @@
 import { NextPage, GetServerSideProps } from 'next'
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { enums, object, string, optional, array } from 'superstruct'
+import { useRouter } from 'next/router'
+import Link from 'next/link'
+import { withLayout } from '@moxy/next-layout'
 
 import { AchievementCategories } from '@/modules/achievement-categories/AchievementCategories'
 import { AchievementsGate } from '@/modules/achievement/AchievementsGate'
+import { CharacterAchievementsLayout } from '@/modules/layout/CharacterAchievementsLayout'
 
 import { CharacterPageHeader } from './CharacterPageHeader'
 import { CharacterAchievements } from './CharacterAchievements'
@@ -17,13 +21,13 @@ type CharacterPageProps = Omit<CharacterParams, 'characterKey'> & {
   category: string[]
 }
 
-export const CharacterPage: NextPage<CharacterPageProps> = ({
-  region,
-  realm,
-  name,
-  category,
-}) => {
+const CharacterPage: NextPage<CharacterPageProps> = () => {
   const { characterKey, set } = useCharacterStore()
+
+  const {
+    query: { region, realm, name, category },
+  } = useRouter()
+
   const isReady = !!(region && realm && name)
 
   useEffect(() => {
@@ -41,23 +45,17 @@ export const CharacterPage: NextPage<CharacterPageProps> = ({
     <div className="space-y-7">
       <CharacterPageHeader />
       <AchievementsGate category={category}>
-        <div className="grid grid-cols-12 gap-7">
-          <div className="col-span-3 bg-surface p-7 rounded-lg">
-            <AchievementCategories
-              category={category}
-              basePath={`character/${characterKey}`}
-            />
-          </div>
-          <div className="col-span-9 bg-surface p-7 rounded-lg">
-            <CharacterAchievements />
-          </div>
-        </div>
+        <Link href={`/character/${characterKey}/achievements`}>
+          Achievements
+        </Link>
       </AchievementsGate>
     </div>
   )
 }
 
-const CharacterRouteStruct = object({
+export default CharacterPage
+
+/* const CharacterRouteStruct = object({
   region: enums(BNET_REGIONS),
   realm: string(),
   name: string(),
@@ -77,3 +75,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     props: values,
   }
 }
+ */

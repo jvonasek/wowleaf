@@ -15,7 +15,7 @@ export const AchievementsGate: React.FC<AchievementsGateProps> = ({
     category,
   })
 
-  if (isSuccess) {
+  if (true) {
     return <>{children}</>
   }
 

@@ -22,5 +22,10 @@ export const CharacterPageHeader: React.FC = () => {
     { enabled: !!(region && realm && name) }
   )
 
-  return <div>{isSuccess && <CharacterCard {...character} />}</div>
+  return (
+    <div>
+      <input type="text" />
+      {isSuccess && <CharacterCard {...character} />}
+    </div>
+  )
 }

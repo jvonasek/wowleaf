@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
 import { LayoutTree } from '@moxy/next-layout'
 
-import { LayoutPrimary } from '@/components/LayoutPrimary'
+import { MainLayout } from '@/modules/layout/MainLayout'
 
 import '../styles/base.css'
 
@@ -25,7 +25,7 @@ class RootApp extends App {
           <LayoutTree
             Component={Component}
             pageProps={pageProps}
-            defaultLayout={<LayoutPrimary />}
+            defaultLayout={<MainLayout />}
           />
           <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>

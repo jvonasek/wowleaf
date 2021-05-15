@@ -6,6 +6,8 @@ import { AchievementsQueryResult } from '../types'
 export const useAchievementsStore = createStore(
   combine(
     {
+      isSuccess: false,
+      isLoading: false,
       byId: {},
       ids: [],
     } as AchievementsQueryResult,

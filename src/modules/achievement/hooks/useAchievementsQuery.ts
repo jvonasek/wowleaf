@@ -7,7 +7,7 @@ import { useAchievementsStore } from '../store/useAchievementsStore'
 
 import { Achievement } from '../types'
 
-const fetchWoWAchievements = (category) =>
+const fetchWoWAchievements = (category?: string[]) =>
   fetch(
     `/api/wow/achievements/${(category && category.join('/')) || ''}`
   ).then((res) => res.json())
@@ -23,7 +23,7 @@ type AchievementsHookResult = {
 
 export const useAchievementsQuery = ({
   category,
-}: AchievementHookOptions): AchievementsHookResult => {
+}: AchievementHookOptions = {}): AchievementsHookResult => {
   const { set } = useAchievementsStore()
 
   const { isSuccess, isLoading, data } = useQuery<Achievement[]>(
@@ -32,13 +32,22 @@ export const useAchievementsQuery = ({
   )
 
   useEffect(() => {
+    if (isLoading) {
+      set({
+        isLoading,
+        isSuccess,
+      })
+    }
+
     if (isSuccess) {
       set({
+        isSuccess,
+        isLoading,
         byId: groupById(data),
         ids: pluck('id', data),
       })
     }
-  }, [isSuccess, data, set])
+  }, [isSuccess, isLoading, data, set])
 
   return {
     isLoading: isLoading,

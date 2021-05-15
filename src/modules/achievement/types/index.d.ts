@@ -10,6 +10,8 @@ export type Achievement = BaseAchievement & {
 }
 
 export type AchievementsQueryResult = {
+  isLoading: boolean
+  isSuccess: boolean
   byId: Record<string, Achievement>
   ids: number[]
 }

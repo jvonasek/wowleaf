@@ -4,11 +4,11 @@ import Head from 'next/head'
 import { Container } from '@/components/Container'
 import { Header } from '@/components/Header'
 
-export type LayoutPrimaryProps = {
+export type MainLayoutProps = {
   children?: React.ReactNode
 }
 
-export const LayoutPrimary: React.FC<LayoutPrimaryProps> = ({ children }) => (
+export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => (
   <>
     <Head>
       <script>{`const whTooltips = {colorLinks: true, iconizeLinks: false, renameLinks: true, iconSize: true}`}</script>

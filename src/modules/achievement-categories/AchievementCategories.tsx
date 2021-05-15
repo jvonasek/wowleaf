@@ -1,42 +1,40 @@
-import { useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import Link from 'next/link'
 
+import { useCharacterStore } from '@/modules/character/store/useCharacterStore'
+
 export type AchievementCategoriesProps = {
   category?: string[]
-  basePath?: string
 }
 
-export const AchievementCategories: React.FC<AchievementCategoriesProps> = ({
-  category,
-  basePath = '',
-}) => {
-  const [categories, setCategories] = useState([])
-
-  const isRoot = !category
+export const AchievementCategories: React.FC<AchievementCategoriesProps> = () => {
+  const { characterKey } = useCharacterStore()
 
   const { isSuccess, data } = useQuery(
-    ['WoWAchievementCategories', category || 'index'],
-    () =>
-      fetch(
-        `/api/wow/categories/${(category && category.join('/')) || ''}`
-      ).then((res) => res.json())
+    ['WoWAchievementCategories', 'index'],
+    () => fetch('/api/wow/categories/').then((res) => res.json())
   )
-
-  useEffect(() => {
-    if (isSuccess && data) {
-      const categoryList = isRoot ? data : data.otherAchievementCategories
-      setCategories(categoryList)
-    }
-  }, [isSuccess, data, setCategories, isRoot])
 
   return (
     <div className="space-y-3">
+      <input type="text" />
       {data && <strong>{data.name}</strong>}
       {isSuccess &&
-        categories.map(({ id, name, slug }) => (
-          <div className="bg-surface p-3 rounded" key={id}>
-            <Link href={`/${basePath}/achievements/${slug}`}>{name}</Link>
+        data.map(({ id, name, slug, otherAchievementCategories }) => (
+          <div className="bg-surface p-3 rounded text-lg" key={id}>
+            <Link href={`/character/${characterKey}/achievements/${slug}`}>
+              {name}
+            </Link>
+            {otherAchievementCategories.length > 0 &&
+              otherAchievementCategories.map(({ id, name, slug }) => (
+                <div key={id} className="pl-4 text-sm">
+                  <Link
+                    href={`/character/${characterKey}/achievements/${slug}`}
+                  >
+                    {name}
+                  </Link>
+                </div>
+              ))}
           </div>
         ))}
     </div>

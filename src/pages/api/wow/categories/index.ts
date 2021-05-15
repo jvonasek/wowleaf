@@ -1,5 +1,22 @@
 import { createPrismaHandler } from '@/lib/createPrismaHandler'
-import prisma, { AchievementCategory } from '@/prisma/wow'
+import prisma, {
+  AchievementCategory as AchievementCategoryBase,
+} from '@/prisma/wow'
+
+type AchievementCategoryType = Pick<
+  AchievementCategoryBase,
+  'id' | 'name' | 'slug'
+>
+
+type AchievementCategory = AchievementCategoryType & {
+  otherAchievementCategories: AchievementCategoryType[]
+}
+
+const fields = {
+  id: true,
+  name: true,
+  slug: true,
+}
 
 const handle = createPrismaHandler<AchievementCategory[]>({
   selector: async () =>
@@ -8,11 +25,20 @@ const handle = createPrismaHandler<AchievementCategory[]>({
         parentCategoryId: null,
         isGuildCategory: false,
       },
-      orderBy: [
-        {
-          displayOrder: 'asc',
+      select: {
+        ...fields,
+        otherAchievementCategories: {
+          select: {
+            ...fields,
+          },
+          orderBy: {
+            displayOrder: 'asc',
+          },
         },
-      ],
+      },
+      orderBy: {
+        displayOrder: 'asc',
+      },
     }),
 })
 

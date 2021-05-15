@@ -48,3 +48,9 @@ export type CharacterAchievementProgress = {
   isCompleted: boolean
   showOverallProgressBar: boolean
 }
+
+type AchievementFilterProps = {
+  incomplete: boolean
+  reward: boolean
+  points: number
+}

@@ -1,8 +1,17 @@
 import { useState, useEffect } from 'react'
 import { LocalizedCharacterAchievement } from 'battlenet-api'
-import { pluck, clamp, prop, ascend, descend, sortWith } from 'ramda'
+import {
+  pluck,
+  clamp,
+  prop,
+  ascend,
+  descend,
+  sortWith,
+  filter,
+  allPass,
+} from 'ramda'
 import { groupById, percentage, round } from '@/lib/utils'
-import { useQueriesTyped } from '@/lib/useQueriesTyped'
+import { useTypeSafeQueries } from '@/hooks/useTypeSafeQueries'
 import { CRITERIA_OPERATOR_MAP } from '@/lib/constants'
 
 import { useAchievementsStore } from '@/modules/achievement/store/useAchievementsStore'
@@ -12,6 +21,7 @@ import {
 } from '../store/useCharacterAchievementsStore'
 
 import {
+  AchievementFilterProps,
   CharacterAchievementProgress,
   CharacterAchievementCriterionProgress,
   CharacterAchievementsQueryResult,
@@ -23,6 +33,8 @@ import {
   Achievement,
   AchievementsQueryResult,
 } from '@/modules/achievement/types'
+
+import { useAchievementsFilterStore } from '../store/useAchievementsFilterStore'
 
 type CharacterAchievementsHookProps = {
   isLoading: boolean
@@ -51,12 +63,15 @@ export const useCharacterAchievementsQuery = (
   { enabled = false }: CharacterQueryOptions = {}
 ): CharacterAchievementsHookProps => {
   const achievementsData = useAchievementsStore()
+  const filter = useAchievementsFilterStore((state) => state.filter)
+
   const { set } = useCharacterAchievementsStore()
   const [status, setStatus] = useState({ isSet: false })
 
-  const queries = useQueriesTyped(
+  const queries = useTypeSafeQueries(
     characters.map(({ region, realm, name, characterKey }) => {
-      const queryEnabled = enabled && !!characterKey
+      const queryEnabled =
+        enabled && !!characterKey && achievementsData.isSuccess
       return {
         queryKey: ['BnetCharacterAchievements', characterKey],
         queryFn: () => fetchCharacter({ region, realm, name }),
@@ -69,7 +84,7 @@ export const useCharacterAchievementsQuery = (
   const isLoading = queries.some((q) => q.isLoading)
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && achievementsData.isSuccess) {
       const characterData = queries.map(({ data }, index) => ({
         data,
         character: characters[index],
@@ -77,10 +92,9 @@ export const useCharacterAchievementsQuery = (
 
       const characterProgressArray = createCharacterProgressArray(
         characterData,
-        achievementsData
+        achievementsData,
+        filter
       )
-
-      console.log(characterData)
 
       const charactersAchievements = characterProgressArray.reduce(
         (prev, character) => {
@@ -96,7 +110,7 @@ export const useCharacterAchievementsQuery = (
       setStatus({ isSet: true })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSuccess, achievementsData, set])
+  }, [isSuccess, filter, achievementsData, achievementsData.isSuccess, set])
 
   return {
     isLoading: isLoading && !status.isSet,
@@ -109,7 +123,8 @@ function createCharacterProgressArray(
     data: CharacterAchievementsQueryResult
     character: CharacterParams
   }>,
-  achievements: AchievementsQueryResult
+  achievements: AchievementsQueryResult,
+  filterValues: AchievementFilterProps
 ) {
   return characters.map(({ data, character: { characterKey } }) => {
     const achievementProgress = achievements.ids.map((id) =>
@@ -125,8 +140,35 @@ function createCharacterProgressArray(
       },
     ]
 
-    const filtered = achievementProgress.filter(
-      ({ percent, isCompleted }) => true //percent < 100 && !isCompleted
+    const isIncompleteFilter = ({ percent, isCompleted }) => {
+      if (filterValues.incomplete) {
+        return !isCompleted && percent < 100
+      }
+
+      return true
+    }
+
+    const pointsFilter = ({ id }) => {
+      const achievement = achievements?.byId?.[id]
+      if (achievement && filterValues.points > 0) {
+        return achievement.points >= filterValues.points
+      }
+
+      return true
+    }
+
+    const rewardFilter = ({ id }) => {
+      const achievement = achievements?.byId?.[id]
+      if (achievement && filterValues.reward) {
+        return !!achievement.rewardDescription
+      }
+
+      return true
+    }
+
+    const filtered = filter<CharacterAchievementProgress>(
+      allPass([isIncompleteFilter, pointsFilter, rewardFilter]),
+      achievementProgress
     )
 
     const sorted = sortWith<CharacterAchievementProgress>(
