@@ -1,10 +1,20 @@
 import { useQuery } from 'react-query'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 import { useCharacterStore } from '@/modules/character/store/useCharacterStore'
 
 export type AchievementCategoriesProps = {
   category?: string[]
+}
+
+const ActiveLink = ({ children, href }) => {
+  const router = useRouter()
+  return (
+    <Link href={href} passHref>
+      <a className={router.asPath === href ? 'text-accent' : ''}>{children}</a>
+    </Link>
+  )
 }
 
 export const AchievementCategories: React.FC<AchievementCategoriesProps> = () => {
@@ -22,17 +32,19 @@ export const AchievementCategories: React.FC<AchievementCategoriesProps> = () =>
       {isSuccess &&
         data.map(({ id, name, slug, otherAchievementCategories }) => (
           <div className="bg-surface p-3 rounded text-lg" key={id}>
-            <Link href={`/character/${characterKey}/achievements/${slug}`}>
+            <ActiveLink
+              href={`/character/${characterKey}/achievements/${slug}`}
+            >
               {name}
-            </Link>
+            </ActiveLink>
             {otherAchievementCategories.length > 0 &&
               otherAchievementCategories.map(({ id, name, slug }) => (
                 <div key={id} className="pl-4 text-sm">
-                  <Link
+                  <ActiveLink
                     href={`/character/${characterKey}/achievements/${slug}`}
                   >
                     {name}
-                  </Link>
+                  </ActiveLink>
                 </div>
               ))}
           </div>

@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import dynamic from 'next/dynamic'
 import { useForm, useWatch } from 'react-hook-form'
 import { superstructResolver } from '@hookform/resolvers/superstruct'
 import { create, object, boolean, number } from 'superstruct'
@@ -13,7 +14,7 @@ const FilterFormStruct = object({
   points: number(),
 })
 
-export const CharacterAchievementsFilter: React.FC = () => {
+const _CharacterAchievementsFilter: React.FC = () => {
   const { setFilter, filter } = useAchievementsFilterStore()
   const {
     watch,
@@ -48,3 +49,10 @@ export const CharacterAchievementsFilter: React.FC = () => {
     </form>
   )
 }
+
+export const CharacterAchievementsFilter = dynamic(
+  () => Promise.resolve(_CharacterAchievementsFilter),
+  {
+    ssr: false,
+  }
+)

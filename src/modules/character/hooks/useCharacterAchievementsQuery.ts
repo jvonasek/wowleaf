@@ -228,7 +228,14 @@ function transformCharacterAchievementsData(
 }
 
 function createAchievementProgress(
-  { id, name, criteria, criteriaOperator, requiredCriteriaAmount }: Achievement,
+  {
+    id,
+    name,
+    criteria,
+    criteriaOperator,
+    requiredCriteriaAmount,
+    categoryId,
+  }: Achievement,
   characterAchievement?: CharacterAchievement
 ): CharacterAchievementProgress {
   if (!characterAchievement)
@@ -285,9 +292,40 @@ function createAchievementProgress(
     }
   )
 
-  const percent = hasChildCriteria
+  let percent = hasChildCriteria
     ? overallCriteriaProgress
     : percentage(clamp(0, requiredAmount, partialAmount), requiredAmount, 1)
+
+  let criteriaProgressArray = criteriaProgress
+
+  // Fix criteria in completed achievements (lich king dungeon),
+  // where last criterion is completed, but not previous ones
+  const categoriesWithoutMatchingCriteria = [14806]
+  if (categoriesWithoutMatchingCriteria.includes(categoryId)) {
+    const isCompletedWithoutMatchingCriteria =
+      isCompleted &&
+      percent > 0 &&
+      percent < 100 &&
+      criteriaProgress.length >= 3 &&
+      criteriaProgress.length <= 5
+
+    if (isCompletedWithoutMatchingCriteria) {
+      const completedCriteria = criteriaProgress.filter(
+        ({ isCompleted }) => isCompleted
+      )
+
+      // force 100% completion on all criteria when only some are completed (usually last boss)
+      if (completedCriteria.length > 0) {
+        console.log('fixing', name)
+        percent = 100
+        criteriaProgressArray = criteriaProgress.map((criterion) => ({
+          ...criterion,
+          isCompleted: true,
+          percent: 100,
+        }))
+      }
+    }
+  }
 
   return {
     id,
@@ -299,7 +337,7 @@ function createAchievementProgress(
     required: requiredAmount,
     showOverallProgressBar: !hasChildCriteria && requiredAmount >= 5,
     criteria: groupById<CharacterAchievementCriterionProgress>(
-      criteriaProgress
+      criteriaProgressArray
     ),
   }
 }
