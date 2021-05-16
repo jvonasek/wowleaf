@@ -39,6 +39,14 @@ const CharacterPage: NextPage<CharacterPageProps> = () => {
         characterKey: `${region}/${realm}/${name}`.toLowerCase(),
       })
     }
+
+    return () => {
+      set({
+        realm: '',
+        name: '',
+        characterKey: '',
+      })
+    }
   }, [isReady, region, realm, name, set])
 
   return (

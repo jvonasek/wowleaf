@@ -24,6 +24,7 @@
       "@/store/*": ["src/store/*"],
       "@/pages/*": ["src/pages/*"],
       "@/lib/*": ["src/lib/*"],
+      "@/services/*": ["src/services/*"],
       "@/hooks/*": ["src/hooks/*"],
       "@/types/*": ["src/types/*"],
       "@/types": ["src/types/"],

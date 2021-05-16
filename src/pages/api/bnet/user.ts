@@ -23,6 +23,7 @@ const handle: NextApiHandler = (req, res) =>
       return await wow.getUserProfile()
     },
     callback: (result) => {
+      console.log(result)
       if (result.error) {
         return result
       }

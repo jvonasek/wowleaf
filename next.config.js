@@ -1,9 +1,9 @@
 const withMDX = require('@next/mdx')()
 
 module.exports = withMDX({
-  images: {
-    domains: ['render-eu.worldofwarcraft.com'],
-  },
+  /* future: {
+    webpack5: true,
+  }, */
   typescript: {
     // !! WARN !!
     // Dangerously allow production builds to successfully complete even if

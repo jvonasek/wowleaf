@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import ms from 'ms.macro'
 
-import { RedisCacheService } from '../services'
+import { RedisCacheService } from '@/services/RedisCacheService'
 import getJWT from '@/lib/getJWT'
 import { responseErrorMessage } from '@/lib/responseErrorMessage'
 import { JWToken } from '@/types'
@@ -23,7 +23,14 @@ export interface CacheAPIOptions<R> {
   callback: (result: R, token: JWToken) => any
 }
 
-const cacheAPI = async <R>(
+export interface GenericApiResponse<R = any> {
+  code: number
+  message: string
+  error: boolean
+  data?: R
+}
+
+const cacheAPI = async <R extends GenericApiResponse>(
   req: NextApiRequest,
   res: NextApiResponse,
   {
@@ -45,11 +52,12 @@ const cacheAPI = async <R>(
   const cache = new RedisCacheService()
   const redisKey = createRedisKey(key, token)
 
+  const payload = await method(req, res, token)
   const data = await cache.save<R>({
     key: redisKey,
     expiration,
-    purge,
-    payload: async () => await method(req, res, token),
+    purge: purge || payload.error,
+    payload,
   })
 
   if (data) {

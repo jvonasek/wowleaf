@@ -36,6 +36,14 @@ export const CharacterAchievementsLayout: NextPage<CharacterAchievementsLayoutPr
         characterKey: `${region}/${realm}/${name}`.toLowerCase(),
       })
     }
+
+    return () => {
+      set({
+        realm: '',
+        name: '',
+        characterKey: '',
+      })
+    }
   }, [isReady, region, realm, name, set])
 
   return (

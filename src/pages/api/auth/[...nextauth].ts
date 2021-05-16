@@ -3,7 +3,7 @@ import { add } from 'date-fns'
 import NextAuth from 'next-auth'
 import Adapters from 'next-auth/adapters'
 import { BattleNetRegion } from 'battlenet-api'
-import { RedisCacheService } from '../../../services'
+import { RedisCacheService } from '@/services/RedisCacheService'
 
 import { JWToken } from '@/types'
 import prisma from '@/prisma/app'

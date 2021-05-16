@@ -12,9 +12,10 @@ const FilterFormStruct = object({
   incomplete: boolean(),
   reward: boolean(),
   points: number(),
+  includeAccountWide: boolean(),
 })
 
-const _CharacterAchievementsFilter: React.FC = () => {
+export const _CharacterAchievementsFilter: React.FC = () => {
   const { setFilter, filter } = useAchievementsFilterStore()
   const {
     watch,
@@ -36,16 +37,28 @@ const _CharacterAchievementsFilter: React.FC = () => {
 
   return (
     <form onSubmit={handleSubmit((d) => console.log(d))}>
-      <input {...register('incomplete')} type="checkbox" /> Incomplete Only
-      <input {...register('reward')} type="checkbox" /> With Reward
-      <input
-        {...register('points', { valueAsNumber: true })}
-        type="range"
-        min={0}
-        max={25}
-        step={1}
-      />
-      {pointsValue} points
+      <div className="flex align-center space-x-4">
+        <span>
+          <input {...register('incomplete')} type="checkbox" /> Incomplete Only
+        </span>
+        <span>
+          <input {...register('reward')} type="checkbox" /> With Reward
+        </span>
+        <span>
+          <input {...register('includeAccountWide')} type="checkbox" /> Include
+          account wide
+        </span>
+        <span>
+          <input
+            {...register('points', { valueAsNumber: true })}
+            type="range"
+            min={0}
+            max={25}
+            step={1}
+          />
+          {pointsValue} points
+        </span>
+      </div>
     </form>
   )
 }

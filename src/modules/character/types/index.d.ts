@@ -1,10 +1,13 @@
 import { BattleNetRegion } from '@/types'
+import { LocalizedCharacterMedia } from 'battlenet-api'
+export type { CharacterMediaTypes } from 'battlenet-api'
+
+export type CharacterMediaAssets = LocalizedCharacterMedia['assets']
 
 export type CharacterParams = {
   region: BattleNetRegion
   realm: string
   name: string
-  characterKey: string
 }
 
 export type CharacterAchievement = {
@@ -49,8 +52,9 @@ export type CharacterAchievementProgress = {
   showOverallProgressBar: boolean
 }
 
-type AchievementFilterProps = {
+export type AchievementFilterProps = {
   incomplete: boolean
   reward: boolean
+  includeAccountWide: boolean
   points: number
 }

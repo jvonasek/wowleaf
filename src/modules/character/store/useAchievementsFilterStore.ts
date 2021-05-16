@@ -10,15 +10,21 @@ type AchievementFilterStore = {
 export const useAchievementsFilterStore = createPersistedStore(
   combine(
     {
-      filter: { incomplete: false, points: 1, reward: false },
+      filter: {
+        incomplete: false,
+        reward: false,
+        includeAccountWide: true,
+        points: 1,
+      },
     } as AchievementFilterStore,
     (set) => ({
-      setFilter: (filter: AchievementFilterProps) =>
-        set((state) => ({ ...state, filter: { ...state.filter, ...filter } })),
+      setFilter: (filter: AchievementFilterProps) => {
+        set((state) => ({ ...state, filter: { ...state.filter, ...filter } }))
+      },
     })
   ),
   {
     name: 'achievementsFilter',
-    version: 5,
+    version: 9,
   }
 )

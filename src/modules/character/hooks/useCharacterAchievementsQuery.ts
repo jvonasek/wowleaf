@@ -63,7 +63,7 @@ export const useCharacterAchievementsQuery = (
   { enabled = false }: CharacterQueryOptions = {}
 ): CharacterAchievementsHookProps => {
   const achievementsData = useAchievementsStore()
-  const filter = useAchievementsFilterStore((state) => state.filter)
+  const filterValues = useAchievementsFilterStore((state) => state.filter)
 
   const { set } = useCharacterAchievementsStore()
   const [status, setStatus] = useState({ isSet: false })
@@ -93,7 +93,7 @@ export const useCharacterAchievementsQuery = (
       const characterProgressArray = createCharacterProgressArray(
         characterData,
         achievementsData,
-        filter
+        filterValues
       )
 
       const charactersAchievements = characterProgressArray.reduce(
@@ -110,7 +110,13 @@ export const useCharacterAchievementsQuery = (
       setStatus({ isSet: true })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSuccess, filter, achievementsData, achievementsData.isSuccess, set])
+  }, [
+    isSuccess,
+    filterValues,
+    achievementsData,
+    achievementsData.isSuccess,
+    set,
+  ])
 
   return {
     isLoading: isLoading && !status.isSet,
@@ -140,7 +146,10 @@ function createCharacterProgressArray(
       },
     ]
 
-    const isIncompleteFilter = ({ percent, isCompleted }) => {
+    const isIncompleteFilter = ({
+      percent,
+      isCompleted,
+    }: CharacterAchievementProgress) => {
       if (filterValues.incomplete) {
         return !isCompleted && percent < 100
       }
@@ -148,7 +157,16 @@ function createCharacterProgressArray(
       return true
     }
 
-    const pointsFilter = ({ id }) => {
+    const isAccountWideFilter = ({ id }: CharacterAchievementProgress) => {
+      const achievement = achievements?.byId?.[id]
+      if (achievement && filterValues.includeAccountWide === false) {
+        return !achievement.isAccountWide
+      }
+
+      return true
+    }
+
+    const pointsFilter = ({ id }: CharacterAchievementProgress) => {
       const achievement = achievements?.byId?.[id]
       if (achievement && filterValues.points > 0) {
         return achievement.points >= filterValues.points
@@ -157,7 +175,7 @@ function createCharacterProgressArray(
       return true
     }
 
-    const rewardFilter = ({ id }) => {
+    const rewardFilter = ({ id }: CharacterAchievementProgress) => {
       const achievement = achievements?.byId?.[id]
       if (achievement && filterValues.reward) {
         return !!achievement.rewardDescription
@@ -167,7 +185,12 @@ function createCharacterProgressArray(
     }
 
     const filtered = filter<CharacterAchievementProgress>(
-      allPass([isIncompleteFilter, pointsFilter, rewardFilter]),
+      allPass([
+        isIncompleteFilter,
+        isAccountWideFilter,
+        pointsFilter,
+        rewardFilter,
+      ]),
       achievementProgress
     )
 
@@ -281,8 +304,8 @@ function createAchievementProgress(
   )
 
   const hasChildCriteria = criteriaProgress.length > 0
-  const criteriaAmount = characterAchievement?.criteria?.amount || 0
-  const partialAmount = isCompleted && criteriaAmount === 0 ? 1 : criteriaAmount
+  //const criteriaAmount = characterAchievement?.criteria?.amount || 0
+  const partialAmount = characterAchievement?.criteria?.amount || 0 // isCompleted && criteriaAmount === 0 ? 1 : criteriaAmount
   const requiredAmount = requiredCriteriaAmount || 1
   const overallCriteriaProgress = calculateOverallCriteriaProgress(
     criteriaProgress,
@@ -316,7 +339,6 @@ function createAchievementProgress(
 
       // force 100% completion on all criteria when only some are completed (usually last boss)
       if (completedCriteria.length > 0) {
-        console.log('fixing', name)
         percent = 100
         criteriaProgressArray = criteriaProgress.map((criterion) => ({
           ...criterion,

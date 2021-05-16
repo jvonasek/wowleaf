@@ -1,14 +1,22 @@
 import {
   LocalizedCharacter,
+  LocalizedCharacterMedia,
   UserProfile,
   WoWAccountCharacter,
 } from 'battlenet-api'
 import { CharacterProps } from '@/types'
 
-type ResponseType = 'character' | 'userProfile' | 'characterAchievements'
+type ResponseType =
+  | 'character'
+  | 'userProfile'
+  | 'characterAchievements'
+  | 'characterMedia'
 type CharacterNormalizer = (res: LocalizedCharacter) => CharacterProps
 type UserProfileNormalizer = (res: UserProfile) => CharacterProps[]
 type CharacterAchievementsNormalizer = (res: any) => any
+type CharacterMediaNormalizer = (
+  res: LocalizedCharacterMedia
+) => LocalizedCharacterMedia['assets']
 
 type Normalizers<T> = T extends 'character'
   ? CharacterNormalizer
@@ -16,6 +24,8 @@ type Normalizers<T> = T extends 'character'
   ? UserProfileNormalizer
   : T extends 'characterAchievements'
   ? CharacterAchievementsNormalizer
+  : T extends 'characterMedia'
+  ? CharacterMediaNormalizer
   : never
 
 export const normalizeBattleNetData = <T extends ResponseType>(
@@ -23,6 +33,7 @@ export const normalizeBattleNetData = <T extends ResponseType>(
 ): Normalizers<T> => {
   const normalizers = {
     character: normalizeCharacter as CharacterNormalizer,
+    characterMedia: normalizeCharacterMedia as CharacterMediaNormalizer,
     userProfile: normalizeUserProfile as UserProfileNormalizer,
     characterAchievements: normalizeCharacterAchievements as CharacterAchievementsNormalizer,
   }
@@ -72,4 +83,10 @@ function normalizeUserProfile(res: UserProfile): CharacterProps[] {
 
 function normalizeCharacterAchievements(res: any): any {
   return res.achievements
+}
+
+function normalizeCharacterMedia(
+  res: LocalizedCharacterMedia
+): LocalizedCharacterMedia['assets'] {
+  return res.assets
 }

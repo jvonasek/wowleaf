@@ -3,6 +3,10 @@ import { combine } from 'zustand/middleware'
 
 import { CharacterParams } from '../types'
 
+type CharacterStoreProps = CharacterParams & {
+  characterKey: string
+}
+
 export const useCharacterStore = createStore(
   combine(
     {
@@ -10,7 +14,7 @@ export const useCharacterStore = createStore(
       realm: '',
       name: '',
       characterKey: '',
-    } as CharacterParams,
+    } as CharacterStoreProps,
     (set) => ({ set })
   )
 )

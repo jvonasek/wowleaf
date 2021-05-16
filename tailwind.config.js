@@ -171,5 +171,9 @@ module.exports = {
     './src/pages/**/*.{js,ts,jsx,tsx}',
     './src/styles/safelist.txt',
   ],
-  plugins: [require('@tailwindcss/forms'), themeSwapper(themeSwapperConfig)],
+  plugins: [
+    require('@tailwindcss/forms'),
+    require('@tailwindcss/aspect-ratio'),
+    themeSwapper(themeSwapperConfig),
+  ],
 }

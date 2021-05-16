@@ -34,11 +34,11 @@ const handle: NextApiHandler = (req, res) => {
         accessToken,
         region: region,
       })
+
       return await wow.getCharacter(realm, name)
     },
     callback: async (result, token) => {
-      //@TODO handle errors
-      if (result.error) return result
+      if (result.error) return {}
 
       switch (method) {
         case 'GET':

@@ -3,7 +3,7 @@ import { promisify } from 'util'
 
 import { GenericObject } from '@/types'
 
-class RedisCacheService {
+export class RedisCacheService {
   protected cache = redis.createClient({
     url: process.env.REDIS_URL,
   })
@@ -72,7 +72,7 @@ class RedisCacheService {
     key: string
     expiration: number
     purge?: boolean
-    payload: () => Promise<T>
+    payload: T
   }): Promise<T> {
     if (purge) await this.delete(key)
 
@@ -81,10 +81,8 @@ class RedisCacheService {
       return await this.get<T>(key)
     }
 
-    const data = await payload()
-    const success = await this.set<T>(key, data, expiration)
-    return success ? data : null
+    //const data = await payload()
+    const success = await this.set<T>(key, payload, expiration)
+    return success ? payload : null
   }
 }
-
-export default RedisCacheService

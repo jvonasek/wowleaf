@@ -1,6 +1,7 @@
 import { useQuery } from 'react-query'
 import { getSession } from 'next-auth/client'
 import { NextPage } from 'next'
+import { Character } from '@/prisma/app'
 
 import { CharacterCard } from '@/components/CharacterCard'
 import { CharacterSearch } from '@/modules/character-search/CharacterSearch'
@@ -10,10 +11,12 @@ import { AchievementsGate } from '@/modules/achievement/AchievementsGate'
 const getUserCharacters = () =>
   fetch(`/api/user/characters`).then((res) => res.json())
 
-const Index: NextPage = () => {
-  const { isSuccess, data: characters } = useQuery(
+const Index: NextPage = ({ session }) => {
+  console.log(session)
+  const { isSuccess, data: characters } = useQuery<Character[]>(
     'UserCharacters',
-    getUserCharacters
+    getUserCharacters,
+    { enabled: !!session }
   )
   return (
     <div>
@@ -22,7 +25,9 @@ const Index: NextPage = () => {
       </div>
       <div className="grid grid-cols-4 gap-3">
         {isSuccess &&
-          characters.map((char) => <CharacterCard key={char.id} {...char} />)}
+          characters.map((char) => (
+            <CharacterCard region="eu" key={char.id} {...char} />
+          ))}
       </div>
       <AchievementsGate>
         {isSuccess && <DashboardPage characters={characters} />}
