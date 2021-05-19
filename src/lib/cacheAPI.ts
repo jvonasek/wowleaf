@@ -4,7 +4,7 @@ import ms from 'ms.macro'
 import { RedisCacheService } from '@/services/RedisCacheService'
 import getJWT from '@/lib/getJWT'
 import { responseErrorMessage } from '@/lib/responseErrorMessage'
-import { JWToken } from '@/types'
+import { JWToken, BattleNetResponse } from '@/types'
 import createRedisKey, {
   RedisCacheKey,
   RedisCacheKeyFactory,
@@ -23,14 +23,7 @@ export interface CacheAPIOptions<R> {
   callback: (result: R, token: JWToken) => any
 }
 
-export interface GenericApiResponse<R = any> {
-  code: number
-  message: string
-  error: boolean
-  data?: R
-}
-
-const cacheAPI = async <R extends GenericApiResponse>(
+const cacheAPI = async <R extends BattleNetResponse>(
   req: NextApiRequest,
   res: NextApiResponse,
   {

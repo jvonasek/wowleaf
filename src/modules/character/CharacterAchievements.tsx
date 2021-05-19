@@ -14,7 +14,7 @@ import { useWowheadLinks } from '@/hooks/useWowheadLinks'
 export const CharacterAchievements: React.FC = () => {
   const [achIds, setAchIds] = useState([])
 
-  const { region, realm, name, characterKey } = useCharacterStore()
+  const { region, realmSlug, name, characterKey } = useCharacterStore()
   const {
     get,
     isLoading: isAchsLoading,
@@ -24,9 +24,12 @@ export const CharacterAchievements: React.FC = () => {
   const {
     isLoading: isCharAchsLoading,
     isSuccess: isCharAchsSuccess,
-  } = useCharacterAchievementsQuery([{ region, realm, name, characterKey }], {
-    enabled: !!characterKey,
-  })
+  } = useCharacterAchievementsQuery(
+    [{ region, realmSlug, name, characterKey }],
+    {
+      enabled: !!characterKey,
+    }
+  )
 
   const isLoading = isAchsLoading || isCharAchsLoading
   const isSuccess = isAchsSuccess && isCharAchsSuccess

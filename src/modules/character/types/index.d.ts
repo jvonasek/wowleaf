@@ -6,7 +6,7 @@ export type CharacterMediaAssets = LocalizedCharacterMedia['assets']
 
 export type CharacterParams = {
   region: BattleNetRegion
-  realm: string
+  realmSlug: string
   name: string
 }
 
@@ -46,7 +46,7 @@ export type CharacterAchievementProgress = {
   percent: number
   partial: number
   required: number
-  criteria: Record<string, AchievementCriterionProgress>
+  criteria: Record<string, CharacterAchievementCriterionProgress>
   completedTimestamp?: number
   isCompleted: boolean
   showOverallProgressBar: boolean

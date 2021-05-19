@@ -3,6 +3,7 @@ Todo:
     ☐ Achievement Filtering and Sorting (by completion %, by reward type, by expansion)
     ☐ Return only horde/alliance achievements
     ☐ Fetch character media
+    ☐ Fetch achievements and criteria only for matching faction
   Dashboard / Multi Character View:
     ☐ Fetch only necessary fields for all achievements
     ☐ Create dashboard with helpful statistics (expansion based?)

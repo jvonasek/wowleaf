@@ -1,18 +1,15 @@
 import { useEffect } from 'react'
-import { useQuery } from 'react-query'
+import { UseQueryOptions, useQuery } from 'react-query'
 import { pluck } from 'ramda'
 
 import { groupById } from '@/lib/utils'
 import { useAchievementsStore } from '../store/useAchievementsStore'
 
 import { Achievement } from '../types'
+import { Faction } from '@/types'
 
-const fetchWoWAchievements = (category?: string[]) =>
-  fetch(
-    `/api/wow/achievements/${(category && category.join('/')) || ''}`
-  ).then((res) => res.json())
-
-type AchievementHookOptions = {
+type AchievementHookParams = {
+  factionId: Faction
   category?: string[]
 }
 
@@ -21,14 +18,27 @@ type AchievementsHookResult = {
   isSuccess: boolean
 }
 
-export const useAchievementsQuery = ({
+const fetchWoWAchievements = async ({
+  factionId,
   category,
-}: AchievementHookOptions = {}): AchievementsHookResult => {
+}: AchievementHookParams) => {
+  const slug = (category && category.join('/')) || ''
+  const params = factionId ? new URLSearchParams({ factionId }) : ''
+  return fetch(`/api/wow/achievements/${slug}?${params}`).then((res) =>
+    res.json()
+  )
+}
+
+export const useAchievementsQuery = (
+  { category, factionId }: AchievementHookParams = { factionId: null },
+  options?: UseQueryOptions<Achievement[]>
+): AchievementsHookResult => {
   const { set } = useAchievementsStore()
 
   const { isSuccess, isLoading, data } = useQuery<Achievement[]>(
     ['WoWAchievements', category || 'index'],
-    () => fetchWoWAchievements(category)
+    () => fetchWoWAchievements({ category, factionId }),
+    options
   )
 
   useEffect(() => {

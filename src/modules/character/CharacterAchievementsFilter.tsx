@@ -53,7 +53,7 @@ export const _CharacterAchievementsFilter: React.FC = () => {
             {...register('points', { valueAsNumber: true })}
             type="range"
             min={0}
-            max={25}
+            max={50}
             step={1}
           />
           {pointsValue} points

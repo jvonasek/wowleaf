@@ -22,6 +22,7 @@ export const AchievementCard: React.FC<Achievement> = memo(
     name,
     description,
     criteria,
+    factionId,
     rewardDescription,
     rewardItemId,
     achievementAssets,
@@ -122,6 +123,7 @@ export const AchievementCard: React.FC<Achievement> = memo(
           </div>
           <div className="col-span-3 flex items-center">
             <div className="w-full">
+              <span>{factionId}</span>
               <div className="flex items-center">
                 <div className="h-2 w-full rounded-full bg-background">
                   <div

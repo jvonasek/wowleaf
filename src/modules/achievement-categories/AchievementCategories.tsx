@@ -27,7 +27,6 @@ export const AchievementCategories: React.FC<AchievementCategoriesProps> = () =>
 
   return (
     <div className="space-y-3">
-      <input type="text" />
       {data && <strong>{data.name}</strong>}
       {isSuccess &&
         data.map(({ id, name, slug, otherAchievementCategories }) => (

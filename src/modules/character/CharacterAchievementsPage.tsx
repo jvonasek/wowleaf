@@ -1,34 +1,109 @@
 import { NextPage, GetServerSideProps } from 'next'
 import { useEffect } from 'react'
-import { enums, object, string, optional, array } from 'superstruct'
-import { useRouter } from 'next/router'
-import { withLayout } from '@moxy/next-layout'
 
-import { useTypeSafeRouter } from '@/hooks/useTypeSafeRouter'
-
-import { CharacterAchievementsLayout } from '@/modules/layout/CharacterAchievementsLayout'
-import { MainLayout } from '@/modules/layout/MainLayout'
-
-import { CharacterAchievements } from './CharacterAchievements'
-
-import { CharacterParams } from './types'
+import { AchievementCategories } from '@/modules/achievement-categories/AchievementCategories'
+import { useAchievementsQuery } from '@/modules/achievement/hooks/useAchievementsQuery'
+import { CharacterPageHeader } from '@/modules/character/CharacterPageHeader'
+import { CharacterAchievements } from '@/modules/character/CharacterAchievements'
+import {
+  initialCharacterState,
+  useCharacterStore,
+} from '@/modules/character/store/useCharacterStore'
 
 import { CharacterRouteStruct } from '@/lib/structs'
+import { createCharacterKey } from '@/lib/createCharacterKey'
+import { CharacterProps, BattleNetResponse } from '@/types'
 
-type CharacterAchievementsPageProps = Omit<CharacterParams, 'characterKey'> & {
-  category: string[]
+type CharacterAchievementsPageProps = {
+  category?: string[]
+  character: CharacterProps
 }
 
-const CharacterAchievementsPage: NextPage<CharacterAchievementsPageProps> = () => {
-  const {
-    query: { category },
-  } = useTypeSafeRouter(CharacterRouteStruct)
-
-  return <CharacterAchievements />
+const fetchCharacter = async ({
+  region,
+  realm,
+  name,
+}): Promise<BattleNetResponse<CharacterProps>> => {
+  return fetch(
+    `${process.env.NEXTAUTH_URL}/api/bnet/character/${region}/${realm}/${name}`,
+    { method: 'GET' }
+  ).then((res) => res.json())
 }
 
-export default withLayout(
-  <MainLayout>
-    <CharacterAchievementsLayout />
-  </MainLayout>
-)(CharacterAchievementsPage)
+export const CharacterAchievementsPage: NextPage<CharacterAchievementsPageProps> = ({
+  category,
+  character,
+}) => {
+  const { set } = useCharacterStore()
+  const { region, realmSlug, name } = character
+
+  const characterKey = createCharacterKey({ region, realmSlug, name })
+
+  useEffect(() => {
+    if (characterKey) {
+      set({
+        region,
+        ...character,
+        characterKey,
+      })
+    }
+
+    return () => {
+      set(initialCharacterState)
+    }
+  }, [character, characterKey, region, set])
+
+  useAchievementsQuery(
+    {
+      category,
+      factionId: character?.faction,
+    },
+    {
+      enabled: !!characterKey,
+    }
+  )
+
+  return (
+    <div className="space-y-7">
+      <CharacterPageHeader />
+      <div className="grid grid-cols-12 gap-7">
+        <div className="col-span-3 bg-surface p-7 rounded-lg">
+          <AchievementCategories />
+        </div>
+        <div className="col-span-9 bg-surface p-7 rounded-lg">
+          <CharacterAchievements />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const [err, query] = CharacterRouteStruct.validate(context.query)
+  console.log(query)
+
+  if (err || !query) {
+    return {
+      notFound: true,
+    }
+  }
+
+  const { region, realm, name, category } = query
+  const character = await fetchCharacter({ region, realm, name })
+
+  if (character.error) {
+    return {
+      notFound: true,
+    }
+  }
+
+  return {
+    props: {
+      category: category || null,
+      character: {
+        region,
+        ...character.data,
+      },
+    },
+  }
+}

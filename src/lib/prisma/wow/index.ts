@@ -1,5 +1,6 @@
-import { PrismaClient } from '../../../prisma/generated/wow-client'
-export * from '../../../prisma/generated/wow-client'
+import { PrismaClient } from '../../../../prisma/generated/wow-client'
+export * from '../../../../prisma/generated/wow-client'
+export * from './selectors'
 
 interface CustomNodeJsGlobal extends NodeJS.Global {
   prisma2: PrismaClient

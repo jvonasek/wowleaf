@@ -61,7 +61,7 @@ model Achievement {
   rewardDescription                                                     String?                @map("reward_description")
   rewardItemId                                                          Int?                   @map("reward_item_id")
   requiredCriteriaAmount                                                Int?                   @map("required_criteria_amount")
-  criteriaOperator                                                      Int?                   @map("criteria_operator")
+  criteriaOperator                                                      String?                @map("criteria_operator")
   achievementCategory                                                   AchievementCategory?   @relation("achievement_categoriesToachievements", fields: [categoryId], references: [id])
   achievementsAchievementsToachievementsNextAchievementId               Achievement?           @relation("achievementsToachievements_next_achievement_id", fields: [nextAchievementId], references: [id])
   achievementsAchievementsToachievementsPrerequisiteAchievementId       Achievement?           @relation("achievementsToachievements_prerequisite_achievement_id", fields: [prerequisiteAchievementId], references: [id])
@@ -70,35 +70,29 @@ model Achievement {
   otherAchievementsAchievementsToachievementsNextAchievementIds         Achievement[]          @relation("achievementsToachievements_next_achievement_id")
   otherAchievementsAchievementsToachievementsPrerequisiteAchievementIds Achievement[]          @relation("achievementsToachievements_prerequisite_achievement_id")
   criteria                                                              Criterion[]            @relation("achievementsTocriteria")
+  criteriaAchievementsTocriteriaLinkedAchievementId                     Criterion[]            @relation("achievementsTocriteria_linked_achievement_id")
 
   @@map("achievements")
 }
 
 model Criterion {
-  id                  Int                    @id
-  description         String?
-  amount              Int?
-  showProgressBar     Boolean?               @map("show_progress_bar")
-  isGold              Boolean?               @map("is_gold")
-  operatorId          String?                @map("operator_id")
-  factionId           String?                @map("faction_id")
-  achievementId       Int?                   @map("achievement_id")
-  parentCriteriaId    Int?                   @map("parent_criteria_id")
-  achievement         Achievement?           @relation("achievementsTocriteria", fields: [achievementId], references: [id])
-  criteriaOperator    CriteriaOperator?      @relation("criteriaTocriteria_operators", fields: [operatorId], references: [id])
-  criterion           Criterion?             @relation("criteriaTocriteria_parent_criteria_id", fields: [parentCriteriaId], references: [id])
-  achievementCriteria AchievementCriterion[] @relation("achievement_criteriaTocriteria")
-  otherCriteria       Criterion[]            @relation("criteriaTocriteria_parent_criteria_id")
+  id                   Int                    @id
+  description          String?
+  amount               Int?
+  showProgressBar      Boolean?               @map("show_progress_bar")
+  isGold               Boolean?               @map("is_gold")
+  operatorId           String?                @map("operator_id")
+  factionId            String?                @map("faction_id")
+  achievementId        Int?                   @map("achievement_id")
+  parentCriteriaId     Int?                   @map("parent_criteria_id")
+  linkedAchievementId  Int?                   @map("linked_achievement_id")
+  achievement          Achievement?           @relation("achievementsTocriteria", fields: [achievementId], references: [id])
+  linkedAchievement    Achievement?           @relation("achievementsTocriteria_linked_achievement_id", fields: [linkedAchievementId], references: [id])
+  criterion            Criterion?             @relation("criteriaTocriteria_parent_criteria_id", fields: [parentCriteriaId], references: [id])
+  achievementCriteria  AchievementCriterion[] @relation("achievement_criteriaTocriteria")
+  otherCriteria        Criterion[]            @relation("criteriaTocriteria_parent_criteria_id")
 
   @@map("criteria")
-}
-
-model CriteriaOperator {
-  id       String      @id
-  name     String?
-  criteria Criterion[] @relation("criteriaTocriteria_operators")
-
-  @@map("criteria_operators")
 }
 
 model UpdateError {

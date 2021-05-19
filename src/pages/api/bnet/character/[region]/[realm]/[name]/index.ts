@@ -38,13 +38,19 @@ const handle: NextApiHandler = (req, res) => {
       return await wow.getCharacter(realm, name)
     },
     callback: async (result, token) => {
-      if (result.error) return {}
+      if (result.error) return result
 
       switch (method) {
         case 'GET':
-          return normalizeBattleNetData('character')(result.data)
+          return {
+            ...result,
+            data: normalizeBattleNetData('character')(result.data),
+          }
         case 'PUT':
-          return await saveCharacterToDb(result.data, token)
+          return {
+            ...result,
+            data: await saveCharacterToDb(result.data, token),
+          }
         default:
           return result
       }

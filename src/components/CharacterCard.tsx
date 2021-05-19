@@ -4,12 +4,10 @@ import { CharacterProps } from '@/types'
 import { Button } from '@/components/Button'
 
 import { CharacterAvatar } from '@/modules/character/CharacterAvatar'
-import { BattleNetRegion } from '@/types'
 
 import { CHARACTER_CLASS_MAP, CHARACTER_RACE_MAP } from '@/lib/constants'
 
 export type CharacterCardProps = {
-  region: BattleNetRegion
   onClick?: (realmSlug: string, name: string) => void
 } & CharacterProps
 

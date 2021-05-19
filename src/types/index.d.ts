@@ -1,14 +1,14 @@
 import { SessionProvider } from 'next-auth/client'
-import { BattleNetRegion } from 'battlenet-api'
+import { BattleNetRegion, BattleNetResponse } from 'battlenet-api'
 
-export { BattleNetRegion }
+export { BattleNetRegion, BattleNetResponse }
 
 export interface GenericObject {
   [key: string]: any
 }
 
-export type CharacterFaction = 'ALLIANCE' | 'HORDE'
-export type CharacterGender = 'MALE' | 'FEMALE'
+export type Faction = 'ALLIANCE' | 'HORDE'
+export type Gender = 'MALE' | 'FEMALE'
 
 export type Achievement = {
   id: number
@@ -75,13 +75,14 @@ export type Realm = {
 
 export type CharacterProps = {
   id: number
+  region: BattleNetRegion
+  realmSlug: string
   name: string
   classId: number
   raceId: number
-  faction: CharacterFaction
-  gender: CharacterGender
+  faction: Faction
+  gender: Gender
   guild?: string
-  realmSlug: string
   level: number
   covenantId?: number
   updatedAt?: string

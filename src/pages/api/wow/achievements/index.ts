@@ -1,11 +1,19 @@
+import { create } from 'superstruct'
 import { createPrismaHandler } from '@/lib/createPrismaHandler'
-import prisma, { Achievement } from '@/prisma/wow'
+import prisma, { createFactionSelector, Achievement } from '@/prisma/wow'
+
+import { AchIndexApiRouteStruct } from '@/lib/structs'
 
 const handle = createPrismaHandler<Achievement[]>({
-  selector: async () => {
+  selector: async (req) => {
+    const { factionId } = create(req.query, AchIndexApiRouteStruct)
+    const faction = createFactionSelector(factionId)
     return await prisma.achievement.findMany({
+      where: faction,
       include: {
-        criteria: true,
+        criteria: {
+          where: faction,
+        },
         achievementAssets: true,
       },
       orderBy: [
