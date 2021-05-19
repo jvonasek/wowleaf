@@ -18,7 +18,10 @@ export const AchievementCriteriaList: React.FC<AchievementCriteriaListProps> = (
         <div
           key={id}
           className={
-            criteriaProgress?.[id]?.showProgressBar ? 'col-span-2' : ''
+            criteriaProgress?.[id]?.showProgressBar ||
+            !!criteriaProgress?.[id]?.linkedAchievementId
+              ? 'col-span-2'
+              : ''
           }
         >
           <AchievementCriterion

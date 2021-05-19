@@ -13,6 +13,9 @@ const handle = createPrismaHandler<Achievement[]>({
       include: {
         criteria: {
           where: faction,
+          include: {
+            linkedAchievement: true,
+          },
         },
         achievementAssets: true,
       },
