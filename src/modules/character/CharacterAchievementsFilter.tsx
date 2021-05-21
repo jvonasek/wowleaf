@@ -1,12 +1,12 @@
-import { useEffect } from 'react'
-import dynamic from 'next/dynamic'
-import { useForm, useWatch } from 'react-hook-form'
-import { superstructResolver } from '@hookform/resolvers/superstruct'
-import { create, object, boolean, number } from 'superstruct'
+import dynamic from 'next/dynamic';
+import { useEffect } from 'react';
+import { useForm, useWatch } from 'react-hook-form';
+import { boolean, create, number, object } from 'superstruct';
 
-import { useAchievementsFilterStore } from './store/useAchievementsFilterStore'
+import { superstructResolver } from '@hookform/resolvers/superstruct';
 
-import { AchievementFilterProps } from './types'
+import { useAchievementsFilterStore } from './store/useAchievementsFilterStore';
+import { AchievementFilterProps } from './types';
 
 const FilterFormStruct = object({
   incomplete: boolean(),

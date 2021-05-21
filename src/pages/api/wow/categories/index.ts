@@ -1,7 +1,5 @@
-import { createPrismaHandler } from '@/lib/createPrismaHandler'
-import prisma, {
-  AchievementCategory as AchievementCategoryBase,
-} from '@/prisma/wow'
+import { createPrismaHandler } from '@/lib/createPrismaHandler';
+import prisma, { AchievementCategory as AchievementCategoryBase } from '@/prisma/wow';
 
 type AchievementCategoryType = Pick<
   AchievementCategoryBase,

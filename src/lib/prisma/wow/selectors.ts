@@ -1,4 +1,4 @@
-import { Faction } from '@/types'
+import { Faction } from '@/types';
 
 export const createFactionSelector = (factionId: Faction) => {
   if (!factionId) {

@@ -1,12 +1,12 @@
-import { useEffect } from 'react'
-import { UseQueryOptions, useQuery } from 'react-query'
-import { pluck } from 'ramda'
+import { pluck } from 'ramda';
+import { useEffect } from 'react';
+import { useQuery, UseQueryOptions } from 'react-query';
 
-import { groupById } from '@/lib/utils'
-import { useAchievementsStore } from '../store/useAchievementsStore'
+import { groupById } from '@/lib/utils';
+import { Faction } from '@/types';
 
-import { Achievement } from '../types'
-import { Faction } from '@/types'
+import { useAchievementsStore } from '../store/useAchievementsStore';
+import { Achievement } from '../types';
 
 type AchievementHookParams = {
   factionId: Faction

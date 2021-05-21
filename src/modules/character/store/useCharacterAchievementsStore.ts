@@ -1,7 +1,8 @@
-import { createStore } from '@/lib/createStore'
-import { combine } from 'zustand/middleware'
+import { combine } from 'zustand/middleware';
 
-import { CharacterAchievementProgress } from '../types'
+import { createStore } from '@/lib/createStore';
+
+import { CharacterAchievementProgress } from '../types';
 
 export type CharacterAchievementsStoreObject = {
   /* name: string

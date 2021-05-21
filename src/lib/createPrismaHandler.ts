@@ -1,11 +1,11 @@
-import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next'
-import nc from 'next-connect'
-import requireAuthMiddleware from '@/middlewares/requireAuth'
-import cors from '@/middlewares/cors'
-import getJWT from '@/lib/getJWT'
+import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
+import nc from 'next-connect';
 
-import { responseErrorMessage } from '@/lib/responseErrorMessage'
-import { JWToken } from '@/types'
+import getJWT from '@/lib/getJWT';
+import { responseErrorMessage } from '@/lib/responseErrorMessage';
+import cors from '@/middlewares/cors';
+import requireAuthMiddleware from '@/middlewares/requireAuth';
+import { JWToken } from '@/types';
 
 type PrismaApiHandlerOptions<R> = {
   selector: (

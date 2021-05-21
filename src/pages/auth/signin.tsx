@@ -1,8 +1,8 @@
-import { NextPage } from 'next'
-import { providers } from 'next-auth/client'
+import { NextPage } from 'next';
+import { providers } from 'next-auth/client';
 
-import { AuthProviders } from '@/components/AuthProviders'
-import { SessionProviders } from '@/types'
+import { AuthProviders } from '@/components/AuthProviders';
+import { SessionProviders } from '@/types';
 
 export type SignInProps = {
   providers: SessionProviders

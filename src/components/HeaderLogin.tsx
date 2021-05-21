@@ -1,6 +1,6 @@
-import { signIn, signOut, useSession } from 'next-auth/client'
+import { signIn, signOut, useSession } from 'next-auth/client';
 
-import { Button } from './Button'
+import { Button } from './Button';
 
 export const HeaderLogin: React.FC = (): JSX.Element => {
   const [session, loading] = useSession()

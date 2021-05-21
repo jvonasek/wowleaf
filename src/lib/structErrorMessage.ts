@@ -1,4 +1,4 @@
-import { Struct, define, is } from 'superstruct'
+import { define, is, Struct } from 'superstruct';
 
 export const structErrorMessage = <T>(
   struct: Struct<T, any>,

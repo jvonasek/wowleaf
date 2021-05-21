@@ -1,39 +1,17 @@
 import {
-  gte,
-  pluck,
-  clamp,
-  prop,
-  ascend,
-  descend,
-  sortWith,
-  filter,
-  allPass,
-  lt,
-  pick,
-} from 'ramda'
+    allPass, ascend, clamp, descend, filter, gte, lt, pick, pluck, prop, sortWith
+} from 'ramda';
 
-import { groupById, percentage, round } from '@/lib/utils'
-
+import { groupById, percentage, round } from '@/lib/utils';
+import { AchievementsStoreObject } from '@/modules/achievement/store/useAchievementsStore';
+import { Achievement, AchievementsQueryResult } from '@/modules/achievement/types';
 import {
-  AchievementFilterProps,
-  CharacterAchievementProgress,
-  CharacterAchievementCriterionProgress,
-  CharacterAchievementsQueryResult,
-  CharacterAchievement,
-  CharacterParams,
-} from '@/modules/character/types'
-
+    CharacterAchievementsStoreObject, initialAchievementProgress
+} from '@/modules/character/store/useCharacterAchievementsStore';
 import {
-  Achievement,
-  AchievementsQueryResult,
-} from '@/modules/achievement/types'
-
-import { AchievementsStoreObject } from '@/modules/achievement/store/useAchievementsStore'
-
-import {
-  initialAchievementProgress,
-  CharacterAchievementsStoreObject,
-} from '@/modules/character/store/useCharacterAchievementsStore'
+    AchievementFilterProps, CharacterAchievement, CharacterAchievementCriterionProgress,
+    CharacterAchievementProgress, CharacterAchievementsQueryResult, CharacterParams
+} from '@/modules/character/types';
 
 type CharacterProps = CharacterParams & {
   characterKey: string

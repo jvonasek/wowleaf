@@ -1,14 +1,11 @@
-import { NextApiRequest, NextApiResponse } from 'next'
-import ms from 'ms.macro'
+import ms from 'ms.macro';
+import { NextApiRequest, NextApiResponse } from 'next';
 
-import { RedisCacheService } from '@/services/RedisCacheService'
-import getJWT from '@/lib/getJWT'
-import { responseErrorMessage } from '@/lib/responseErrorMessage'
-import { JWToken, BattleNetResponse } from '@/types'
-import createRedisKey, {
-  RedisCacheKey,
-  RedisCacheKeyFactory,
-} from '@/lib/createRedisKey'
+import createRedisKey, { RedisCacheKey, RedisCacheKeyFactory } from '@/lib/createRedisKey';
+import getJWT from '@/lib/getJWT';
+import { responseErrorMessage } from '@/lib/responseErrorMessage';
+import { RedisCacheService } from '@/services/RedisCacheService';
+import { BattleNetResponse, JWToken } from '@/types';
 
 export interface CacheAPIOptions<R> {
   key: RedisCacheKey | RedisCacheKeyFactory

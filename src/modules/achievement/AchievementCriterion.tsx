@@ -1,9 +1,8 @@
-import { memo } from 'react'
-import { ProgressBar } from '@/components/ProgressBar'
+import { memo } from 'react';
 
-import { CharacterAchievementCriterionProgress } from '@/modules/character/types'
-
-import { formatGold } from '@/lib/formatGold'
+import { ProgressBar } from '@/components/ProgressBar';
+import { formatGold } from '@/lib/formatGold';
+import { CharacterAchievementCriterionProgress } from '@/modules/character/types';
 
 export type AchievementCriterionProps = {
   isGold: boolean

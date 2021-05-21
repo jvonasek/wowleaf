@@ -1,9 +1,8 @@
-import { AchievementCriterion } from './AchievementCriterion'
+import { CharacterAchievementCriterionProgress } from '@/modules/character/types';
+import { Criterion } from '@/types';
 
-import { Criterion } from '@/types'
-import { CharacterAchievementCriterionProgress } from '@/modules/character/types'
-
-import { AchievementCard } from './AchievementCard'
+import { AchievementCard } from './AchievementCard';
+import { AchievementCriterion } from './AchievementCriterion';
 
 export type AchievementCriteriaListProps = {
   criteria: Criterion[]

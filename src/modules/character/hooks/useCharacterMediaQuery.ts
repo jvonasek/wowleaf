@@ -1,13 +1,9 @@
-import { useEffect, useState } from 'react'
-import { useQuery, UseQueryOptions } from 'react-query'
+import { useEffect, useState } from 'react';
+import { useQuery, UseQueryOptions } from 'react-query';
 
-import {
-  CharacterMediaTypes,
-  CharacterMediaAssets,
-  CharacterParams,
-} from '../types'
+import { Gender } from '@/types';
 
-import { Gender } from '@/types'
+import { CharacterMediaAssets, CharacterMediaTypes, CharacterParams } from '../types';
 
 type CharacterMediaQueryOptions = CharacterParams & {
   raceId?: number

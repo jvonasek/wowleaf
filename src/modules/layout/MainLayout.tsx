@@ -1,8 +1,8 @@
-import Link from 'next/link'
-import Head from 'next/head'
+import Head from 'next/head';
+import Link from 'next/link';
 
-import { Container } from '@/components/Container'
-import { Header } from '@/components/Header'
+import { Container } from '@/components/Container';
+import { Header } from '@/components/Header';
 
 export type MainLayoutProps = {
   children?: React.ReactNode

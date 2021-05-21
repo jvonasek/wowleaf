@@ -1,7 +1,7 @@
-import { BattleNet, BattleNetTokenProps } from 'battlenet-api'
-import ms from 'ms.macro'
+import { BattleNet, BattleNetTokenProps } from 'battlenet-api';
+import ms from 'ms.macro';
 
-import { RedisCacheService } from '@/services/RedisCacheService'
+import { RedisCacheService } from '@/services/RedisCacheService';
 
 const getCachedAccessToken = async (): Promise<
   BattleNetTokenProps['access_token']

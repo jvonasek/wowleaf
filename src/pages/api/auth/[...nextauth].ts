@@ -1,12 +1,12 @@
-import { NextApiHandler } from 'next'
-import { add } from 'date-fns'
-import NextAuth from 'next-auth'
-import Adapters from 'next-auth/adapters'
-import { BattleNetRegion } from 'battlenet-api'
-import { RedisCacheService } from '@/services/RedisCacheService'
+import { BattleNetRegion } from 'battlenet-api';
+import { add } from 'date-fns';
+import { NextApiHandler } from 'next';
+import NextAuth from 'next-auth';
+import Adapters from 'next-auth/adapters';
 
-import { JWToken } from '@/types'
-import prisma from '@/prisma/app'
+import prisma from '@/prisma/app';
+import { RedisCacheService } from '@/services/RedisCacheService';
+import { JWToken } from '@/types';
 
 const BNET_TOKEN_EXPIRY = { hours: 24 }
 

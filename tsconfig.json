@@ -19,17 +19,17 @@
     "baseUrl": "./",
     "typeRoots": ["./src/types"],
     "paths": {
-      "@/components/*": ["src/components/*"],
-      "@/modules/*": ["src/modules/*"],
-      "@/store/*": ["src/store/*"],
       "@/pages/*": ["src/pages/*"],
-      "@/lib/*": ["src/lib/*"],
-      "@/services/*": ["src/services/*"],
+      "@/modules/*": ["src/modules/*"],
+      "@/components/*": ["src/components/*"],
       "@/hooks/*": ["src/hooks/*"],
-      "@/types/*": ["src/types/*"],
-      "@/types": ["src/types/"],
+      "@/store/*": ["src/store/*"],
+      "@/services/*": ["src/services/*"],
       "@/middlewares/*": ["src/middlewares/*"],
-      "@/prisma/*": ["src/lib/prisma/*"]
+      "@/types": ["src/types/"],
+      "@/types/*": ["src/types/*"],
+      "@/prisma/*": ["src/lib/prisma/*"],
+      "@/lib/*": ["src/lib/*"]
     }
   },
   "exclude": ["node_modules", ".next", "out"],

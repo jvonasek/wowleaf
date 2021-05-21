@@ -1,9 +1,8 @@
-import { useCharacterMediaQuery } from './hooks/useCharacterMediaQuery'
+import { Spinner } from '@/components/Spinner';
+import { Gender } from '@/types';
 
-import { Spinner } from '@/components/Spinner'
-
-import { CharacterParams } from './types'
-import { Gender } from '@/types'
+import { useCharacterMediaQuery } from './hooks/useCharacterMediaQuery';
+import { CharacterParams } from './types';
 
 export type CharacterAvatarProps = CharacterParams & {
   gender?: Gender

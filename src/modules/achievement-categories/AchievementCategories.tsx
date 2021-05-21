@@ -1,8 +1,8 @@
-import { useQuery } from 'react-query'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useQuery } from 'react-query';
 
-import { useCharacterStore } from '@/modules/character/store/useCharacterStore'
+import { useCharacterStore } from '@/modules/character/store/useCharacterStore';
 
 export type AchievementCategoriesProps = {
   category?: string[]

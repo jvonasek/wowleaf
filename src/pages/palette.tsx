@@ -1,4 +1,4 @@
-import { Palette as PaletteGrid } from '@/components/Palette'
+import { Palette as PaletteGrid } from '@/components/Palette';
 
 const Palette: React.FC = () => (
   <div>

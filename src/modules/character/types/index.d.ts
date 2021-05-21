@@ -1,5 +1,7 @@
-import { BattleNetRegion } from '@/types'
-import { LocalizedCharacterMedia } from 'battlenet-api'
+import { LocalizedCharacterMedia } from 'battlenet-api';
+
+import { BattleNetRegion } from '@/types';
+
 export type { CharacterMediaTypes } from 'battlenet-api'
 
 export type CharacterMediaAssets = LocalizedCharacterMedia['assets']

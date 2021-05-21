@@ -1,4 +1,5 @@
-import cors from 'cors'
+import cors from 'cors';
+
 const whitelist = ['http://localhost:3000/', 'http://localhost:6006']
 const options = {
   origin: (origin, callback) => {

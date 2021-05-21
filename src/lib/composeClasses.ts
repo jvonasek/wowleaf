@@ -1,4 +1,4 @@
-import classnames from 'classnames'
+import classnames from 'classnames';
 
 type ClassNames = {
   [key: string]: boolean | string

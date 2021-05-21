@@ -1,8 +1,4 @@
-import {
-  BattleNetService,
-  BattleNetRegion,
-  BattleNetTokenProps,
-} from 'battlenet-api'
+import { BattleNetRegion, BattleNetService, BattleNetTokenProps } from 'battlenet-api';
 
 const getBattleNetToken = async (
   region: BattleNetRegion = 'eu'

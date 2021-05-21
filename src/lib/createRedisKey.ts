@@ -1,4 +1,4 @@
-import { JWToken } from '@/types'
+import { JWToken } from '@/types';
 
 export type RedisCacheKey = { name: string; userSpecific?: boolean } | string
 export type RedisCacheKeyFactory = (token: JWToken) => string

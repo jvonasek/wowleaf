@@ -1,17 +1,12 @@
-import { NextApiHandler } from 'next'
-import {
-  WoWAPI,
-  BattleNetResponse,
-  LocalizedCharacter,
-  BattleNetRegion,
-} from 'battlenet-api'
-import ms from 'ms.macro'
+import { BattleNetRegion, BattleNetResponse, LocalizedCharacter, WoWAPI } from 'battlenet-api';
+import ms from 'ms.macro';
+import { NextApiHandler } from 'next';
 
-import { JWToken } from '@/types'
-import cacheAPI from '@/lib/cacheAPI'
-import { normalizeBattleNetData } from '@/lib/normalizeBattleNetData'
-import getCachedAccessToken from '@/lib/getCachedAccessToken'
-import prisma from '@/prisma/app'
+import cacheAPI from '@/lib/cacheAPI';
+import getCachedAccessToken from '@/lib/getCachedAccessToken';
+import { normalizeBattleNetData } from '@/lib/normalizeBattleNetData';
+import prisma from '@/prisma/app';
+import { JWToken } from '@/types';
 
 type CharacterResponse = BattleNetResponse<LocalizedCharacter>
 

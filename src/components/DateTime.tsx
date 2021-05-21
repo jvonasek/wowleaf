@@ -1,9 +1,4 @@
-import {
-  isFuture,
-  format as dateFormat,
-  formatDistanceToNowStrict,
-  isValid,
-} from 'date-fns'
+import { format as dateFormat, formatDistanceToNowStrict, isFuture, isValid } from 'date-fns';
 
 export type DateTimeProps = {
   date: Date

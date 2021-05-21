@@ -1,10 +1,5 @@
-import {
-  forwardRef,
-  ReactNode,
-  ButtonHTMLAttributes,
-  DetailedHTMLProps,
-} from 'react'
-import cx from 'classnames'
+import cx from 'classnames';
+import { ButtonHTMLAttributes, DetailedHTMLProps, forwardRef, ReactNode } from 'react';
 
 const VARIANT_MAP = {
   primary: cx(

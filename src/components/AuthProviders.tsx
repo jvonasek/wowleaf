@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react'
-import { signIn, useSession } from 'next-auth/client'
+import { signIn, useSession } from 'next-auth/client';
+import { useEffect, useState } from 'react';
 
-import { Button } from '@/components/Button'
-import { SessionProviders } from '@/types'
+import { Button } from '@/components/Button';
+import { SessionProviders } from '@/types';
 
 export type AuthProvidersProps = {
   providers: SessionProviders

@@ -1,13 +1,13 @@
-import { useState, useCallback } from 'react'
-import { GetServerSideProps, GetServerSidePropsContext } from 'next'
-import { useQuery, useMutation } from 'react-query'
-import { useSession, getSession, providers } from 'next-auth/client'
-import { BattleNetRegion } from 'battlenet-api'
+import { BattleNetRegion } from 'battlenet-api';
+import { GetServerSideProps, GetServerSidePropsContext } from 'next';
+import { getSession, providers, useSession } from 'next-auth/client';
+import { useCallback, useState } from 'react';
+import { useMutation, useQuery } from 'react-query';
 
-import { CharacterCard } from '@/components/CharacterCard'
-import { DateTime } from '@/components/DateTime'
-import { AuthProviders } from '@/components/AuthProviders'
-import { SessionProviders } from '@/types'
+import { AuthProviders } from '@/components/AuthProviders';
+import { CharacterCard } from '@/components/CharacterCard';
+import { DateTime } from '@/components/DateTime';
+import { SessionProviders } from '@/types';
 
 type CharacterSelectionProps = {
   region: BattleNetRegion

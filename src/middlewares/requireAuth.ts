@@ -1,8 +1,8 @@
-import { NextApiRequest, NextApiResponse } from 'next'
-import { NextHandler } from 'next-connect'
+import { NextApiRequest, NextApiResponse } from 'next';
+import { NextHandler } from 'next-connect';
 
-import getJWT from '@/lib/getJWT'
-import { responseErrorMessage } from '@/lib/responseErrorMessage'
+import getJWT from '@/lib/getJWT';
+import { responseErrorMessage } from '@/lib/responseErrorMessage';
 
 const requireAuth = (enabled = true) => async (
   req: NextApiRequest,

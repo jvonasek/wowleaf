@@ -1,15 +1,10 @@
-import { NextApiHandler } from 'next'
-import {
-  WoWAPI,
-  BattleNetResponse,
-  LocalizedCharacterMedia,
-  BattleNetRegion,
-} from 'battlenet-api'
-import ms from 'ms.macro'
+import { BattleNetRegion, BattleNetResponse, LocalizedCharacterMedia, WoWAPI } from 'battlenet-api';
+import ms from 'ms.macro';
+import { NextApiHandler } from 'next';
 
-import cacheAPI from '@/lib/cacheAPI'
-import getCachedAccessToken from '@/lib/getCachedAccessToken'
-import { normalizeBattleNetData } from '@/lib/normalizeBattleNetData'
+import cacheAPI from '@/lib/cacheAPI';
+import getCachedAccessToken from '@/lib/getCachedAccessToken';
+import { normalizeBattleNetData } from '@/lib/normalizeBattleNetData';
 
 type CharacterMediaResponse = BattleNetResponse<LocalizedCharacterMedia>
 

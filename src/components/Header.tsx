@@ -1,7 +1,7 @@
-import Link from 'next/link'
+import Link from 'next/link';
 
-import { HeaderLogin } from '@/components/HeaderLogin'
-import ThemeSwitch from '@/components/ThemeSwitch'
+import { HeaderLogin } from '@/components/HeaderLogin';
+import ThemeSwitch from '@/components/ThemeSwitch';
 
 export const Header: React.FC = () => {
   return (

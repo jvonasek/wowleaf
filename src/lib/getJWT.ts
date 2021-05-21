@@ -1,7 +1,7 @@
-import { NextApiRequest } from 'next'
-import jwt from 'next-auth/jwt'
+import { NextApiRequest } from 'next';
+import jwt from 'next-auth/jwt';
 
-import { JWToken } from '@/types/index'
+import { JWToken } from '@/types/index';
 
 const getJWT = async (req: NextApiRequest): Promise<JWToken> => {
   return await jwt.getToken({

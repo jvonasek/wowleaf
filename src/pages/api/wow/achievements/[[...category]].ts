@@ -1,10 +1,9 @@
-import { create } from 'superstruct'
-import { createPrismaHandler } from '@/lib/createPrismaHandler'
-import prisma, { createFactionSelector } from '@/prisma/wow'
+import { create } from 'superstruct';
 
-import { AchCategoryApiRouteStruct } from '@/lib/structs'
-
-import { Achievement } from '@/modules/achievement/types'
+import { createPrismaHandler } from '@/lib/createPrismaHandler';
+import { AchCategoryApiRouteStruct } from '@/lib/structs';
+import { Achievement } from '@/modules/achievement/types';
+import prisma, { createFactionSelector } from '@/prisma/wow';
 
 type AchievementResult =
   | Achievement

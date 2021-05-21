@@ -1,4 +1,4 @@
-import { useQueries, UseQueryOptions, UseQueryResult } from 'react-query'
+import { useQueries, UseQueryOptions, UseQueryResult } from 'react-query';
 
 type Awaited<T> = T extends PromiseLike<infer U> ? Awaited<U> : T
 

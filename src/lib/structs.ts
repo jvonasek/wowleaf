@@ -1,15 +1,6 @@
-import {
-  enums,
-  object,
-  string,
-  optional,
-  array,
-  defaulted,
-  coerce,
-  number,
-} from 'superstruct'
+import { array, coerce, defaulted, enums, number, object, optional, string } from 'superstruct';
 
-import { Faction, BNET_REGIONS } from './constants'
+import { BNET_REGIONS, Faction } from './constants';
 
 export const CharacterRouteStruct = object({
   region: enums(BNET_REGIONS),

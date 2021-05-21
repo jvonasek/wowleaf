@@ -1,9 +1,5 @@
-import { Story, Meta } from '@storybook/react'
-
-import {
-  AchievementCard,
-  AchievementCardProps,
-} from '@/modules/achievement/AchievementCard'
+import { AchievementCard, AchievementCardProps } from '@/modules/achievement/AchievementCard';
+import { Meta, Story } from '@storybook/react';
 
 export default {
   title: 'Components/AchievementCard',

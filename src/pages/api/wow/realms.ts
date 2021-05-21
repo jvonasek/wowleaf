@@ -1,5 +1,5 @@
-import { createPrismaHandler } from '@/lib/createPrismaHandler'
-import prisma, { Realm } from '@/prisma/wow'
+import { createPrismaHandler } from '@/lib/createPrismaHandler';
+import prisma, { Realm } from '@/prisma/wow';
 
 const handle = createPrismaHandler<Realm[]>({
   selector: async () =>

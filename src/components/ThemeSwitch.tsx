@@ -1,9 +1,9 @@
-import dynamic from 'next/dynamic'
-import { useCallback } from 'react'
+import dynamic from 'next/dynamic';
+import { useCallback } from 'react';
 
-import { useThemeStore, Theme } from '../stores/useThemeStore'
+import { Button } from '@/components/Button';
 
-import { Button } from '@/components/Button'
+import { Theme, useThemeStore } from '../stores/useThemeStore';
 
 const ThemeSwitch: React.FC = () => {
   const { theme: currentTheme, setTheme } = useThemeStore()

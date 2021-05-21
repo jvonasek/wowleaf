@@ -1,4 +1,4 @@
-import { BattleNetRegion } from '@/types'
+import { BattleNetRegion } from '@/types';
 
 type CharacterParams = {
   region: BattleNetRegion

@@ -1,6 +1,6 @@
-import { CharacterCard } from '@/components/CharacterCard'
+import { CharacterCard } from '@/components/CharacterCard';
 
-import { useCharacterStore } from './store/useCharacterStore'
+import { useCharacterStore } from './store/useCharacterStore';
 
 export const CharacterPageHeader: React.FC = () => {
   const character = useCharacterStore()

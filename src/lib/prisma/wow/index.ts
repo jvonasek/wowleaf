@@ -1,4 +1,5 @@
-import { PrismaClient } from '../../../../prisma/generated/wow-client'
+import { PrismaClient } from '../../../../prisma/generated/wow-client';
+
 export * from '../../../../prisma/generated/wow-client'
 export * from './selectors'
 

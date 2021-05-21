@@ -1,10 +1,10 @@
-import { NextApiHandler } from 'next'
-import { WoWAPI, BattleNetResponse } from 'battlenet-api'
-import ms from 'ms.macro'
+import { BattleNetResponse, WoWAPI } from 'battlenet-api';
+import ms from 'ms.macro';
+import { NextApiHandler } from 'next';
 
-import cacheAPI from '@/lib/cacheAPI'
-import getCachedAccessToken from '@/lib/getCachedAccessToken'
-import { normalizeBattleNetData } from '@/lib/normalizeBattleNetData'
+import cacheAPI from '@/lib/cacheAPI';
+import getCachedAccessToken from '@/lib/getCachedAccessToken';
+import { normalizeBattleNetData } from '@/lib/normalizeBattleNetData';
 
 const handle: NextApiHandler = (req, res) =>
   cacheAPI<BattleNetResponse>(req, res, {

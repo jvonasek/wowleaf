@@ -1,6 +1,6 @@
-import { useEffect, useState, memo } from 'react'
-import { clamp } from 'ramda'
-import cx from 'classnames'
+import cx from 'classnames';
+import { clamp } from 'ramda';
+import { memo, useEffect, useState } from 'react';
 
 export type ProgressBarProps = {
   total?: number

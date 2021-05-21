@@ -1,25 +1,23 @@
-import { useCallback, useEffect, useState } from 'react'
-import { useInfiniteQuery, useQueryClient, UseQueryOptions } from 'react-query'
-import { AchievementCard } from '@/modules/achievement/AchievementCard'
-import { CharacterAchievementsFilter } from './CharacterAchievementsFilter'
+import { useCallback, useEffect, useState } from 'react';
+import { useInfiniteQuery, useQueryClient, UseQueryOptions } from 'react-query';
 
-import { Spinner } from '@/components/Spinner'
+import { Button } from '@/components/Button';
+import { Spinner } from '@/components/Spinner';
+import { useHasChanged } from '@/hooks/useHasChanged';
+import { useWowheadLinks } from '@/hooks/useWowheadLinks';
+import { AchievementFilterSorter } from '@/lib/AchievementProgressFactory';
+import { paginateArray } from '@/lib/paginateArray';
+import { qs } from '@/lib/qs';
+import { AchievementCard } from '@/modules/achievement/AchievementCard';
+import { useAchievementsStore } from '@/modules/achievement/store/useAchievementsStore';
+import { Achievement } from '@/modules/achievement/types';
+import { Faction } from '@/types';
 
-import { useCharacterAchievementsStore } from './store/useCharacterAchievementsStore'
-import { useCharacterStore } from './store/useCharacterStore'
-import { useCharacterAchievementsQuery } from './hooks/useCharacterAchievementsQuery'
-import { useAchievementsStore } from '@/modules/achievement/store/useAchievementsStore'
-import { useAchievementsFilterStore } from './store/useAchievementsFilterStore'
-import { Achievement } from '@/modules/achievement/types'
-import { useWowheadLinks } from '@/hooks/useWowheadLinks'
-import { useHasChanged } from '@/hooks/useHasChanged'
-import { Faction } from '@/types'
-
-import { AchievementFilterSorter } from '@/lib/AchievementProgressFactory'
-import { paginateArray } from '@/lib/paginateArray'
-import { qs } from '@/lib/qs'
-
-import { Button } from '@/components/Button'
+import { CharacterAchievementsFilter } from './CharacterAchievementsFilter';
+import { useCharacterAchievementsQuery } from './hooks/useCharacterAchievementsQuery';
+import { useAchievementsFilterStore } from './store/useAchievementsFilterStore';
+import { useCharacterAchievementsStore } from './store/useCharacterAchievementsStore';
+import { useCharacterStore } from './store/useCharacterStore';
 
 const PAGINATED_ACHIEVEMENTS_QUERY_KEY = 'WoWPaginatedAchievements'
 

@@ -1,8 +1,8 @@
-import { useState } from 'react'
-import { Story, Meta } from '@storybook/react'
+import { useState } from 'react';
 
-import { Dialog, DialogProps } from '@/components/Dialog'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/Button';
+import { Dialog, DialogProps } from '@/components/Dialog';
+import { Meta, Story } from '@storybook/react';
 
 export default {
   title: 'Components/Dialog',

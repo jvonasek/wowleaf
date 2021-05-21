@@ -1,14 +1,13 @@
-import App from 'next/app'
-import { Provider as SessionProvider } from 'next-auth/client'
-import { QueryClient, QueryClientProvider } from 'react-query'
-import { ReactQueryDevtools } from 'react-query/devtools'
-import { LayoutTree } from '@moxy/next-layout'
+import '../styles/base.css';
 
-import { createQueryFn } from '@/lib/createQueryFn'
+import { Provider as SessionProvider } from 'next-auth/client';
+import App from 'next/app';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
 
-import { MainLayout } from '@/modules/layout/MainLayout'
-
-import '../styles/base.css'
+import { createQueryFn } from '@/lib/createQueryFn';
+import { MainLayout } from '@/modules/layout/MainLayout';
+import { LayoutTree } from '@moxy/next-layout';
 
 const queryClient = new QueryClient({
   defaultOptions: {

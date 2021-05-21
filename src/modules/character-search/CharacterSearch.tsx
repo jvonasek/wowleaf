@@ -1,12 +1,12 @@
-import { useCallback, useEffect, useState } from 'react'
-import { useQuery } from 'react-query'
-import { useRouter } from 'next/router'
-import { groupBy, prop } from 'ramda'
-import { Realm } from '@/prisma/wow'
+import { useRouter } from 'next/router';
+import { groupBy, prop } from 'ramda';
+import { useCallback, useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
 
-import { Button } from '@/components/Button'
-import { FormInput } from '@/components/FormInput'
-import { FormSelect } from '@/components/FormSelect'
+import { Button } from '@/components/Button';
+import { FormInput } from '@/components/FormInput';
+import { FormSelect } from '@/components/FormSelect';
+import { Realm } from '@/prisma/wow';
 
 export const CharacterSearch: React.FC = () => {
   const [regions, setRegions] = useState([])

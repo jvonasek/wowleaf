@@ -1,4 +1,4 @@
-import { groupBy, map, head } from 'ramda'
+import { groupBy, head, map } from 'ramda';
 
 export const isServer = typeof window === 'undefined'
 

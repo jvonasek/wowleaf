@@ -1,5 +1,6 @@
-import { useEffect } from 'react'
-import { isServer } from '@/lib/utils'
+import { useEffect } from 'react';
+
+import { isServer } from '@/lib/utils';
 
 const wh = !isServer && window.$WowheadPower
 

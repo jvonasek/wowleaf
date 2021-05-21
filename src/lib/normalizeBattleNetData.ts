@@ -1,10 +1,8 @@
 import {
-  LocalizedCharacter,
-  LocalizedCharacterMedia,
-  UserProfile,
-  WoWAccountCharacter,
-} from 'battlenet-api'
-import { CharacterProps } from '@/types'
+    LocalizedCharacter, LocalizedCharacterMedia, UserProfile, WoWAccountCharacter
+} from 'battlenet-api';
+
+import { CharacterProps } from '@/types';
 
 type ResponseType =
   | 'character'

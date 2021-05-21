@@ -1,5 +1,5 @@
-import { InputHTMLAttributes } from 'react'
-import cx from 'classnames'
+import cx from 'classnames';
+import { InputHTMLAttributes } from 'react';
 
 export type FormInputProps = InputHTMLAttributes<HTMLInputElement> & {
   name: string

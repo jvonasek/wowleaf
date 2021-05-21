@@ -1,10 +1,10 @@
-import { useRef, useState, useCallback, Fragment, ReactNode } from 'react'
-import cx from 'classnames'
-import { Dialog as HeadlessDialog, Transition } from '@headlessui/react'
-import { XIcon } from '@heroicons/react/outline'
-import { noop } from '@/lib/utils'
+import cx from 'classnames';
+import { Fragment, ReactNode, useCallback, useRef, useState } from 'react';
 
-import { Button, ButtonProps } from '@/components/Button'
+import { Button, ButtonProps } from '@/components/Button';
+import { noop } from '@/lib/utils';
+import { Dialog as HeadlessDialog, Transition } from '@headlessui/react';
+import { XIcon } from '@heroicons/react/outline';
 
 const SIZE_MAP = {
   small: 'max-w-md p-6 my-8',

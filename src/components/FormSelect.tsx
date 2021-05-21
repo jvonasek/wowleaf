@@ -1,5 +1,5 @@
-import { Fragment, SelectHTMLAttributes, OptionHTMLAttributes } from 'react'
-import cx from 'classnames'
+import cx from 'classnames';
+import { Fragment, OptionHTMLAttributes, SelectHTMLAttributes } from 'react';
 
 type SelectOption = OptionHTMLAttributes<HTMLOptionElement> & {
   label: string

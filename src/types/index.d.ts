@@ -1,9 +1,9 @@
-import { SessionProvider } from 'next-auth/client'
-import { BattleNet, BattleNetRegion, BattleNetResponse } from 'battlenet-api'
-import { Criterion as BaseCriterion } from '@/lib/prisma/wow'
-import { Character as UserCharacter } from '@/lib/prisma/app'
+import { BattleNet, BattleNetRegion, BattleNetResponse } from 'battlenet-api';
+import { SessionProvider } from 'next-auth/client';
 
-import { Achievement } from '@/modules/achievement/types'
+import { Character as UserCharacter } from '@/lib/prisma/app';
+import { Criterion as BaseCriterion } from '@/lib/prisma/wow';
+import { Achievement } from '@/modules/achievement/types';
 
 export { BattleNetRegion, BattleNetResponse, Criterion, Achievement }
 

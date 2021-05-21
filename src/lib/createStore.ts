@@ -1,6 +1,6 @@
-import create from 'zustand'
-import { persist, devtools } from 'zustand/middleware'
-import { pipe } from 'ramda'
+import { pipe } from 'ramda';
+import create from 'zustand';
+import { devtools, persist } from 'zustand/middleware';
 
 const isServer = typeof window === 'undefined'
 

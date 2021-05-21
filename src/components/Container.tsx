@@ -1,4 +1,4 @@
-import cx from 'classnames'
+import cx from 'classnames';
 
 export type ContainerProps = {
   children: React.ReactNode

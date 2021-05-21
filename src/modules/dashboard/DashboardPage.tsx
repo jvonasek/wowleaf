@@ -1,14 +1,16 @@
-import { useEffect, useState } from 'react'
-import { useSession } from 'next-auth/client'
-import { uniq, prop } from 'ramda'
+import { useSession } from 'next-auth/client';
+import { prop, uniq } from 'ramda';
+import { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
 
-import { createCharacterKey } from '@/lib/createCharacterKey'
-import { useQuery } from 'react-query'
-import { CharacterCard } from '@/components/CharacterCard'
-import { useCharacterAchievementsQuery } from '@/modules/character/hooks/useCharacterAchievementsQuery'
-import { useAchievementsQuery } from '@/modules/achievement/hooks/useAchievementsQuery'
-import { Character } from '@/types'
-import { CharacterStoreProps } from '@/modules/character/store/useCharacterStore'
+import { CharacterCard } from '@/components/CharacterCard';
+import { createCharacterKey } from '@/lib/createCharacterKey';
+import { useAchievementsQuery } from '@/modules/achievement/hooks/useAchievementsQuery';
+import {
+    useCharacterAchievementsQuery
+} from '@/modules/character/hooks/useCharacterAchievementsQuery';
+import { CharacterStoreProps } from '@/modules/character/store/useCharacterStore';
+import { Character } from '@/types';
 
 export const DashboardPage: React.FC = () => {
   const [session] = useSession()

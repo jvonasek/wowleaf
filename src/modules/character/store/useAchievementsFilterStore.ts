@@ -1,7 +1,8 @@
-import { createPersistedStore } from '@/lib/createStore'
-import { combine } from 'zustand/middleware'
+import { combine } from 'zustand/middleware';
 
-import { AchievementFilterProps } from '../types'
+import { createPersistedStore } from '@/lib/createStore';
+
+import { AchievementFilterProps } from '../types';
 
 type AchievementFilterStore = {
   filter: AchievementFilterProps

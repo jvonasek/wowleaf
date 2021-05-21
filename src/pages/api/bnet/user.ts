@@ -1,11 +1,10 @@
-import { NextApiHandler } from 'next'
-import { WoWAPI, BattleNetResponse, UserProfile } from 'battlenet-api'
-import ms from 'ms.macro'
+import { BattleNetResponse, UserProfile, WoWAPI } from 'battlenet-api';
+import ms from 'ms.macro';
+import { NextApiHandler } from 'next';
 
-import { normalizeBattleNetData } from '@/lib/normalizeBattleNetData'
-
-import cacheAPI from '@/lib/cacheAPI'
-import { JWToken } from '@/types/index'
+import cacheAPI from '@/lib/cacheAPI';
+import { normalizeBattleNetData } from '@/lib/normalizeBattleNetData';
+import { JWToken } from '@/types/index';
 
 type UserProfileResponse = BattleNetResponse<UserProfile>
 

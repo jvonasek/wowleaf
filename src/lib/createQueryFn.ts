@@ -1,6 +1,6 @@
-import { QueryFunction } from 'react-query'
+import { QueryFunction } from 'react-query';
 
-import { qs } from './qs'
+import { qs } from './qs';
 
 export const createQueryFn = (baseUrl: string): QueryFunction => {
   return async ({ queryKey }) => {

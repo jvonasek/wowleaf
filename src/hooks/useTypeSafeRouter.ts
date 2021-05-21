@@ -1,6 +1,6 @@
-import { NextRouter, useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
-import { Struct, Infer, create } from 'superstruct'
+import { NextRouter, useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { create, Infer, Struct } from 'superstruct';
 
 type RouterQueryValue<T extends Struct> = NextRouter & {
   query: Infer<T>

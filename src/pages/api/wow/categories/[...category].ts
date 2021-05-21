@@ -1,8 +1,8 @@
-import { create, string, object, array } from 'superstruct'
+import { array, create, object, string } from 'superstruct';
 
-import { createPrismaHandler } from '@/lib/createPrismaHandler'
-import prisma from '@/prisma/wow'
-import { AchievementCategory } from '@/modules/achievement-categories/types'
+import { createPrismaHandler } from '@/lib/createPrismaHandler';
+import { AchievementCategory } from '@/modules/achievement-categories/types';
+import prisma from '@/prisma/wow';
 
 const CategoryRouteStruct = object({
   category: array(string()),

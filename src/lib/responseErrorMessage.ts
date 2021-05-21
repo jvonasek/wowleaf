@@ -1,4 +1,4 @@
-import status from 'statuses'
+import status from 'statuses';
 
 export type ResponseErrorMessage = {
   error: boolean

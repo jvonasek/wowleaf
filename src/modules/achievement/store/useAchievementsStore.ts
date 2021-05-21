@@ -1,7 +1,8 @@
-import { createStore } from '@/lib/createStore'
-import { combine } from 'zustand/middleware'
+import { combine } from 'zustand/middleware';
 
-import { AchievementsQueryResult } from '../types'
+import { createStore } from '@/lib/createStore';
+
+import { AchievementsQueryResult } from '../types';
 
 export type AchievementsStoreObject = AchievementsQueryResult
 

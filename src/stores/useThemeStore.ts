@@ -1,5 +1,6 @@
-import { createPersistedStore } from '@/lib/createStore'
-import { combine } from 'zustand/middleware'
+import { combine } from 'zustand/middleware';
+
+import { createPersistedStore } from '@/lib/createStore';
 
 export enum Theme {
   Light = 'light',
