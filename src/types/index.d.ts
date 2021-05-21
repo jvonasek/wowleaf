@@ -1,8 +1,11 @@
 import { SessionProvider } from 'next-auth/client'
-import { BattleNetRegion, BattleNetResponse } from 'battlenet-api'
-import { Criterion } from '@/lib/prisma/wow'
+import { BattleNet, BattleNetRegion, BattleNetResponse } from 'battlenet-api'
+import { Criterion as BaseCriterion } from '@/lib/prisma/wow'
+import { Character as UserCharacter } from '@/lib/prisma/app'
 
-export { BattleNetRegion, BattleNetResponse, Criterion }
+import { Achievement } from '@/modules/achievement/types'
+
+export { BattleNetRegion, BattleNetResponse, Criterion, Achievement }
 
 export interface GenericObject {
   [key: string]: any
@@ -11,19 +14,14 @@ export interface GenericObject {
 export type Faction = 'ALLIANCE' | 'HORDE'
 export type Gender = 'MALE' | 'FEMALE'
 
-export type Achievement = {
-  id: number
-  name: string
-  categoryId: number | null
-  description: string
-  points: number | null
-  isAccountWide: boolean
-  factionId: string | null
-  prerequisiteAchievementId: number | null
-  nextAchievementId: number | null
-  displayOrder: number | null
-  rewardDescription: string | null
-  rewardItemId: number | null
+export type Character = UserCharacter & {
+  region: BattleNetRegion
+  faction: Faction
+  gender: Gender
+}
+
+export type Criterion = BaseCriterion & {
+  linkedAchievement: Achievement
 }
 
 export type CriterionWithProgress = Omit<Criterion, 'amount'> & {
@@ -60,22 +58,6 @@ export type Realm = {
   name: string
   id: number
   slug: string
-}
-
-export type CharacterProps = {
-  id: number
-  region: BattleNetRegion
-  realmSlug: string
-  name: string
-  classId: number
-  raceId: number
-  faction: Faction
-  gender: Gender
-  guild?: string
-  level: number
-  covenantId?: number
-  updatedAt?: string
-  createdAt?: string
 }
 
 export type BattleNetUser = {

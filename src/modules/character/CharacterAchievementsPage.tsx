@@ -12,22 +12,11 @@ import {
 
 import { CharacterRouteStruct } from '@/lib/structs'
 import { createCharacterKey } from '@/lib/createCharacterKey'
-import { CharacterProps, BattleNetResponse } from '@/types'
+import { Character, BattleNetResponse } from '@/types'
 
 type CharacterAchievementsPageProps = {
   category?: string[]
-  character: CharacterProps
-}
-
-const fetchCharacter = async ({
-  region,
-  realm,
-  name,
-}): Promise<BattleNetResponse<CharacterProps>> => {
-  return fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/bnet/character/${region}/${realm}/${name}`,
-    { method: 'GET' }
-  ).then((res) => res.json())
+  character: Character
 }
 
 export const CharacterAchievementsPage: NextPage<CharacterAchievementsPageProps> = ({
@@ -55,7 +44,6 @@ export const CharacterAchievementsPage: NextPage<CharacterAchievementsPageProps>
 
   useAchievementsQuery(
     {
-      //category,
       factionId: character?.faction,
     },
     {
@@ -76,6 +64,16 @@ export const CharacterAchievementsPage: NextPage<CharacterAchievementsPageProps>
       </div>
     </div>
   )
+}
+
+const fetchCharacter = async ({
+  region,
+  realm,
+  name,
+}): Promise<BattleNetResponse<Character>> => {
+  return fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/bnet/character/${region}/${realm}/${name}`
+  ).then((res) => res.json())
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {

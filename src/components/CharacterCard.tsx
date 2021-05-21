@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-import { CharacterProps } from '@/types'
+import { Character } from '@/types'
 import { Button } from '@/components/Button'
 
 import { CharacterAvatar } from '@/modules/character/CharacterAvatar'
@@ -9,7 +9,7 @@ import { CHARACTER_CLASS_MAP, CHARACTER_RACE_MAP } from '@/lib/constants'
 
 export type CharacterCardProps = {
   onClick?: (realmSlug: string, name: string) => void
-} & CharacterProps
+} & Character
 
 export const CharacterCard: React.FC<CharacterCardProps> = ({
   region,
@@ -33,7 +33,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
     <div>
       <div>
         <p className="text-lg font-bold">
-          <Link href={`/character/eu/argent-dawn/${name}`}>{name}</Link>
+          <Link href={`/character/${region}/${realmSlug}/${name}`}>{name}</Link>
         </p>
         {guild && <p className="text-sm">&lt;{guild}&gt;</p>}
       </div>

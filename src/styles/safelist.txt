@@ -1,13 +1,13 @@
 dark
-text-class-1
-text-class-2
-text-class-3
-text-class-4
-text-class-5
-text-class-6
-text-class-7
-text-class-8
-text-class-9
-text-class-10
-text-class-11
-text-class-12
+text-class-1 bg-class-1
+text-class-2 bg-class-2
+text-class-3 bg-class-3
+text-class-4 bg-class-4
+text-class-5 bg-class-5
+text-class-6 bg-class-6
+text-class-7 bg-class-7
+text-class-8 bg-class-8
+text-class-9 bg-class-9
+text-class-10 bg-class-10
+text-class-11 bg-class-11
+text-class-12 bg-class-12

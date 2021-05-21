@@ -12,16 +12,16 @@ const createRedisKey = (
   }
 
   if (typeof key === 'string') {
-    return key
+    return key?.toLowerCase()
   }
 
   const { name, userSpecific } = key
 
   if (userSpecific && token) {
-    return `user:${token.id}:${name}`
+    return `user:${token.id}:${name}`.toLocaleLowerCase()
   }
 
-  return name
+  return name?.toLocaleLowerCase()
 }
 
 export default createRedisKey

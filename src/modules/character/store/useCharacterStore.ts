@@ -1,16 +1,17 @@
 import { createStore } from '@/lib/createStore'
 import { combine } from 'zustand/middleware'
 
-import { CharacterProps, BattleNetRegion } from '@/types'
+import { Character } from '@/types'
 
-type CharacterStoreProps = CharacterProps & {
-  region: BattleNetRegion
+export type CharacterStoreProps = Character & {
   characterKey: string
 }
 
 export const initialCharacterState: CharacterStoreProps = {
   id: null,
+  userId: null,
   region: null,
+  realm: '',
   realmSlug: '',
   name: '',
   classId: null,
@@ -21,6 +22,8 @@ export const initialCharacterState: CharacterStoreProps = {
   level: null,
   covenantId: null,
   characterKey: '',
+  createdAt: null,
+  updatedAt: null,
 }
 
 export const useCharacterStore = createStore(

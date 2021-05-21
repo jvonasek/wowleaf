@@ -73,6 +73,8 @@ model Character {
   gender      String
   guild       String?
   level       Int
+  region      String
+  realm       String
   realmSlug   String   @map("realm_slug")
   covenantId  Int?     @map("covenant_id")
   createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
