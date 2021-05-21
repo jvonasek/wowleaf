@@ -127,7 +127,9 @@ export const AchievementCard: React.FC<Achievement> = memo(
               <div className="flex items-center">
                 <div className="h-2 w-full rounded-full bg-background">
                   <div
-                    className="h-2 rounded-l-full"
+                    className={`h-2 rounded-l-full${
+                      percent === 100 ? ' rounded-r-full' : ''
+                    }`}
                     style={{
                       width: `${percent}%`,
                       backgroundColor: getHslColorByPercent(percent),

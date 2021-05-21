@@ -25,7 +25,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
   <div className="bg-surface p-3 rounded-lg flex space-x-2">
     <CharacterAvatar
       region={region}
-      realm={realmSlug}
+      realmSlug={realmSlug}
       name={name}
       gender={gender}
       raceId={raceId}

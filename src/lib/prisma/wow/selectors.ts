@@ -15,3 +15,5 @@ export const createFactionSelector = (factionId: Faction) => {
     ],
   }
 }
+
+export const createAchievementSelector = (isPlain = false) => {}

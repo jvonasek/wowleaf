@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { UseQueryOptions } from 'react-query'
 import { LocalizedCharacterAchievement } from 'battlenet-api'
 import { pluck } from 'ramda'
 import { groupById } from '@/lib/utils'
@@ -25,10 +26,6 @@ type CharacterProps = CharacterParams & {
   characterKey: string
 }
 
-type CharacterQueryOptions = {
-  enabled?: boolean
-}
-
 const fetchCharacter = ({ region, realmSlug, name }) =>
   fetch(`/api/bnet/character/${region}/${realmSlug}/${name}/achievements`).then(
     async (res) => {
@@ -39,7 +36,7 @@ const fetchCharacter = ({ region, realmSlug, name }) =>
 
 export const useCharacterAchievementsQuery = (
   characters: CharacterProps[],
-  { enabled = false }: CharacterQueryOptions = {}
+  { enabled = false }: UseQueryOptions = {}
 ): CharacterAchievementsHookProps => {
   const achievementsData = useAchievementsStore()
   const filterValues = useAchievementsFilterStore((state) => state.filter)

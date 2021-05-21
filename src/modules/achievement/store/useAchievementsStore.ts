@@ -3,6 +3,8 @@ import { combine } from 'zustand/middleware'
 
 import { AchievementsQueryResult } from '../types'
 
+export type AchievementsStoreObject = AchievementsQueryResult
+
 export const useAchievementsStore = createStore(
   combine(
     {

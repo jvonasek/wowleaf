@@ -9,6 +9,7 @@ import {
   filter,
   allPass,
   lt,
+  pick,
 } from 'ramda'
 
 import { groupById, percentage, round } from '@/lib/utils'
@@ -27,7 +28,12 @@ import {
   AchievementsQueryResult,
 } from '@/modules/achievement/types'
 
-import { initialAchievementProgress } from '@/modules/character/store/useCharacterAchievementsStore'
+import { AchievementsStoreObject } from '@/modules/achievement/store/useAchievementsStore'
+
+import {
+  initialAchievementProgress,
+  CharacterAchievementsStoreObject,
+} from '@/modules/character/store/useCharacterAchievementsStore'
 
 type CharacterProps = CharacterParams & {
   characterKey: string
@@ -36,21 +42,20 @@ type CharacterProps = CharacterParams & {
 type SortDir = 'DESC' | 'ASC'
 
 export class AchievementProgressFactory {
-  private progress: CharacterAchievementProgress[]
-  private achievements: AchievementsQueryResult
+  private achievements: AchievementsStoreObject
   private characters: Array<{
     characterAchievements: CharacterAchievementsQueryResult
     character: CharacterProps
   }>
 
   constructor({ achievements, characters }) {
-    this.progress = []
     this.achievements = achievements
     this.characters = characters
   }
 
   getProggress(filterValues: AchievementFilterProps) {
     const progress = this.getProgressArray(filterValues)
+
     return progress.reduce((prev, character) => {
       return {
         ...prev,
@@ -62,12 +67,28 @@ export class AchievementProgressFactory {
   getProgressArray(filterValues: AchievementFilterProps) {
     return this.characters.map(
       ({ characterAchievements, character: { characterKey } }) => {
-        this.merge(characterAchievements).filter(filterValues).sort()
+        const data = this.merge(characterAchievements)
+        const progress = groupById(data)
+
+        const filterSorter = new AchievementFilterSorter({
+          achievements: this.achievements.byId,
+          progress,
+        })
+
+        const achievements = this.achievements.ids.map((id) =>
+          this.getAchievementById(id)
+        )
+
+        const filteredAndSorted = filterSorter
+          .apply(achievements)
+          .filter(filterValues)
+          .sort()
+          .get()
 
         return {
           [characterKey]: {
-            byId: groupById(this.progress),
-            ids: pluck('id', this.progress).slice(0, 300),
+            byId: progress,
+            ids: pluck('id', filteredAndSorted),
           },
         }
       }
@@ -75,74 +96,12 @@ export class AchievementProgressFactory {
   }
 
   merge(characterAchievements: CharacterAchievementsQueryResult) {
-    this.progress = this.achievements.ids.map((id) =>
+    return this.achievements.ids.map((id) =>
       this.createAchievementProgress(
         this.achievements.byId[id],
         characterAchievements.byId[id]
       )
     )
-
-    return this
-  }
-
-  filter(filterValues: AchievementFilterProps) {
-    const isIncompleteFilter = this.getFilterFn(
-      (_, progress: CharacterAchievementProgress) => {
-        const isNotCompleted =
-          lt(prop('percent', progress), 100) && !prop('isCompleted', progress)
-
-        return !prop('incomplete', filterValues) || isNotCompleted
-      }
-    )
-
-    const isAccountWideFilter = this.getFilterFn(
-      (achievement) =>
-        prop('includeAccountWide', filterValues) ||
-        !prop('isAccountWide', achievement)
-    )
-
-    const pointsFilter = this.getFilterFn((achievement) =>
-      gte(prop('points', achievement))(prop('points', filterValues))
-    )
-
-    const rewardFilter = this.getFilterFn(
-      (achievement) =>
-        !prop('reward', filterValues) ||
-        !!prop('rewardDescription', achievement)
-    )
-
-    this.progress = filter<CharacterAchievementProgress>(
-      allPass([
-        isIncompleteFilter,
-        isAccountWideFilter,
-        pointsFilter,
-        rewardFilter,
-      ]),
-      this.progress
-    )
-
-    return this
-  }
-
-  sort() {
-    const sortProps: Record<string, SortDir>[] = [
-      {
-        percent: 'DESC',
-      },
-      {
-        name: 'ASC',
-      },
-    ]
-
-    this.progress = sortWith<CharacterAchievementProgress>(
-      sortProps.map((s) => {
-        const propName = Object.keys(s)[0]
-        const dir = Object.values(s)[0]
-        return (dir === 'DESC' ? descend : ascend)(prop(propName))
-      })
-    )(this.progress)
-
-    return this
   }
 
   createAchievementProgress(
@@ -169,42 +128,31 @@ export class AchievementProgressFactory {
       characterAchievement?.criteria?.childCriteria
     )
 
-    const criteriaProgress = criteria.map(
-      ({
-        id,
-        amount: requiredAmount,
-        linkedAchievementId,
-        linkedAchievement,
-      }) => {
-        const { amount = 0, isCompleted = false } =
-          childCriteriaById?.[id] || {}
+    const criteriaProgress = criteria.map(({ id, amount: requiredAmount }) => {
+      const { amount = 0, isCompleted = false } = childCriteriaById?.[id] || {}
 
-        const showProgressBar =
-          requiredAmount <= 0 ? false : requiredAmount >= 5 //!!criterion.showProgressBar
+      const showProgressBar = requiredAmount <= 0 ? false : requiredAmount >= 5 //!!criterion.showProgressBar
 
-        let partial: number
-        let required: number
+      let partial: number
+      let required: number
 
-        if (showProgressBar) {
-          partial = amount
-          required = requiredAmount
-        } else {
-          partial = isCompleted ? 1 : 0
-          required = 1
-        }
-
-        return {
-          id,
-          showProgressBar,
-          partial,
-          required,
-          percent: percentage(clamp(0, required, partial), required, 1),
-          isCompleted,
-          linkedAchievement,
-          linkedAchievementId,
-        }
+      if (showProgressBar) {
+        partial = amount
+        required = requiredAmount
+      } else {
+        partial = isCompleted ? 1 : 0
+        required = 1
       }
-    )
+
+      return {
+        id,
+        showProgressBar,
+        partial,
+        required,
+        percent: percentage(clamp(0, required, partial), required, 1),
+        isCompleted,
+      }
+    })
 
     const hasChildCriteria = criteriaProgress.length > 0
     const partialAmount = characterAchievement?.criteria?.amount || 0
@@ -259,7 +207,7 @@ export class AchievementProgressFactory {
     return {
       id,
       name,
-      percent,
+      percent: isCompleted ? 100 : percent,
       isCompleted,
       completedTimestamp,
       partial: partialAmount,
@@ -298,6 +246,121 @@ export class AchievementProgressFactory {
     predicateFn: (a: Achievement, p: CharacterAchievementProgress) => boolean
   ) => (progress: CharacterAchievementProgress) => {
     const achievement = this.getAchievementById(progress.id)
+    return predicateFn(achievement, progress)
+  }
+}
+
+export class AchievementFilterSorter {
+  private achievements: AchievementsStoreObject['byId']
+  private progress: CharacterAchievementsStoreObject['byId']
+  public data: Achievement[]
+  constructor({
+    achievements,
+    progress,
+  }: {
+    achievements: AchievementsStoreObject['byId']
+    progress: CharacterAchievementsStoreObject['byId']
+  }) {
+    this.achievements = achievements
+    this.progress = progress
+    this.data = []
+  }
+
+  apply(data: Achievement[]) {
+    this.data = data
+    return this
+  }
+
+  filter(filterValues: AchievementFilterProps) {
+    const isIncompleteFilter = this.getFilterFn(
+      (_, progress: CharacterAchievementProgress) => {
+        const isNotCompleted =
+          lt(prop('percent', progress), 100) && !prop('isCompleted', progress)
+
+        return !prop('incomplete', filterValues) || isNotCompleted
+      }
+    )
+
+    const isAccountWideFilter = this.getFilterFn(
+      (achievement) =>
+        prop('includeAccountWide', filterValues) ||
+        !prop('isAccountWide', achievement)
+    )
+
+    const pointsFilter = this.getFilterFn((achievement) => {
+      const points = prop('points', achievement)
+      return gte(points)(prop('points', filterValues))
+    })
+
+    const rewardFilter = this.getFilterFn(
+      (achievement) =>
+        !prop('reward', filterValues) ||
+        !!prop('rewardDescription', achievement)
+    )
+
+    this.data = filter<Achievement>(
+      allPass([
+        isIncompleteFilter,
+        isAccountWideFilter,
+        pointsFilter,
+        rewardFilter,
+      ]),
+      this.data
+    )
+
+    return this
+  }
+
+  sort() {
+    const sortProps: Record<string, SortDir>[] = [
+      {
+        completedTimestamp: 'DESC',
+      },
+      {
+        percent: 'DESC',
+      },
+      {
+        name: 'ASC',
+      },
+    ]
+
+    this.data = sortWith<Achievement>(
+      sortProps.map((s) => {
+        const propName = Object.keys(s)[0]
+        const dir = Object.values(s)[0]
+        return (dir === 'DESC' ? descend : ascend)((ach) => {
+          const progress = this.getProgressById(ach.id)
+
+          const values = {
+            ...pick(['name', 'id'], ach),
+            ...pick(['completedTimestamp', 'percent'], progress),
+            completedTimestamp: progress?.completedTimestamp || 0,
+          }
+
+          return prop(propName)(values)
+        })
+      })
+    )(this.data)
+
+    return this
+  }
+
+  get() {
+    return this.data
+  }
+
+  getProgressById(id: number) {
+    return this.progress?.[id]
+  }
+
+  getAchievementById(id: number) {
+    return this.achievements?.[id]
+  }
+
+  getFilterFn = (
+    predicateFn: (a: Achievement, p: CharacterAchievementProgress) => boolean
+  ) => (achievement: Achievement) => {
+    const progress = this.getProgressById(achievement.id)
     return predicateFn(achievement, progress)
   }
 }

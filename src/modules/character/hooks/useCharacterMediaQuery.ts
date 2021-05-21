@@ -7,11 +7,11 @@ import {
   CharacterParams,
 } from '../types'
 
-import { CharacterGender } from '@/types'
+import { Gender } from '@/types'
 
 type CharacterMediaQueryOptions = CharacterParams & {
   raceId?: number
-  gender?: CharacterGender
+  gender?: Gender
 }
 
 type CharacterMediaQueryImages = Record<CharacterMediaTypes, string>
@@ -28,7 +28,7 @@ const initialState = {
 }
 
 export const useCharacterMediaQuery = (
-  { region, realm, name, gender, raceId }: CharacterMediaQueryOptions,
+  { region, realmSlug, name, gender, raceId }: CharacterMediaQueryOptions,
   { enabled }: UseQueryOptions
 ): CharacterMediaQueryValue => {
   const [images, setImages] = useState(initialState)
@@ -37,13 +37,13 @@ export const useCharacterMediaQuery = (
       'BnetCharacterMedia',
       {
         region,
-        realm,
+        realmSlug,
         name,
       },
     ],
     () =>
       fetch(
-        `/api/bnet/character/${region}/${realm}/${name}/media`
+        `/api/bnet/character/${region}/${realmSlug}/${name}/media`
       ).then((res) => res.json()),
     { enabled }
   )

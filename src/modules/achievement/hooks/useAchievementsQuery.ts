@@ -22,6 +22,7 @@ const fetchWoWAchievements = async ({
   factionId,
   category,
 }: AchievementHookParams) => {
+  console.log('fetch achs')
   const slug = (category && category.join('/')) || ''
   const params = factionId ? new URLSearchParams({ factionId }) : ''
   return fetch(`/api/wow/achievements/${slug}?${params}`).then((res) =>

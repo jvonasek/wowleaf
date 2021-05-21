@@ -8,7 +8,7 @@ export const DashboardPage: React.FC = ({ characters }) => {
     const character = {
       name,
       region: 'eu',
-      realm: 'argent-dawn',
+      realmSlug: 'argent-dawn',
     }
     return {
       ...character,

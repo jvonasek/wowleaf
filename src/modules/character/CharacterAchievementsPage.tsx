@@ -55,7 +55,7 @@ export const CharacterAchievementsPage: NextPage<CharacterAchievementsPageProps>
 
   useAchievementsQuery(
     {
-      category,
+      //category,
       factionId: character?.faction,
     },
     {
@@ -71,7 +71,7 @@ export const CharacterAchievementsPage: NextPage<CharacterAchievementsPageProps>
           <AchievementCategories />
         </div>
         <div className="col-span-9 bg-surface p-7 rounded-lg">
-          <CharacterAchievements />
+          <CharacterAchievements category={category} />
         </div>
       </div>
     </div>
@@ -79,8 +79,9 @@ export const CharacterAchievementsPage: NextPage<CharacterAchievementsPageProps>
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const [err, query] = CharacterRouteStruct.validate(context.query)
-  console.log(query)
+  const [err, query] = CharacterRouteStruct.validate(context.query, {
+    coerce: true,
+  })
 
   if (err || !query) {
     return {

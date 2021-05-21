@@ -1,7 +1,8 @@
 import { SessionProvider } from 'next-auth/client'
 import { BattleNetRegion, BattleNetResponse } from 'battlenet-api'
+import { Criterion } from '@/lib/prisma/wow'
 
-export { BattleNetRegion, BattleNetResponse }
+export { BattleNetRegion, BattleNetResponse, Criterion }
 
 export interface GenericObject {
   [key: string]: any
@@ -23,18 +24,6 @@ export type Achievement = {
   displayOrder: number | null
   rewardDescription: string | null
   rewardItemId: number | null
-}
-
-export type Criterion = {
-  id: number
-  description: string | null
-  amount: number | null
-  showProgressBar: boolean | null
-  isGold: boolean | null
-  operatorId: string | null
-  factionId: string | null
-  achievementId: number | null
-  parentCriteriaId: number | null
 }
 
 export type CriterionWithProgress = Omit<Criterion, 'amount'> & {

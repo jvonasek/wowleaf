@@ -3,14 +3,16 @@ import { combine } from 'zustand/middleware'
 
 import { CharacterAchievementProgress } from '../types'
 
+export type CharacterAchievementsStoreObject = {
+  /* name: string
+  realm: string
+  classId: number */
+  byId: Record<string, CharacterAchievementProgress>
+  ids: number[]
+}
+
 export type CharacterAchievementsStore = {
-  [x: string]: {
-    /* name: string
-    realm: string
-    classId: number */
-    byId: Record<string, CharacterAchievementProgress>
-    ids: number[]
-  }
+  [x: string]: CharacterAchievementsStoreObject
 }
 
 export const initialAchievementProgress: CharacterAchievementProgress = {
