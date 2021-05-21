@@ -5,10 +5,11 @@ import cx from 'classnames'
 export type ProgressBarProps = {
   total?: number
   value: number
+  formatter?: (n: number) => string
 }
 
 export const ProgressBar: React.FC<ProgressBarProps> = memo(
-  ({ total = 100, value = 0 }) => {
+  ({ total = 100, value = 0, formatter }) => {
     const [percentage, setPercentage] = useState(0)
 
     useEffect(() => {
@@ -17,6 +18,10 @@ export const ProgressBar: React.FC<ProgressBarProps> = memo(
 
     const current = clamp(0, total, value)
     const centerdLabelThreshold = percentage <= 20
+
+    const label = formatter
+      ? `${formatter(current)} / ${formatter(total)}`
+      : `${current} / ${total}`
 
     return (
       <div className="bg-background rounded-full relative h-6">
@@ -34,7 +39,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = memo(
               'text-on-background absolute left-1/2 transform -translate-x-1/2': centerdLabelThreshold,
             })}
           >
-            {current} / {total}
+            {label}
           </span>
         </div>
       </div>

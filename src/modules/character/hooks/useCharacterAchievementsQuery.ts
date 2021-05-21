@@ -26,14 +26,6 @@ type CharacterProps = CharacterParams & {
   characterKey: string
 }
 
-const fetchCharacter = ({ region, realmSlug, name }) =>
-  fetch(`/api/bnet/character/${region}/${realmSlug}/${name}/achievements`).then(
-    async (res) => {
-      const data = await res.json()
-      return transformCharacterAchievementsData(data)
-    }
-  )
-
 export const useCharacterAchievementsQuery = (
   characters: CharacterProps[],
   { enabled = false }: UseQueryOptions = {}
@@ -49,9 +41,9 @@ export const useCharacterAchievementsQuery = (
       const queryEnabled =
         enabled && !!characterKey && achievementsData.isSuccess
       return {
-        queryKey: ['BnetCharacterAchievements', characterKey],
-        queryFn: () => fetchCharacter({ region, realmSlug, name }),
+        queryKey: `/api/bnet/character/${region}/${realmSlug}/${name}/achievements`,
         enabled: queryEnabled,
+        select: transformCharacterAchievementsData,
       }
     })
   )

@@ -20,10 +20,7 @@ const ActiveLink = ({ children, href }) => {
 export const AchievementCategories: React.FC<AchievementCategoriesProps> = () => {
   const { characterKey } = useCharacterStore()
 
-  const { isSuccess, data } = useQuery(
-    ['WoWAchievementCategories', 'index'],
-    () => fetch('/api/wow/categories/').then((res) => res.json())
-  )
+  const { isSuccess, data } = useQuery('/api/wow/categories/')
 
   return (
     <div className="space-y-3">

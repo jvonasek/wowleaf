@@ -14,8 +14,7 @@ const getUserCharacters = () =>
 const Index: NextPage = ({ session }) => {
   console.log(session)
   const { isSuccess, data: characters } = useQuery<Character[]>(
-    'UserCharacters',
-    getUserCharacters,
+    '/api/user/characters',
     { enabled: !!session }
   )
   return (

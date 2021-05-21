@@ -33,18 +33,7 @@ export const useCharacterMediaQuery = (
 ): CharacterMediaQueryValue => {
   const [images, setImages] = useState(initialState)
   const { isSuccess, isLoading, data } = useQuery<CharacterMediaAssets>(
-    [
-      'BnetCharacterMedia',
-      {
-        region,
-        realmSlug,
-        name,
-      },
-    ],
-    () =>
-      fetch(
-        `/api/bnet/character/${region}/${realmSlug}/${name}/media`
-      ).then((res) => res.json()),
+    `/api/bnet/character/${region}/${realmSlug}/${name}/media`,
     { enabled }
   )
 

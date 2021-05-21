@@ -4,6 +4,8 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
 import { LayoutTree } from '@moxy/next-layout'
 
+import { createQueryFn } from '@/lib/createQueryFn'
+
 import { MainLayout } from '@/modules/layout/MainLayout'
 
 import '../styles/base.css'
@@ -11,7 +13,9 @@ import '../styles/base.css'
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
+      retry: process.env.NODE_ENV === 'production',
       refetchOnWindowFocus: false,
+      queryFn: createQueryFn(process.env.NEXT_PUBLIC_BASE_URL),
     },
   },
 })

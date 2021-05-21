@@ -2,13 +2,11 @@ import { useCallback, useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useRouter } from 'next/router'
 import { groupBy, prop } from 'ramda'
+import { Realm } from '@/prisma/wow'
 
 import { Button } from '@/components/Button'
 import { FormInput } from '@/components/FormInput'
 import { FormSelect } from '@/components/FormSelect'
-
-const fetchRealms = () =>
-  fetch('/api/wow/realms', { method: 'GET' }).then((res) => res.json())
 
 export const CharacterSearch: React.FC = () => {
   const [regions, setRegions] = useState([])
@@ -20,7 +18,7 @@ export const CharacterSearch: React.FC = () => {
   })
   const router = useRouter()
 
-  const { isSuccess, data } = useQuery('WoWRealms', fetchRealms)
+  const { isSuccess, data } = useQuery<Realm[]>('/api/wow/realms')
 
   useEffect(() => {
     if (isSuccess) {

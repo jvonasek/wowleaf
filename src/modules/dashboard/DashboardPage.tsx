@@ -1,7 +1,6 @@
 import { useCharacterAchievementsQuery } from '@/modules/character/hooks/useCharacterAchievementsQuery'
 
-const createCharacterKey = ({ region, realm, name }) =>
-  `${region}/${realm}/${name}`.toLowerCase()
+import { createCharacterKey } from '@/lib/createCharacterKey'
 
 export const DashboardPage: React.FC = ({ characters }) => {
   const characterList = characters.map(({ name }) => {

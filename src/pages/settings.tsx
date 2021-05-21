@@ -19,8 +19,6 @@ export type SettingsProps = {
   providers: SessionProviders
 }
 
-const getCharacters = () => fetch('/api/bnet/user').then((res) => res.json())
-
 const createCharacter = ({
   region,
   realmSlug,
@@ -35,10 +33,7 @@ const Settings: React.FC<SettingsProps> = ({ providers }) => {
   const [selection, setSelection] = useState<Array<CharacterSelectionProps>>([])
 
   const { mutate } = useMutation(createCharacter)
-  const { isLoading, error, data: characters } = useQuery(
-    'BnetCharacters',
-    getCharacters
-  )
+  const { isLoading, error, data: characters } = useQuery('/api/bnet/user')
 
   const submitCharacters = useCallback(() => {
     for (const character of selection) {

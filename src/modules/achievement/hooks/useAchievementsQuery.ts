@@ -18,27 +18,15 @@ type AchievementsHookResult = {
   isSuccess: boolean
 }
 
-const fetchWoWAchievements = async ({
-  factionId,
-  category,
-}: AchievementHookParams) => {
-  console.log('fetch achs')
-  const slug = (category && category.join('/')) || ''
-  const params = factionId ? new URLSearchParams({ factionId }) : ''
-  return fetch(`/api/wow/achievements/${slug}?${params}`).then((res) =>
-    res.json()
-  )
-}
-
 export const useAchievementsQuery = (
   { category, factionId }: AchievementHookParams = { factionId: null },
   options?: UseQueryOptions<Achievement[]>
 ): AchievementsHookResult => {
   const { set } = useAchievementsStore()
 
+  const slug = (category && category.join('/')) || ''
   const { isSuccess, isLoading, data } = useQuery<Achievement[]>(
-    ['WoWAchievements', category || 'index'],
-    () => fetchWoWAchievements({ category, factionId }),
+    [`/api/wow/achievements/${slug}`, { factionId }],
     options
   )
 

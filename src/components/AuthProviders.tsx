@@ -32,7 +32,7 @@ export const AuthProviders: React.FC<AuthProvidersProps> = ({ providers }) => {
           <Button
             onClick={() =>
               signIn(provider.id, {
-                callbackUrl: `${process.env.NEXTAUTH_URL}/settings`,
+                callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/settings`,
               })
             }
           >

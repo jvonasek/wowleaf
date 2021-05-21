@@ -16,7 +16,7 @@ export const AchievementCriteriaList: React.FC<AchievementCriteriaListProps> = (
 }) => {
   return (
     <div className="grid grid-cols-2 leading-8 text-foreground-muted font-bold text-sm">
-      {criteria.map(({ id, description, linkedAchievement }) => (
+      {criteria.map(({ id, description, linkedAchievement, isGold }) => (
         <div
           key={id}
           className={
@@ -30,6 +30,7 @@ export const AchievementCriteriaList: React.FC<AchievementCriteriaListProps> = (
           ) : (
             <AchievementCriterion
               description={description}
+              isGold={isGold}
               {...criteriaProgress?.[id]}
             />
           )}

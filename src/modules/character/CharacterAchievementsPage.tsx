@@ -25,7 +25,7 @@ const fetchCharacter = async ({
   name,
 }): Promise<BattleNetResponse<CharacterProps>> => {
   return fetch(
-    `${process.env.NEXTAUTH_URL}/api/bnet/character/${region}/${realm}/${name}`,
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/bnet/character/${region}/${realm}/${name}`,
     { method: 'GET' }
   ).then((res) => res.json())
 }

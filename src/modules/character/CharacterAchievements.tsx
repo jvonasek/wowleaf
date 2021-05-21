@@ -17,17 +17,24 @@ import { Faction } from '@/types'
 
 import { AchievementFilterSorter } from '@/lib/AchievementProgressFactory'
 import { paginateArray } from '@/lib/paginateArray'
+import { qs } from '@/lib/qs'
 
 import { Button } from '@/components/Button'
 
-const fetchWoWAchievements = async ({ factionId, category, ids = [] }) => {
-  const slug = (category && category.join('/')) || ''
-  const params = factionId ? new URLSearchParams({ factionId }) : ''
+const PAGINATED_ACHIEVEMENTS_QUERY_KEY = 'WoWPaginatedAchievements'
 
-  const idParams = new URLSearchParams(ids.map((id) => ['id', id]))
-  return fetch(
-    `/api/wow/achievements/${slug}?${params}&${slug ? '' : idParams}`
-  ).then((res) => res.json())
+const fetchAchievementPage = async ({ factionId, category, ids = [] }) => {
+  const slug = (category && category.join('/')) || ''
+  const isRoot = !slug
+
+  const querystring = qs({
+    factionId,
+    id: isRoot ? ids : undefined,
+  })
+
+  return fetch(`/api/wow/achievements/${slug}${querystring}`).then((res) =>
+    res.json()
+  )
 }
 
 type PaginatedAchievementsQueryHookProps = {
@@ -76,9 +83,13 @@ const usePaginatedAchievementsQuery = (
     data: queryData,
     ...queryResult
   } = useInfiniteQuery<Achievement[]>(
-    ['WoWPaginatedAchievements', filter, isCategoryPage ? category : 'index'],
+    [
+      PAGINATED_ACHIEVEMENTS_QUERY_KEY,
+      filter,
+      isCategoryPage ? category : 'index',
+    ],
     ({ pageParam }) => {
-      return fetchWoWAchievements({
+      return fetchAchievementPage({
         category,
         factionId,
         ids: pageParam || progress.ids.slice(0, perPage),
@@ -92,7 +103,7 @@ const usePaginatedAchievementsQuery = (
   useEffect(() => {
     if (hasCategoryChanged || hasFilterChanged) {
       setPage(1)
-      queryClient.setQueryData('WoWPaginatedAchievements', (data) => ({
+      queryClient.setQueryData(PAGINATED_ACHIEVEMENTS_QUERY_KEY, (data) => ({
         pages: [],
         pageParams: [],
       }))
@@ -132,7 +143,6 @@ const usePaginatedAchievementsQuery = (
   ])
 
   // everything is fetched on category page, set paginator props to have one page
-
   const current = data.length
   const total = isCategoryPage ? data.length : progress.ids.length
   const lastPage = isCategoryPage ? 1 : Math.ceil(total / perPage)
