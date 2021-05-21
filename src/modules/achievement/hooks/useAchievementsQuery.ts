@@ -1,12 +1,12 @@
-import { pluck } from 'ramda';
-import { useEffect } from 'react';
-import { useQuery, UseQueryOptions } from 'react-query';
+import { pluck } from 'ramda'
+import { useEffect } from 'react'
+import { useQuery, UseQueryOptions } from 'react-query'
 
-import { groupById } from '@/lib/utils';
-import { Faction } from '@/types';
+import { groupById } from '@/lib/utils'
+import { Faction } from '@/types'
 
-import { useAchievementsStore } from '../store/useAchievementsStore';
-import { Achievement } from '../types';
+import { useAchievementsStore } from '../store/useAchievementsStore'
+import { Achievement } from '../types'
 
 type AchievementHookParams = {
   factionId: Faction
@@ -49,7 +49,7 @@ export const useAchievementsQuery = (
   }, [isSuccess, isLoading, data, set])
 
   return {
-    isLoading: isLoading,
-    isSuccess: isSuccess,
+    isLoading,
+    isSuccess,
   }
 }

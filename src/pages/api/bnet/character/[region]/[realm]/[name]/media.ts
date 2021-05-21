@@ -1,10 +1,15 @@
-import { BattleNetRegion, BattleNetResponse, LocalizedCharacterMedia, WoWAPI } from 'battlenet-api';
-import ms from 'ms.macro';
-import { NextApiHandler } from 'next';
+import {
+  BattleNetRegion,
+  BattleNetResponse,
+  LocalizedCharacterMedia,
+  WoWAPI,
+} from 'battlenet-api'
+import ms from 'ms.macro'
+import { NextApiHandler } from 'next'
 
-import cacheAPI from '@/lib/cacheAPI';
-import getCachedAccessToken from '@/lib/getCachedAccessToken';
-import { normalizeBattleNetData } from '@/lib/normalizeBattleNetData';
+import cacheAPI from '@/lib/cacheAPI'
+import getCachedAccessToken from '@/lib/getCachedAccessToken'
+import { normalizeBattleNetData } from '@/lib/normalizeBattleNetData'
 
 type CharacterMediaResponse = BattleNetResponse<LocalizedCharacterMedia>
 
@@ -23,12 +28,12 @@ const handle: NextApiHandler = (req, res) => {
       const wow = new WoWAPI({
         debug: true,
         accessToken,
-        region: region,
+        region,
       })
 
       return await wow.getCharacterMedia(realm, name)
     },
-    callback: async (result) => {
+    callback: (result) => {
       if (result.error) return []
 
       return normalizeBattleNetData('characterMedia')(result.data)

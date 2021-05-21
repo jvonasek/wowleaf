@@ -1,16 +1,16 @@
-import { LocalizedCharacterAchievement } from 'battlenet-api';
-import { pluck } from 'ramda';
-import { useEffect, useState } from 'react';
-import { UseQueryOptions } from 'react-query';
+import { LocalizedCharacterAchievement } from 'battlenet-api'
+import { pluck } from 'ramda'
+import { useEffect, useState } from 'react'
+import { UseQueryOptions } from 'react-query'
 
-import { useTypeSafeQueries } from '@/hooks/useTypeSafeQueries';
-import { AchievementProgressFactory } from '@/lib/AchievementProgressFactory';
-import { groupById } from '@/lib/utils';
-import { useAchievementsStore } from '@/modules/achievement/store/useAchievementsStore';
+import { useTypeSafeQueries } from '@/hooks/useTypeSafeQueries'
+import { AchievementProgressFactory } from '@/lib/AchievementProgressFactory'
+import { groupById } from '@/lib/utils'
+import { useAchievementsStore } from '@/modules/achievement/store/useAchievementsStore'
 
-import { useAchievementsFilterStore } from '../store/useAchievementsFilterStore';
-import { useCharacterAchievementsStore } from '../store/useCharacterAchievementsStore';
-import { CharacterAchievement, CharacterParams } from '../types';
+import { useAchievementsFilterStore } from '../store/useAchievementsFilterStore'
+import { useCharacterAchievementsStore } from '../store/useCharacterAchievementsStore'
+import { CharacterAchievement, CharacterParams } from '../types'
 
 type AchievementCriteria = LocalizedCharacterAchievement['criteria']
 type AchievementChildCriteria = LocalizedCharacterAchievement['criteria']['child_criteria']
@@ -114,7 +114,7 @@ function transformCharacterAchievementsData(
     if (criteria) {
       const { id, amount, is_completed, child_criteria } = criteria
       const criterion = {
-        id: id,
+        id,
         amount: amount || 0,
         isCompleted: !!is_completed,
       }

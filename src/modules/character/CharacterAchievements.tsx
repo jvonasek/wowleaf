@@ -1,23 +1,23 @@
-import { useCallback, useEffect, useState } from 'react';
-import { useInfiniteQuery, useQueryClient, UseQueryOptions } from 'react-query';
+import { useCallback, useEffect, useState } from 'react'
+import { useInfiniteQuery, useQueryClient, UseQueryOptions } from 'react-query'
 
-import { Button } from '@/components/Button';
-import { Spinner } from '@/components/Spinner';
-import { useHasChanged } from '@/hooks/useHasChanged';
-import { useWowheadLinks } from '@/hooks/useWowheadLinks';
-import { AchievementFilterSorter } from '@/lib/AchievementProgressFactory';
-import { paginateArray } from '@/lib/paginateArray';
-import { qs } from '@/lib/qs';
-import { AchievementCard } from '@/modules/achievement/AchievementCard';
-import { useAchievementsStore } from '@/modules/achievement/store/useAchievementsStore';
-import { Achievement } from '@/modules/achievement/types';
-import { Faction } from '@/types';
+import { Button } from '@/components/Button'
+import { Spinner } from '@/components/Spinner'
+import { useHasChanged } from '@/hooks/useHasChanged'
+import { useWowheadLinks } from '@/hooks/useWowheadLinks'
+import { AchievementFilterFactory } from '@/lib/AchievementFilterFactory'
+import { paginateArray } from '@/lib/paginateArray'
+import { qs } from '@/lib/qs'
+import { AchievementCard } from '@/modules/achievement/AchievementCard'
+import { useAchievementsStore } from '@/modules/achievement/store/useAchievementsStore'
+import { Achievement } from '@/modules/achievement/types'
+import { Faction } from '@/types'
 
-import { CharacterAchievementsFilter } from './CharacterAchievementsFilter';
-import { useCharacterAchievementsQuery } from './hooks/useCharacterAchievementsQuery';
-import { useAchievementsFilterStore } from './store/useAchievementsFilterStore';
-import { useCharacterAchievementsStore } from './store/useCharacterAchievementsStore';
-import { useCharacterStore } from './store/useCharacterStore';
+import { CharacterAchievementsFilter } from './CharacterAchievementsFilter'
+import { useCharacterAchievementsQuery } from './hooks/useCharacterAchievementsQuery'
+import { useAchievementsFilterStore } from './store/useAchievementsFilterStore'
+import { useCharacterAchievementsStore } from './store/useCharacterAchievementsStore'
+import { useCharacterStore } from './store/useCharacterStore'
 
 const PAGINATED_ACHIEVEMENTS_QUERY_KEY = 'WoWPaginatedAchievements'
 
@@ -30,9 +30,9 @@ const fetchAchievementPage = async ({ factionId, category, ids = [] }) => {
     id: isRoot ? ids : undefined,
   })
 
-  return fetch(`/api/wow/achievements/${slug}${querystring}`).then((res) =>
-    res.json()
-  )
+  return await fetch(
+    `/api/wow/achievements/${slug}${querystring}`
+  ).then((res) => res.json())
 }
 
 type PaginatedAchievementsQueryHookProps = {
@@ -101,12 +101,12 @@ const usePaginatedAchievementsQuery = (
   useEffect(() => {
     if (hasCategoryChanged || hasFilterChanged) {
       setPage(1)
-      queryClient.setQueryData(PAGINATED_ACHIEVEMENTS_QUERY_KEY, (data) => ({
+      queryClient.setQueryData(PAGINATED_ACHIEVEMENTS_QUERY_KEY, () => ({
         pages: [],
         pageParams: [],
       }))
     }
-  }, [hasCategoryChanged, hasFilterChanged])
+  }, [hasCategoryChanged, hasFilterChanged, queryClient])
 
   useEffect(() => {
     if (isLoading) {
@@ -114,7 +114,7 @@ const usePaginatedAchievementsQuery = (
     }
 
     if (isSuccess) {
-      const achievmentFilterSorter = new AchievementFilterSorter({
+      const achievmentFilterSorter = new AchievementFilterFactory({
         achievements: achievements.byId,
         progress: progress.byId,
       })
@@ -158,7 +158,7 @@ const usePaginatedAchievementsQuery = (
 
       setPage(nextPage)
     }
-  }, [page, perPage, hasNextPage, progress.ids])
+  }, [hasNextPage, page, progress.ids, perPage, fetchNextPage])
 
   return {
     ...queryResult,

@@ -1,12 +1,17 @@
-import { BattleNetRegion, BattleNetResponse, LocalizedCharacter, WoWAPI } from 'battlenet-api';
-import ms from 'ms.macro';
-import { NextApiHandler } from 'next';
+import {
+  BattleNetRegion,
+  BattleNetResponse,
+  LocalizedCharacter,
+  WoWAPI,
+} from 'battlenet-api'
+import ms from 'ms.macro'
+import { NextApiHandler } from 'next'
 
-import cacheAPI from '@/lib/cacheAPI';
-import getCachedAccessToken from '@/lib/getCachedAccessToken';
-import { normalizeBattleNetData } from '@/lib/normalizeBattleNetData';
-import prisma from '@/prisma/app';
-import { JWToken } from '@/types';
+import cacheAPI from '@/lib/cacheAPI'
+import getCachedAccessToken from '@/lib/getCachedAccessToken'
+import { normalizeBattleNetData } from '@/lib/normalizeBattleNetData'
+import prisma from '@/prisma/app'
+import { JWToken } from '@/types'
 
 type CharacterResponse = BattleNetResponse<LocalizedCharacter>
 
@@ -27,7 +32,7 @@ const handle: NextApiHandler = (req, res) => {
       const wow = new WoWAPI({
         debug: true,
         accessToken,
-        region: region,
+        region,
       })
 
       return await wow.getCharacter(realm, name)

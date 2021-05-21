@@ -1,11 +1,14 @@
-import ms from 'ms.macro';
-import { NextApiRequest, NextApiResponse } from 'next';
+import ms from 'ms.macro'
+import { NextApiRequest, NextApiResponse } from 'next'
 
-import createRedisKey, { RedisCacheKey, RedisCacheKeyFactory } from '@/lib/createRedisKey';
-import getJWT from '@/lib/getJWT';
-import { responseErrorMessage } from '@/lib/responseErrorMessage';
-import { RedisCacheService } from '@/services/RedisCacheService';
-import { BattleNetResponse, JWToken } from '@/types';
+import createRedisKey, {
+  RedisCacheKey,
+  RedisCacheKeyFactory,
+} from '@/lib/createRedisKey'
+import getJWT from '@/lib/getJWT'
+import { responseErrorMessage } from '@/lib/responseErrorMessage'
+import { RedisCacheService } from '@/services/RedisCacheService'
+import { BattleNetResponse, JWToken } from '@/types'
 
 export interface CacheAPIOptions<R> {
   key: RedisCacheKey | RedisCacheKeyFactory
@@ -17,7 +20,7 @@ export interface CacheAPIOptions<R> {
     res: NextApiResponse,
     token: JWToken
   ) => Promise<R>
-  callback: (result: R, token: JWToken) => any
+  callback: (result: R, token: JWToken) => Promise<any> | any
 }
 
 const cacheAPI = async <R extends BattleNetResponse>(

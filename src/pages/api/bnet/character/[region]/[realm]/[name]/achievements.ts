@@ -1,10 +1,10 @@
-import { BattleNetResponse, WoWAPI } from 'battlenet-api';
-import ms from 'ms.macro';
-import { NextApiHandler } from 'next';
+import { BattleNetResponse, WoWAPI } from 'battlenet-api'
+import ms from 'ms.macro'
+import { NextApiHandler } from 'next'
 
-import cacheAPI from '@/lib/cacheAPI';
-import getCachedAccessToken from '@/lib/getCachedAccessToken';
-import { normalizeBattleNetData } from '@/lib/normalizeBattleNetData';
+import cacheAPI from '@/lib/cacheAPI'
+import getCachedAccessToken from '@/lib/getCachedAccessToken'
+import { normalizeBattleNetData } from '@/lib/normalizeBattleNetData'
 
 const handle: NextApiHandler = (req, res) =>
   cacheAPI<BattleNetResponse>(req, res, {
@@ -16,7 +16,7 @@ const handle: NextApiHandler = (req, res) =>
       const wow = new WoWAPI({
         debug: true,
         accessToken,
-        region: region,
+        region,
       })
       return await wow.getCharacterAchievements(realm, name)
     },

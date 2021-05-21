@@ -1,12 +1,12 @@
-import { BattleNetRegion } from 'battlenet-api';
-import { add } from 'date-fns';
-import { NextApiHandler } from 'next';
-import NextAuth from 'next-auth';
-import Adapters from 'next-auth/adapters';
+import { BattleNetRegion } from 'battlenet-api'
+import { add } from 'date-fns'
+import { NextApiHandler } from 'next'
+import NextAuth from 'next-auth'
+import Adapters from 'next-auth/adapters'
 
-import prisma from '@/prisma/app';
-import { RedisCacheService } from '@/services/RedisCacheService';
-import { JWToken } from '@/types';
+import prisma from '@/prisma/app'
+import { RedisCacheService } from '@/services/RedisCacheService'
+import { JWToken } from '@/types'
 
 const BNET_TOKEN_EXPIRY = { hours: 24 }
 
@@ -35,7 +35,7 @@ const options = {
   },
 }
 
-const BattleNetProvider = (region: BattleNetRegion) => ({
+const createBattleNetProvider = (region: BattleNetRegion): any => ({
   id: `battlenet-${region}`,
   name: `Battle.Net ${region.toUpperCase()}`,
   type: 'oauth',
@@ -70,7 +70,7 @@ const handle: NextApiHandler = (req, res) => {
             expires: user?.battlenet?.expires,
           }
         }
-        return Promise.resolve(session)
+        return await Promise.resolve(session)
       },
       jwt: async (
         token: any,
@@ -95,10 +95,10 @@ const handle: NextApiHandler = (req, res) => {
           }
         }
 
-        return Promise.resolve(token)
+        return await Promise.resolve(token)
       },
     },
-    providers: [BattleNetProvider('us'), BattleNetProvider('eu')],
+    providers: [createBattleNetProvider('us'), createBattleNetProvider('eu')],
   })
 }
 

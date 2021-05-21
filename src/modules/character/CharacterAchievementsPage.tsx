@@ -1,16 +1,17 @@
-import { GetServerSideProps, NextPage } from 'next';
-import { useEffect } from 'react';
+import { GetServerSideProps, NextPage } from 'next'
+import { useEffect } from 'react'
 
-import { createCharacterKey } from '@/lib/createCharacterKey';
-import { CharacterRouteStruct } from '@/lib/structs';
-import { AchievementCategories } from '@/modules/achievement-categories/AchievementCategories';
-import { useAchievementsQuery } from '@/modules/achievement/hooks/useAchievementsQuery';
-import { CharacterAchievements } from '@/modules/character/CharacterAchievements';
-import { CharacterPageHeader } from '@/modules/character/CharacterPageHeader';
+import { createCharacterKey } from '@/lib/createCharacterKey'
+import { CharacterRouteStruct } from '@/lib/structs'
+import { AchievementCategories } from '@/modules/achievement-categories/AchievementCategories'
+import { useAchievementsQuery } from '@/modules/achievement/hooks/useAchievementsQuery'
+import { CharacterAchievements } from '@/modules/character/CharacterAchievements'
+import { CharacterPageHeader } from '@/modules/character/CharacterPageHeader'
 import {
-    initialCharacterState, useCharacterStore
-} from '@/modules/character/store/useCharacterStore';
-import { BattleNetResponse, Character } from '@/types';
+  initialCharacterState,
+  useCharacterStore,
+} from '@/modules/character/store/useCharacterStore'
+import { BattleNetResponse, Character } from '@/types'
 
 type CharacterAchievementsPageProps = {
   category?: string[]
@@ -69,7 +70,7 @@ const fetchCharacter = async ({
   realm,
   name,
 }): Promise<BattleNetResponse<Character>> => {
-  return fetch(
+  return await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/api/bnet/character/${region}/${realm}/${name}`
   ).then((res) => res.json())
 }

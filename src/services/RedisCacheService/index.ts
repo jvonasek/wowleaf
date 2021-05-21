@@ -1,7 +1,7 @@
-import redis from 'redis';
-import { promisify } from 'util';
+import redis from 'redis'
+import { promisify } from 'util'
 
-import { GenericObject } from '@/types';
+import { GenericObject } from '@/types'
 
 export class RedisCacheService {
   protected cache = redis.createClient({
