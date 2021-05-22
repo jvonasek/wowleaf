@@ -6,18 +6,24 @@ import { Spinner } from '@/components/Spinner'
 import { useHasChanged } from '@/hooks/useHasChanged'
 import { useWowheadLinks } from '@/hooks/useWowheadLinks'
 import { AchievementFilterFactory } from '@/lib/AchievementFilterFactory'
+import { IS_PREMIUM } from '@/lib/constants'
 import { paginateArray } from '@/lib/paginateArray'
 import { qs } from '@/lib/qs'
 import { AchievementCard } from '@/modules/achievement/AchievementCard'
 import { useAchievementsStore } from '@/modules/achievement/store/useAchievementsStore'
 import { Achievement } from '@/modules/achievement/types'
-import { Faction } from '@/types'
 
 import { CharacterAchievementsFilter } from './CharacterAchievementsFilter'
 import { useCharacterAchievementsQuery } from './hooks/useCharacterAchievementsQuery'
 import { useAchievementsFilterStore } from './store/useAchievementsFilterStore'
-import { useCharacterAchievementsStore } from './store/useCharacterAchievementsStore'
-import { useCharacterStore } from './store/useCharacterStore'
+import {
+  useCharacterAchievementsStore,
+  useCombinedAchievementsStore,
+} from './store/useCharacterAchievementsStore'
+import {
+  CharacterStoreProps,
+  useCharacterStore,
+} from './store/useCharacterStore'
 
 const PAGINATED_ACHIEVEMENTS_QUERY_KEY = 'WoWPaginatedAchievements'
 
@@ -38,16 +44,14 @@ const fetchAchievementPage = async ({ factionId, category, ids = [] }) => {
 type PaginatedAchievementsQueryHookProps = {
   perPage?: number
   category: string[]
-  factionId: Faction
-  characterKey: string
+  character: CharacterStoreProps
 }
 
 const usePaginatedAchievementsQuery = (
   {
     perPage = 20,
     category,
-    factionId,
-    characterKey,
+    character: { faction, characterKey },
   }: PaginatedAchievementsQueryHookProps,
   { enabled }: UseQueryOptions
 ) => {
@@ -58,16 +62,12 @@ const usePaginatedAchievementsQuery = (
   const { filter } = useAchievementsFilterStore()
   const achievements = useAchievementsStore()
 
-  const progress = useCharacterAchievementsStore(
-    useCallback(
-      (state) =>
-        state[characterKey] || {
-          ids: [],
-          byId: {},
-        },
-      [characterKey]
-    )
-  )
+  const { getCharacter } = useCharacterAchievementsStore()
+  const { combined } = useCombinedAchievementsStore()
+
+  const progress = IS_PREMIUM ? combined : getCharacter(characterKey)
+
+  console.log(progress)
 
   const isCategoryPage = !!category?.length
   const hasIdsChanged = useHasChanged(progress.ids)
@@ -89,12 +89,15 @@ const usePaginatedAchievementsQuery = (
     ({ pageParam }) => {
       return fetchAchievementPage({
         category,
-        factionId,
+        factionId: faction ?? undefined,
         ids: pageParam || progress.ids.slice(0, perPage),
       })
     },
     {
-      enabled: enabled && (hasIdsChanged || hasCategoryChanged),
+      enabled:
+        enabled &&
+        !!progress.ids.length &&
+        (hasIdsChanged || hasCategoryChanged),
     }
   )
 
@@ -183,23 +186,14 @@ type CharacterAchievementsProps = {
 export const CharacterAchievements: React.FC<CharacterAchievementsProps> = ({
   category,
 }) => {
-  const {
-    name,
-    region,
-    realmSlug,
-    characterKey,
-    faction: factionId,
-  } = useCharacterStore()
+  const character = useCharacterStore()
 
   const {
     isLoading: isCharAchsLoading,
     isSuccess: isCharAchsSuccess,
-  } = useCharacterAchievementsQuery(
-    [{ region, realmSlug, name, characterKey }],
-    {
-      enabled: !!characterKey,
-    }
-  )
+  } = useCharacterAchievementsQuery([character], {
+    enabled: !!character?.characterKey,
+  })
 
   const {
     fetchNextPage,
@@ -211,11 +205,10 @@ export const CharacterAchievements: React.FC<CharacterAchievementsProps> = ({
   } = usePaginatedAchievementsQuery(
     {
       category,
-      factionId,
-      characterKey,
+      character,
     },
     {
-      enabled: isCharAchsSuccess,
+      enabled: IS_PREMIUM || isCharAchsSuccess,
     }
   )
 

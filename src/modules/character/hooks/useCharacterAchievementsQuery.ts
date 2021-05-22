@@ -10,7 +10,8 @@ import { useAchievementsStore } from '@/modules/achievement/store/useAchievement
 
 import { useAchievementsFilterStore } from '../store/useAchievementsFilterStore'
 import { useCharacterAchievementsStore } from '../store/useCharacterAchievementsStore'
-import { CharacterAchievement, CharacterParams } from '../types'
+import { CharacterStoreProps } from '../store/useCharacterStore'
+import { CharacterAchievement } from '../types'
 
 type AchievementCriteria = LocalizedCharacterAchievement['criteria']
 type AchievementChildCriteria = LocalizedCharacterAchievement['criteria']['child_criteria']
@@ -20,26 +21,22 @@ type CharacterAchievementsHookProps = {
   isSuccess: boolean
 }
 
-type CharacterProps = CharacterParams & {
-  characterKey: string
-}
-
 export const useCharacterAchievementsQuery = (
-  characters: CharacterProps[],
+  characters: CharacterStoreProps[],
   { enabled = false }: UseQueryOptions = {}
 ): CharacterAchievementsHookProps => {
   const achievementsData = useAchievementsStore()
   const filterValues = useAchievementsFilterStore((state) => state.filter)
 
-  const { set } = useCharacterAchievementsStore()
+  const { set, setCharacters } = useCharacterAchievementsStore()
   const [status, setStatus] = useState({ isSet: false })
 
   const queries = useTypeSafeQueries(
-    characters.map(({ region, realmSlug, name, characterKey }) => {
+    characters.map(({ characterKey }) => {
       const queryEnabled =
         enabled && !!characterKey && achievementsData.isSuccess
       return {
-        queryKey: `/api/bnet/character/${region}/${realmSlug}/${name}/achievements`,
+        queryKey: `/api/bnet/character/${characterKey}/achievements`,
         enabled: queryEnabled,
         select: transformCharacterAchievementsData,
       }
@@ -65,7 +62,8 @@ export const useCharacterAchievementsQuery = (
 
       const charactersAchievements = progress.getProggress(filterValues)
 
-      set(charactersAchievements)
+      set({ isSuccess, isLoading })
+      setCharacters(charactersAchievements)
       setStatus({ isSet: true })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

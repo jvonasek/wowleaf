@@ -63,6 +63,7 @@ const handle: NextApiHandler = (req, res) => {
     callbacks: {
       session: async (session: any, user: any) => {
         if (user) {
+          session.user.id = user?.id
           session.battlenet = {
             region: user?.battlenet?.region,
             battletag: user?.battlenet?.battletag,

@@ -1,4 +1,4 @@
-import { BattleNetRegion } from '@/types';
+import { BattleNetRegion } from '@/types'
 
 export const BNET_REGIONS: Array<BattleNetRegion> = ['us', 'eu', 'kr', 'tw']
 
@@ -49,3 +49,5 @@ export enum Faction {
   Alliance = 'ALLIANCE',
   Horde = 'HORDE',
 }
+
+export const IS_PREMIUM = false

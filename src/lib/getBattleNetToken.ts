@@ -1,4 +1,8 @@
-import { BattleNetRegion, BattleNetService, BattleNetTokenProps } from 'battlenet-api';
+import {
+  BattleNetRegion,
+  BattleNetService,
+  BattleNetTokenProps,
+} from 'battlenet-api'
 
 const getBattleNetToken = async (
   region: BattleNetRegion = 'eu'
@@ -9,7 +13,6 @@ const getBattleNetToken = async (
       clientId: process.env.BNET_CLIENT_ID,
       clientSecret: process.env.BNET_CLIENT_SECRET,
     })
-    console.log({ newToken: token })
     return token
   } catch (error) {
     console.log(error)

@@ -14,11 +14,16 @@ export interface GenericObject {
 export type Faction = 'ALLIANCE' | 'HORDE'
 export type Gender = 'MALE' | 'FEMALE'
 
-export type Character = UserCharacter & {
-  region: BattleNetRegion
-  faction: Faction
-  gender: Gender
-}
+type Optional<T, K extends keyof T> = Omit<T, K> & Partial<T>
+
+export type Character = Optional<
+  UserCharacter & {
+    region: BattleNetRegion
+    faction: Faction
+    gender: Gender
+  },
+  'updatedAt' | 'createdAt'
+>
 
 export type Criterion = BaseCriterion & {
   linkedAchievement: Achievement

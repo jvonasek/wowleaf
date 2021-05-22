@@ -1,19 +1,18 @@
-import cx from 'classnames';
-import { memo, useMemo, useState } from 'react';
+import cx from 'classnames'
+import { memo, useMemo, useState } from 'react'
 
-import { Button } from '@/components/Button';
-import { DateTime } from '@/components/DateTime';
-import { Dialog } from '@/components/Dialog';
-import { ProgressBar } from '@/components/ProgressBar';
-import { getHslColorByPercent } from '@/lib/utils';
-import {
-    useCharacterAchievementsStore
-} from '@/modules/character/store/useCharacterAchievementsStore';
-import { useCharacterStore } from '@/modules/character/store/useCharacterStore';
-import { ArrowSmRightIcon, CheckIcon, StarIcon } from '@heroicons/react/solid';
+import { Button } from '@/components/Button'
+import { DateTime } from '@/components/DateTime'
+import { Dialog } from '@/components/Dialog'
+import { ProgressBar } from '@/components/ProgressBar'
+import { getHslColorByPercent } from '@/lib/utils'
+import { useCharacterAchievementsStore } from '@/modules/character/store/useCharacterAchievementsStore'
+import { useCharacterStore } from '@/modules/character/store/useCharacterStore'
+import { ArrowSmRightIcon, CheckIcon, StarIcon } from '@heroicons/react/solid'
+import { IS_PREMIUM } from '@/lib/constants'
 
-import { AchievementCriteriaList } from './AchievementCriteriaList';
-import { Achievement } from './types';
+import { AchievementCriteriaList } from './AchievementCriteriaList'
+import { Achievement } from './types'
 
 export type AchievementCardProps = Achievement
 
@@ -23,7 +22,6 @@ export const AchievementCard: React.FC<Achievement> = memo(
     name,
     description,
     criteria,
-    factionId,
     rewardDescription,
     rewardItemId,
     achievementAssets,
@@ -33,7 +31,7 @@ export const AchievementCard: React.FC<Achievement> = memo(
     const [dialogOpen, setDialogOpen] = useState(false)
     const { characterKey } = useCharacterStore()
 
-    const { get: getProgress } = useCharacterAchievementsStore()
+    const { getProgress } = useCharacterAchievementsStore()
 
     function closeDialog() {
       setDialogOpen(false)
@@ -51,7 +49,8 @@ export const AchievementCard: React.FC<Achievement> = memo(
       completedTimestamp,
       showOverallProgressBar,
       criteria: criteriaProgress,
-    } = useMemo(() => getProgress(id, characterKey), [
+      characterKey: achievementCharacterKey,
+    } = useMemo(() => getProgress(id, characterKey, IS_PREMIUM), [
       id,
       characterKey,
       getProgress,
@@ -124,7 +123,7 @@ export const AchievementCard: React.FC<Achievement> = memo(
           </div>
           <div className="col-span-3 flex items-center">
             <div className="w-full">
-              <span>{factionId}</span>
+              <span>{achievementCharacterKey}</span>
               <div className="flex items-center">
                 <div className="h-2 w-full rounded-full bg-background">
                   <div

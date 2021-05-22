@@ -1,10 +1,10 @@
-import { BattleNetResponse, UserProfile, WoWAPI } from 'battlenet-api';
-import ms from 'ms.macro';
-import { NextApiHandler } from 'next';
+import { BattleNetResponse, UserProfile, WoWAPI } from 'battlenet-api'
+import ms from 'ms.macro'
+import { NextApiHandler } from 'next'
 
-import cacheAPI from '@/lib/cacheAPI';
-import { normalizeBattleNetData } from '@/lib/normalizeBattleNetData';
-import { JWToken } from '@/types/index';
+import cacheAPI from '@/lib/cacheAPI'
+import { normalizeBattleNetData } from '@/lib/normalizeBattleNetData'
+import { JWToken } from '@/types/index'
 
 type UserProfileResponse = BattleNetResponse<UserProfile>
 
@@ -21,8 +21,7 @@ const handle: NextApiHandler = (req, res) =>
       })
       return await wow.getUserProfile()
     },
-    callback: (result) => {
-      console.log(result)
+    callback: (result, token) => {
       if (result.error) {
         return result
       }

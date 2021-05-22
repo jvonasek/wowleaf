@@ -1,9 +1,9 @@
-import { create } from 'superstruct';
+import { create } from 'superstruct'
 
-import { createPrismaHandler } from '@/lib/createPrismaHandler';
-import { AchCategoryApiRouteStruct } from '@/lib/structs';
-import { Achievement } from '@/modules/achievement/types';
-import prisma, { createFactionSelector } from '@/prisma/wow';
+import { createPrismaHandler } from '@/lib/createPrismaHandler'
+import { AchCategoryApiRouteStruct } from '@/lib/structs'
+import { Achievement } from '@/modules/achievement/types'
+import prisma, { createFactionSelector } from '@/prisma/wow'
 
 type AchievementResult =
   | Achievement
@@ -34,10 +34,14 @@ const handle = createPrismaHandler<AchievementResult[]>({
           ...faction,
           achievementCategory: {
             slug,
+            isGuildCategory: false,
           },
         }
       : {
           ...faction,
+          achievementCategory: {
+            isGuildCategory: false,
+          },
         }
 
     const isRegular = ids.length || category.length

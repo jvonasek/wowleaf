@@ -1,16 +1,24 @@
 import {
-    LocalizedCharacter, LocalizedCharacterMedia, UserProfile, WoWAccountCharacter
-} from 'battlenet-api';
+  BattleNetRegion,
+  LocalizedCharacter,
+  LocalizedCharacterMedia,
+  UserProfile,
+  WoWAccountCharacter,
+} from 'battlenet-api'
 
-import { CharacterProps } from '@/types';
+import { Character } from '@/types'
 
 type ResponseType =
   | 'character'
   | 'userProfile'
   | 'characterAchievements'
   | 'characterMedia'
-type CharacterNormalizer = (res: LocalizedCharacter) => CharacterProps
-type UserProfileNormalizer = (res: UserProfile) => CharacterProps[]
+type CharacterNormalizer = (
+  res: LocalizedCharacter,
+  region: BattleNetRegion,
+  userId?: number
+) => Character
+type UserProfileNormalizer = (res: UserProfile) => Character[]
 type CharacterAchievementsNormalizer = (res: any) => any
 type CharacterMediaNormalizer = (
   res: LocalizedCharacterMedia
@@ -39,9 +47,14 @@ export const normalizeBattleNetData = <T extends ResponseType>(
   return normalizers[type] as Normalizers<T>
 }
 
-function normalizeCharacter(char: LocalizedCharacter): CharacterProps {
+function normalizeCharacter(
+  char: LocalizedCharacter,
+  region: BattleNetRegion,
+  userId?: number
+): Character {
   return {
     id: char.id,
+    userId,
     name: char.name,
     classId: char.character_class.id,
     raceId: char.race.id,
@@ -51,10 +64,12 @@ function normalizeCharacter(char: LocalizedCharacter): CharacterProps {
     guild: char?.guild?.name,
     covenantId: char?.covenant_progress?.chosen_covenant?.id,
     level: char.level,
+    realm: char.realm.name,
+    region,
   }
 }
 
-function normalizeUserProfile(res: UserProfile): CharacterProps[] {
+function normalizeUserProfile(res: UserProfile): Character[] {
   const { wow_accounts } = res
 
   if (!wow_accounts && !wow_accounts.length) {

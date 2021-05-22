@@ -14,6 +14,11 @@ import prisma from '@/prisma/app'
 import { JWToken } from '@/types'
 
 type CharacterResponse = BattleNetResponse<LocalizedCharacter>
+type QueryParams = {
+  region: BattleNetRegion
+  realm: string
+  name: string
+}
 
 const handle: NextApiHandler = (req, res) => {
   const { method } = req
@@ -22,11 +27,7 @@ const handle: NextApiHandler = (req, res) => {
     expiration: ms('1 hour'),
     requireAuth: method === 'PUT',
     method: async (req) => {
-      const { region, realm, name } = req.query as {
-        region: BattleNetRegion
-        realm: string
-        name: string
-      }
+      const { region, realm, name } = req.query as QueryParams
 
       const accessToken = await getCachedAccessToken()
       const wow = new WoWAPI({
@@ -40,11 +41,13 @@ const handle: NextApiHandler = (req, res) => {
     callback: async (result, token) => {
       if (result.error) return result
 
+      const { region } = req.query as QueryParams
+
       switch (method) {
         case 'GET':
           return {
             ...result,
-            data: normalizeBattleNetData('character')(result.data),
+            data: normalizeBattleNetData('character')(result.data, region),
           }
         case 'PUT':
           return {
@@ -62,12 +65,16 @@ async function saveCharacterToDb(
   character: LocalizedCharacter,
   token: JWToken
 ) {
-  const char = normalizeBattleNetData('character')(character)
+  const { userId, ...char } = normalizeBattleNetData('character')(
+    character,
+    token.battlenet.region,
+    token.id
+  )
 
   const data = {
     ...char,
     user: {
-      connect: { id: token.id },
+      connect: { id: userId },
     },
   }
 

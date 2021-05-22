@@ -1,5 +1,8 @@
-import { AchievementCard, AchievementCardProps } from '@/modules/achievement/AchievementCard';
-import { Meta, Story } from '@storybook/react';
+import {
+  AchievementCard,
+  AchievementCardProps,
+} from '@/modules/achievement/AchievementCard'
+import { Meta, Story } from '@storybook/react'
 
 export default {
   title: 'Components/AchievementCard',
@@ -10,7 +13,6 @@ const TheAchievementCard: Story<AchievementCardProps> = (
   args,
   { loaded: { achievement } }
 ) => {
-  console.log(achievement)
   return <AchievementCard {...args} {...achievement} />
 }
 

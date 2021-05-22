@@ -32,8 +32,8 @@
       "@/lib/*": ["src/lib/*"]
     }
   },
-  "exclude": ["node_modules", ".next", "out"],
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.js"],
+  "include": ["next-env.d.ts", "src/**/*.ts", "src/**/*.tsx", "src/**/*.js"],
+  "exclude": ["node_modules", ".next", "prisma"],
   "plugins": [
     {
       "name": "typescript-tailwindcssinjs-plugin"

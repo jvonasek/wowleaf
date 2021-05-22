@@ -1,6 +1,6 @@
-import { LocalizedCharacterMedia } from 'battlenet-api';
+import { LocalizedCharacterMedia } from 'battlenet-api'
 
-import { BattleNetRegion } from '@/types';
+import { BattleNetRegion } from '@/types'
 
 export type { CharacterMediaTypes } from 'battlenet-api'
 
@@ -44,7 +44,6 @@ export type CharacterAchievementCriterionProgress = {
 
 export type CharacterAchievementProgress = {
   id: number
-  name: string
   percent: number
   partial: number
   required: number
@@ -52,6 +51,7 @@ export type CharacterAchievementProgress = {
   completedTimestamp?: number
   isCompleted: boolean
   showOverallProgressBar: boolean
+  characterKey?: string
 }
 
 export type AchievementFilterProps = {
