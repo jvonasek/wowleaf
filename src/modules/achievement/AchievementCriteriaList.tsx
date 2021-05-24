@@ -1,17 +1,19 @@
-import { CharacterAchievementCriterionProgress } from '@/modules/character/types';
-import { Criterion } from '@/types';
+import { CharacterAchievementCriterionProgress } from '@/modules/character/types'
+import { Criterion } from '@/types'
 
-import { AchievementCard } from './AchievementCard';
-import { AchievementCriterion } from './AchievementCriterion';
+import { AchievementCard } from './AchievementCard'
+import { AchievementCriterion } from './AchievementCriterion'
 
 export type AchievementCriteriaListProps = {
   criteria: Criterion[]
   criteriaProgress: Record<string, CharacterAchievementCriterionProgress>
+  isProgressAggregated: boolean
 }
 
 export const AchievementCriteriaList: React.FC<AchievementCriteriaListProps> = ({
   criteria,
   criteriaProgress,
+  isProgressAggregated,
 }) => {
   return (
     <div className="grid grid-cols-2 leading-8 text-foreground-muted font-bold text-sm">
@@ -25,7 +27,10 @@ export const AchievementCriteriaList: React.FC<AchievementCriteriaListProps> = (
           }
         >
           {linkedAchievement ? (
-            <AchievementCard {...linkedAchievement} />
+            <AchievementCard
+              {...linkedAchievement}
+              isProgressAggregated={isProgressAggregated}
+            />
           ) : (
             <AchievementCriterion
               description={description}

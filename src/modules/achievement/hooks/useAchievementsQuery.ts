@@ -14,6 +14,7 @@ type AchievementHookParams = {
 }
 
 type AchievementsHookResult = {
+  data: Achievement[]
   isLoading: boolean
   isSuccess: boolean
 }
@@ -49,6 +50,7 @@ export const useAchievementsQuery = (
   }, [isSuccess, isLoading, data, set])
 
   return {
+    data,
     isLoading,
     isSuccess,
   }

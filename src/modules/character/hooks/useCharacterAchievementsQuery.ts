@@ -29,7 +29,7 @@ export const useCharacterAchievementsQuery = (
   const filterValues = useAchievementsFilterStore((state) => state.filter)
 
   const { set, setCharacters } = useCharacterAchievementsStore()
-  const [status, setStatus] = useState({ isSet: false })
+  const [isReady, setIsReady] = useState(false)
 
   const queries = useTypeSafeQueries(
     characters.map(({ characterKey }) => {
@@ -43,8 +43,8 @@ export const useCharacterAchievementsQuery = (
     })
   )
 
-  const isSuccess = queries.every((q) => q.isSuccess)
-  const isLoading = queries.some((q) => q.isLoading)
+  const isSuccess = queries.length ? queries.every((q) => q.isSuccess) : false
+  const isLoading = queries.length ? queries.some((q) => q.isLoading) : false
 
   useEffect(() => {
     if (isSuccess && achievementsData.isSuccess) {
@@ -60,11 +60,11 @@ export const useCharacterAchievementsQuery = (
         characters: characterData,
       })
 
-      const charactersAchievements = progress.getProggress(filterValues)
+      const charactersAchievements = progress.get()
 
       set({ isSuccess, isLoading })
       setCharacters(charactersAchievements)
-      setStatus({ isSet: true })
+      setIsReady(true)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
@@ -76,8 +76,8 @@ export const useCharacterAchievementsQuery = (
   ])
 
   return {
-    isLoading: isLoading && !status.isSet,
-    isSuccess: isSuccess && status.isSet,
+    isLoading: isLoading && !isReady,
+    isSuccess: isSuccess && isReady,
   }
 }
 
@@ -86,7 +86,7 @@ function transformCharacterAchievementsData(
 ) {
   const achievements = data.map(({ id, completed_timestamp, criteria }) => ({
     id,
-    isCompleted: !!completed_timestamp,
+    isCompleted: !!completed_timestamp || !!criteria?.is_completed,
     completedTimestamp: completed_timestamp,
     criteria: transformCriteriaObject(criteria),
   }))

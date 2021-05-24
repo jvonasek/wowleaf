@@ -9,14 +9,15 @@ import { getHslColorByPercent } from '@/lib/utils'
 import { useCharacterAchievementsStore } from '@/modules/character/store/useCharacterAchievementsStore'
 import { useCharacterStore } from '@/modules/character/store/useCharacterStore'
 import { ArrowSmRightIcon, CheckIcon, StarIcon } from '@heroicons/react/solid'
-import { IS_PREMIUM } from '@/lib/constants'
 
 import { AchievementCriteriaList } from './AchievementCriteriaList'
 import { Achievement } from './types'
 
-export type AchievementCardProps = Achievement
+export type AchievementCardProps = {
+  isProgressAggregated: boolean
+} & Achievement
 
-export const AchievementCard: React.FC<Achievement> = memo(
+export const AchievementCard: React.FC<AchievementCardProps> = memo(
   ({
     id,
     name,
@@ -27,11 +28,16 @@ export const AchievementCard: React.FC<Achievement> = memo(
     achievementAssets,
     isAccountWide,
     points,
+    factionId,
+    isProgressAggregated = false,
   }) => {
     const [dialogOpen, setDialogOpen] = useState(false)
     const { characterKey } = useCharacterStore()
 
-    const { getProgress } = useCharacterAchievementsStore()
+    const {
+      getCharAchievementProgressById,
+      getCharacterInfo,
+    } = useCharacterAchievementsStore()
 
     function closeDialog() {
       setDialogOpen(false)
@@ -40,6 +46,8 @@ export const AchievementCard: React.FC<Achievement> = memo(
     function openDialog() {
       setDialogOpen(true)
     }
+
+    const charKey = isProgressAggregated ? 'aggregated' : characterKey
 
     const {
       percent,
@@ -50,11 +58,13 @@ export const AchievementCard: React.FC<Achievement> = memo(
       showOverallProgressBar,
       criteria: criteriaProgress,
       characterKey: achievementCharacterKey,
-    } = useMemo(() => getProgress(id, characterKey, IS_PREMIUM), [
+    } = useMemo(() => getCharAchievementProgressById(id, charKey), [
+      getCharAchievementProgressById,
       id,
-      characterKey,
-      getProgress,
+      charKey,
     ])
+
+    const character = getCharacterInfo(achievementCharacterKey)
 
     return (
       <>
@@ -123,12 +133,24 @@ export const AchievementCard: React.FC<Achievement> = memo(
           </div>
           <div className="col-span-3 flex items-center">
             <div className="w-full">
-              <span>{achievementCharacterKey}</span>
+              <span>
+                {isAccountWide ? (
+                  <span className="font-bold text-sm text-foreground-muted opacity-50">
+                    Account Wide {factionId && factionId}
+                  </span>
+                ) : (
+                  <span
+                    className={`font-bold text-sm text-class-${character?.classId}`}
+                  >
+                    {character?.name} {factionId && factionId}
+                  </span>
+                )}
+              </span>
               <div className="flex items-center">
                 <div className="h-2 w-full rounded-full bg-background">
                   <div
-                    className={`h-2 rounded-l-full${
-                      percent === 100 ? ' rounded-r-full' : ''
+                    className={`h-2 rounded-l-full ${
+                      percent === 100 ? 'rounded-r-full' : ''
                     }`}
                     style={{
                       width: `${percent}%`,
@@ -167,6 +189,7 @@ export const AchievementCard: React.FC<Achievement> = memo(
           <AchievementCriteriaList
             criteria={criteria}
             criteriaProgress={criteriaProgress}
+            isProgressAggregated={isProgressAggregated}
           />
           <AchievementMetaData
             id={id}

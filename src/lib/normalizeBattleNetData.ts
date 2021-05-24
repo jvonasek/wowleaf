@@ -95,6 +95,26 @@ function normalizeUserProfile(res: UserProfile): Character[] {
 }
 
 function normalizeCharacterAchievements(res: any): any {
+  /* const mainCategories = [
+    92,
+    96,
+    97,
+    95,
+    168,
+    169,
+    201,
+    155,
+    15117,
+    15246,
+    15301,
+    81,
+    15234,
+  ]
+  console.log({
+    sum: res.category_progress
+      .filter(({ category }) => mainCategories.includes(category.id))
+      .reduce((prev, curr) => prev + curr.points, 0),
+  }) */
   return res.achievements
 }
 

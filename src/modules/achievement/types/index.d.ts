@@ -1,4 +1,6 @@
-import { Achievement as BaseAchievement, AchievementAsset, Criterion } from '@/prisma/wow';
+import { Achievement as BaseAchievement, AchievementAsset } from '@/prisma/wow'
+
+import { Criterion } from '@/types'
 
 export type Achievement = BaseAchievement & {
   criteria: Criterion[]

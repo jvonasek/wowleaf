@@ -1,6 +1,6 @@
-import cx from 'classnames';
-import { clamp } from 'ramda';
-import { memo, useEffect, useState } from 'react';
+import cx from 'classnames'
+import { clamp } from 'ramda'
+import { memo, useEffect, useState } from 'react'
 
 export type ProgressBarProps = {
   total?: number
@@ -26,7 +26,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = memo(
     return (
       <div className="bg-background rounded-full relative h-6">
         <div
-          className="bg-accent flex justify-center items-center rounded-full h-6"
+          className="bg-accent flex justify-center items-center rounded-full h-6 transition-all"
           role="progressbar"
           aria-valuenow={current}
           aria-valuemin={0}

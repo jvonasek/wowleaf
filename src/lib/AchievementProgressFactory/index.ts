@@ -9,14 +9,11 @@ import {
 } from '@/modules/character/store/useCharacterAchievementsStore'
 import { CharacterStoreProps } from '@/modules/character/store/useCharacterStore'
 import {
-  AchievementFilterProps,
   CharacterAchievement,
   CharacterAchievementCriterionProgress,
   CharacterAchievementProgress,
   CharacterAchievementsQueryResult,
 } from '@/modules/character/types'
-
-import { AchievementFilterFactory } from '../AchievementFilterFactory'
 
 export class AchievementProgressFactory {
   private achievements: AchievementsStoreObject
@@ -30,44 +27,23 @@ export class AchievementProgressFactory {
     this.characters = characters
   }
 
-  getProggress(filterValues: AchievementFilterProps) {
-    const progress = this.getProgressArray(filterValues)
-
-    return progress.reduce((prev, character) => {
-      return {
-        ...prev,
-        ...character,
-      }
-    }, {})
+  get() {
+    const progress = this.getProgressArray()
+    const p = progress.map((p) => Object.entries(p)[0])
+    return Object.fromEntries(p)
   }
 
-  getProgressArray(
-    filterValues: AchievementFilterProps
-  ): Record<string, CharacterAchievementsStoreObject>[] {
+  getProgressArray(): Record<string, CharacterAchievementsStoreObject>[] {
     return this.characters.map(({ characterAchievements, character }) => {
       const data = this.create(character, characterAchievements)
-      const progress = groupById(data)
-
-      const filterFactory = new AchievementFilterFactory({
-        achievements: this.achievements.byId,
-        progress,
-      })
-
-      const achievements = this.achievements.ids.map((id) =>
-        this.getAchievementById(id)
-      )
-
-      const filteredAndSorted = filterFactory
-        .apply(achievements)
-        .filter(filterValues)
-        .sort()
-        .get()
+      const byId = groupById(data)
+      const ids = pluck('id', data)
 
       return {
         [character.characterKey]: {
           character,
-          byId: progress,
-          ids: pluck('id', filteredAndSorted),
+          byId,
+          ids,
         },
       }
     })
@@ -109,11 +85,16 @@ export class AchievementProgressFactory {
       characterAchievement?.criteria?.childCriteria
     )
 
+    const mainCriteria = characterAchievement?.criteria
+    const mainCriteriaAmount = mainCriteria?.amount || 0
+    const isAchievementCompleted = isCompleted
+    const isMainCriteriaCompleted = !!mainCriteria && mainCriteria.isCompleted
+
     const criteriaProgress = criteria.map(({ id, amount: requiredAmount }) => {
       const { amount = 0, isCompleted = false } = childCriteriaById?.[id] || {}
 
       const showProgressBar =
-        requiredAmount <= 0 ? false : requiredAmount >= 5 ? true : false //!!criterion.showProgressBar
+        requiredAmount <= 0 ? false : requiredAmount >= 5 ? true : false
 
       let partial: number
       let required: number
@@ -126,18 +107,27 @@ export class AchievementProgressFactory {
         required = 1
       }
 
+      const shouldForceTo100Perc =
+        criteriaOperator === 'ALL' &&
+        isAchievementCompleted &&
+        !isMainCriteriaCompleted
+
+      const percent = shouldForceTo100Perc
+        ? 100
+        : percentage(clamp(0, required, partial), required, 1)
+
       return {
         id,
         showProgressBar,
         partial,
         required,
-        percent: percentage(clamp(0, required, partial), required, 1),
+        percent,
         isCompleted,
       }
     })
 
     const hasChildCriteria = criteriaProgress.length > 0
-    const partialAmount = characterAchievement?.criteria?.amount || 0
+    const partialAmount = mainCriteriaAmount || isMainCriteriaCompleted ? 1 : 0
     const requiredAmount = requiredCriteriaAmount || 1
     const overallCriteriaProgress = this.calculateOverallCriteriaProgress(
       criteriaProgress,

@@ -2,7 +2,10 @@ import { BattleNetRegion, BattleNetResponse } from 'battlenet-api'
 import { SessionProvider } from 'next-auth/client'
 
 import { Character as UserCharacter } from '@/lib/prisma/app'
-import { Criterion as BaseCriterion } from '@/lib/prisma/wow'
+import {
+  Criterion as BaseCriterion,
+  AchievementCategory as BaseAchievementCategory,
+} from '@/lib/prisma/wow'
 import { Achievement } from '@/modules/achievement/types'
 
 export { BattleNetRegion, BattleNetResponse, Criterion, Achievement }
@@ -46,17 +49,13 @@ export type AchievementWithProgress = Achievement & {
   criteria: Array<CriterionWithProgress>
 }
 
-export type AchievementCategory = {
-  id: number
-  name: string
-  isGuildCategory: boolean | null
-  displayOrder: number | null
-  parentCategoryId: number | null
-  hordeQuantity: number | null
-  hordePoints: number | null
-  allianceQuantity: number | null
-  alliancePoints: number | null
-  achievements: Array<Achievement>
+export type AchievementCategoryProps = Pick<
+  BaseAchievementCategory,
+  'id' | 'name' | 'slug'
+>
+
+export type AchievementCategory = AchievementCategoryProps & {
+  otherAchievementCategories: AchievementCategoryProps[]
 }
 
 export type Realm = {
@@ -85,8 +84,11 @@ export type SessionProviders = {
   [provider: string]: SessionProvider
 }
 
-declare module 'next-auth' {
+declare module 'next-auth/index' {
   export interface Session {
+    user: {
+      id?: number
+    }
     battlenet: BattleNetUser
   }
 }

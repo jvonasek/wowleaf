@@ -9,8 +9,8 @@ export const CharacterRouteStruct = object({
   category: defaulted(array(string()), []),
 })
 
-export const AchIndexApiRouteStruct = object({
-  factionId: enums([Faction.Alliance, Faction.Horde]),
+export const DashboardAchievementsRouteStruct = object({
+  category: defaulted(array(string()), []),
 })
 
 export const AchCategoryApiRouteStruct = object({

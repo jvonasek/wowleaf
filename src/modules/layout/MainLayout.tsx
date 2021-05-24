@@ -1,8 +1,8 @@
-import Head from 'next/head';
-import Link from 'next/link';
+import Head from 'next/head'
+import Link from 'next/link'
 
-import { Container } from '@/components/Container';
-import { Header } from '@/components/Header';
+import { Container } from '@/components/Container'
+import { Header } from '@/components/Header'
 
 export type MainLayoutProps = {
   children?: React.ReactNode
@@ -20,6 +20,9 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => (
           <h2 className="font-bold text-lg mb-5">FUNCRAFT</h2>
           <Link href="/">
             <a className="block mb-2">Home</a>
+          </Link>
+          <Link href="/dashboard/achievements">
+            <a className="block mb-2">Achievements</a>
           </Link>
           <Link href="/settings">
             <a className="block mb-2">Settings</a>

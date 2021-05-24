@@ -1,14 +1,7 @@
-import { createPrismaHandler } from '@/lib/createPrismaHandler';
-import prisma, { AchievementCategory as AchievementCategoryBase } from '@/prisma/wow';
+import { createPrismaHandler } from '@/lib/createPrismaHandler'
+import prisma from '@/prisma/wow'
 
-type AchievementCategoryType = Pick<
-  AchievementCategoryBase,
-  'id' | 'name' | 'slug'
->
-
-type AchievementCategory = AchievementCategoryType & {
-  otherAchievementCategories: AchievementCategoryType[]
-}
+import { AchievementCategory } from '@/types'
 
 const fields = {
   id: true,

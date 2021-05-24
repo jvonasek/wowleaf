@@ -17,8 +17,8 @@ export type CharacterAchievementsStore = {
   characters: Record<string, CharacterAchievementsStoreObject>
 }
 
-export type CombinedAchievementsStore = {
-  combined: CharacterAchievementsStoreObject
+export type AggregatedAchievementsStore = {
+  aggregated: CharacterAchievementsStoreObject
 }
 
 export const initialAchievementProgress: CharacterAchievementProgress = {
@@ -33,11 +33,14 @@ export const initialAchievementProgress: CharacterAchievementProgress = {
   characterKey: '',
 }
 
-export const useCombinedAchievementsStore = createStore(
+export const useAggregatedAchievementsStore = createStore(
   combine(
     {
-      combined: {},
-    } as CombinedAchievementsStore,
+      aggregated: {
+        byId: {},
+        ids: [],
+      },
+    } as AggregatedAchievementsStore,
     (set, get) => ({
       set,
       get,
@@ -64,29 +67,32 @@ export const useCharacterAchievementsStore = createStore(
           },
         })
       },
-      getCharacter: (key: string) =>
-        getCharacterFromStore(get().characters)(key),
-      getProgress: (
+      getCharacterInfo: (key: string) => {
+        return getCharacterFromStore(get().characters)(key).character
+      },
+      getAggregatedAchievements: () => {
+        return useAggregatedAchievementsStore.getState().aggregated
+      },
+      getCharAchievements: (key: string) => {
+        return getCharacterFromStore(get().characters)(key)
+      },
+      getCharAchievementProgressById: (
         id: number | string,
-        characterKey: string,
-        isPremium = false
-      ) => getProgressFromStore(get(), isPremium)(id, characterKey),
+        characterKey: string
+      ) => getProgressFromStore(get())(id, characterKey),
     })
   )
 )
 
-function getProgressFromStore(
-  store: CharacterAchievementsStore,
-  isPremium = false
-) {
-  const characters = isPremium
-    ? { combined: useCombinedAchievementsStore.getState().combined }
-    : store.characters
+function getProgressFromStore(store: CharacterAchievementsStore) {
+  return (id: number | string, characterKey: string) => {
+    const characters =
+      characterKey === 'aggregated'
+        ? { aggregated: useAggregatedAchievementsStore.getState().aggregated }
+        : store.characters
 
-  return (id: number | string, characterKey?: string) => {
-    const character = getCharacterFromStore(characters)(
-      isPremium ? 'combined' : characterKey
-    )
+    const character = getCharacterFromStore(characters)(characterKey)
+
     if (character) {
       return (
         character?.byId?.[Number(id).toString()] || initialAchievementProgress
@@ -102,6 +108,7 @@ function getCharacterFromStore(
 ) {
   return (characterKey: string) =>
     characters?.[characterKey] || {
+      character: null,
       byId: {},
       ids: [],
     }

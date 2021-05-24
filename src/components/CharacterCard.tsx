@@ -1,9 +1,9 @@
-import Link from 'next/link';
+import Link from 'next/link'
 
-import { Button } from '@/components/Button';
-import { CHARACTER_CLASS_MAP, CHARACTER_RACE_MAP } from '@/lib/constants';
-import { CharacterAvatar } from '@/modules/character/CharacterAvatar';
-import { Character } from '@/types';
+import { Button } from '@/components/Button'
+import { CHARACTER_CLASS_MAP, CHARACTER_RACE_MAP } from '@/lib/constants'
+import { CharacterAvatar } from '@/modules/character/CharacterAvatar'
+import { Character } from '@/types'
 
 export type CharacterCardProps = {
   onClick?: (realmSlug: string, name: string) => void

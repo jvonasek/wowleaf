@@ -43,6 +43,8 @@ const handle: NextApiHandler = (req, res) => {
 
       const { region } = req.query as QueryParams
 
+      console.log({ points: result.data.achievement_points })
+
       switch (method) {
         case 'GET':
           return {

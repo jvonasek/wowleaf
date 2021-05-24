@@ -1,11 +1,11 @@
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useQuery } from 'react-query';
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { useQuery } from 'react-query'
 
-import { useCharacterStore } from '@/modules/character/store/useCharacterStore';
+import { AchievementCategory } from '@/types'
 
 export type AchievementCategoriesProps = {
-  category?: string[]
+  basePath: string
 }
 
 const ActiveLink = ({ children, href }) => {
@@ -17,28 +17,25 @@ const ActiveLink = ({ children, href }) => {
   )
 }
 
-export const AchievementCategories: React.FC<AchievementCategoriesProps> = () => {
-  const { characterKey } = useCharacterStore()
-
-  const { isSuccess, data } = useQuery('/api/wow/categories/')
+export const AchievementCategories: React.FC<AchievementCategoriesProps> = ({
+  basePath,
+}) => {
+  const { isSuccess, data } = useQuery<AchievementCategory[]>(
+    '/api/wow/categories/'
+  )
 
   return (
     <div className="space-y-3">
-      {data && <strong>{data.name}</strong>}
       {isSuccess &&
         data.map(({ id, name, slug, otherAchievementCategories }) => (
           <div className="bg-surface p-3 rounded text-lg" key={id}>
-            <ActiveLink
-              href={`/character/${characterKey}/achievements/${slug}`}
-            >
+            <ActiveLink href={`${basePath}/achievements/${slug}`}>
               {name}
             </ActiveLink>
             {otherAchievementCategories.length > 0 &&
               otherAchievementCategories.map(({ id, name, slug }) => (
                 <div key={id} className="pl-4 text-sm">
-                  <ActiveLink
-                    href={`/character/${characterKey}/achievements/${slug}`}
-                  >
+                  <ActiveLink href={`${basePath}/achievements/${slug}`}>
                     {name}
                   </ActiveLink>
                 </div>

@@ -1,17 +1,18 @@
 import { GetServerSideProps, NextPage } from 'next'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 
 import { createCharacterKey } from '@/lib/createCharacterKey'
 import { CharacterRouteStruct } from '@/lib/structs'
-import { AchievementCategories } from '@/modules/achievement-categories/AchievementCategories'
 import { useAchievementsQuery } from '@/modules/achievement/hooks/useAchievementsQuery'
-import { CharacterAchievements } from '@/modules/character/CharacterAchievements'
+import { AchievementList } from '@/modules/achievement/AchievementList'
+
 import { CharacterPageHeader } from '@/modules/character/CharacterPageHeader'
 import {
   initialCharacterState,
   useCharacterStore,
 } from '@/modules/character/store/useCharacterStore'
 import { BattleNetResponse, Character } from '@/types'
+import { useCharacterAchievementsQuery } from '@/modules/character/hooks/useCharacterAchievementsQuery'
 
 type CharacterAchievementsPageProps = {
   category?: string[]
@@ -26,22 +27,26 @@ export const CharacterAchievementsPage: NextPage<CharacterAchievementsPageProps>
   const { region, realmSlug, name } = character
 
   const characterKey = createCharacterKey({ region, realmSlug, name })
+  const characterProps = useMemo(
+    () => ({
+      region,
+      ...character,
+      characterKey,
+    }),
+    [character, characterKey, region]
+  )
 
   useEffect(() => {
     if (characterKey) {
-      set({
-        region,
-        ...character,
-        characterKey,
-      })
+      set(characterProps)
     }
 
     return () => {
       set(initialCharacterState)
     }
-  }, [character, characterKey, region, set])
+  }, [character, characterKey, characterProps, region, set])
 
-  useAchievementsQuery(
+  const { isSuccess: isAchsSuccess } = useAchievementsQuery(
     {
       factionId: character?.faction,
     },
@@ -50,17 +55,25 @@ export const CharacterAchievementsPage: NextPage<CharacterAchievementsPageProps>
     }
   )
 
+  const { isSuccess: isCharAchsSuccess } = useCharacterAchievementsQuery(
+    [characterProps],
+    {
+      enabled: isAchsSuccess,
+    }
+  )
+
+  const isSuccess = isAchsSuccess && isCharAchsSuccess
+
   return (
     <div className="space-y-7">
       <CharacterPageHeader />
-      <div className="grid grid-cols-12 gap-7">
-        <div className="col-span-3 bg-surface p-7 rounded-lg">
-          <AchievementCategories />
-        </div>
-        <div className="col-span-9 bg-surface p-7 rounded-lg">
-          <CharacterAchievements category={category} />
-        </div>
-      </div>
+      {isSuccess && (
+        <AchievementList
+          category={category}
+          characterKey={characterKey}
+          factionId={character.faction}
+        />
+      )}
     </div>
   )
 }
