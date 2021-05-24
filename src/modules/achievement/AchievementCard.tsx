@@ -77,6 +77,44 @@ export const AchievementCard: React.FC<AchievementCardProps> = memo(
 
     const characters = getAggregatedProgressOrderById(id)
 
+    const progressBarLabel = useMemo(() => {
+      if (isProgressAggregated && !isCompleted) {
+        return (
+          <span className="font-bold text-sm">
+            {isAccountWide ? (
+              <span className="text-foreground-muted opacity-50">
+                Account Wide
+              </span>
+            ) : (
+              <span className="space-x-3">
+                {characters.map(({ characterKey, percent }) => (
+                  <AchievementCharacterOrder
+                    percent={percent}
+                    key={characterKey}
+                    {...getCharacterInfo(characterKey)}
+                  />
+                ))}
+              </span>
+            )}
+            {factionId && (
+              <span className="text-foreground-muted opacity-50">
+                {' '}
+                {factionId}
+              </span>
+            )}
+          </span>
+        )
+      }
+
+      return null
+    }, [
+      characters,
+      factionId,
+      getCharacterInfo,
+      isAccountWide,
+      isProgressAggregated,
+    ])
+
     return (
       <>
         <div className="grid grid-cols-12 gap-4">
@@ -143,35 +181,7 @@ export const AchievementCard: React.FC<AchievementCardProps> = memo(
             )}
           </div>
           <div className="col-span-3 flex items-center">
-            <ProgressBar
-              value={percent}
-              total={100}
-              label={
-                <span className="font-bold text-sm">
-                  {isAccountWide ? (
-                    <span className="text-foreground-muted opacity-50">
-                      Account Wide
-                    </span>
-                  ) : (
-                    <span className="space-x-3">
-                      {characters.map(({ characterKey, percent }) => (
-                        <AchievementCharacterOrder
-                          percent={percent}
-                          key={characterKey}
-                          {...getCharacterInfo(characterKey)}
-                        />
-                      ))}
-                    </span>
-                  )}
-                  {factionId && (
-                    <span className="text-foreground-muted opacity-50">
-                      {' '}
-                      {factionId}
-                    </span>
-                  )}
-                </span>
-              }
-            />
+            <ProgressBar value={percent} total={100} label={progressBarLabel} />
           </div>
           <div className="col-span-1 flex items-center justify-end">
             <Button variant="secondary" onClick={openDialog}>
