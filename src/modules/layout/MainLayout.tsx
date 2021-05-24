@@ -33,6 +33,12 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => (
           <Link href="/typography">
             <a className="block mb-2">Typography</a>
           </Link>
+          <Link href="/character/eu/argent-dawn/razzelle">
+            <a className="block mb-2">Razzelle</a>
+          </Link>
+          <Link href="/character/us/kelthuzad/asmongold">
+            <a className="block mb-2">Asmongold</a>
+          </Link>
         </div>
         <div className="w-full px-5">
           <Header />

@@ -5,7 +5,6 @@ import { Button } from '@/components/Button'
 import { DateTime } from '@/components/DateTime'
 import { Dialog } from '@/components/Dialog'
 import { ProgressBar } from '@/components/ProgressBar'
-import { getHslColorByPercent } from '@/lib/utils'
 import { useCharacterAchievementsStore } from '@/modules/character/store/useCharacterAchievementsStore'
 import { useCharacterStore } from '@/modules/character/store/useCharacterStore'
 import { ArrowSmRightIcon, CheckIcon, StarIcon } from '@heroicons/react/solid'
@@ -132,37 +131,29 @@ export const AchievementCard: React.FC<AchievementCardProps> = memo(
             )}
           </div>
           <div className="col-span-3 flex items-center">
-            <div className="w-full">
-              <span>
-                {isAccountWide ? (
-                  <span className="font-bold text-sm text-foreground-muted opacity-50">
-                    Account Wide {factionId && factionId}
-                  </span>
-                ) : (
-                  <span
-                    className={`font-bold text-sm text-class-${character?.classId}`}
-                  >
-                    {character?.name} {factionId && factionId}
-                  </span>
-                )}
-              </span>
-              <div className="flex items-center">
-                <div className="h-2 w-full rounded-full bg-background">
-                  <div
-                    className={`h-2 rounded-l-full ${
-                      percent === 100 ? 'rounded-r-full' : ''
-                    }`}
-                    style={{
-                      width: `${percent}%`,
-                      backgroundColor: getHslColorByPercent(percent),
-                    }}
-                  ></div>
-                </div>
-                <span className="text-sm text-foreground-muted ml-3 w-12">
-                  {percent}%
+            <ProgressBar
+              value={percent}
+              total={100}
+              label={
+                <span className="font-bold text-sm">
+                  {isAccountWide ? (
+                    <span className="text-foreground-muted opacity-50">
+                      Account Wide
+                    </span>
+                  ) : (
+                    <span className={`text-class-${character?.classId}`}>
+                      {character?.name}
+                    </span>
+                  )}
+                  {factionId && (
+                    <span className="text-foreground-muted opacity-50">
+                      {' '}
+                      {factionId}
+                    </span>
+                  )}
                 </span>
-              </div>
-            </div>
+              }
+            />
           </div>
           <div className="col-span-1 flex items-center justify-center">
             <span className="flex font-bold items-center text-foreground-muted justify-center w-11 h-11 border-2 rounded-full">

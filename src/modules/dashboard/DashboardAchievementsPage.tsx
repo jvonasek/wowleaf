@@ -25,7 +25,14 @@ export const DashboardAchievementsPage: React.FC<DashboardAchievementsPageProps>
 
   return (
     <div>
-      {isFetching > 0 && <ProgressBar value={isFetching} total={data.length} />}
+      {isFetching > 0 && (
+        <ProgressBar
+          value={isFetching}
+          total={data.length}
+          color="accent"
+          isReverse
+        />
+      )}
       {isSuccess && (
         <AchievementList
           characterKey="aggregated"

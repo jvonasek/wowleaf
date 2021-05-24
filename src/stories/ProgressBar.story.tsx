@@ -1,5 +1,5 @@
-import { ProgressBar, ProgressBarProps } from '@/components/ProgressBar';
-import { Meta, Story } from '@storybook/react';
+import { ProgressBar, ProgressBarProps } from '@/components/ProgressBar'
+import { Meta, Story } from '@storybook/react'
 
 export default {
   title: 'Components/ProgressBar',
@@ -21,18 +21,21 @@ export default {
 } as Meta
 
 const TheProgressBar: Story<ProgressBarProps> = (args) => (
-  <ProgressBar {...args} />
+  <div className="bg-surface p-5">
+    <ProgressBar {...args} />
+  </div>
 )
 
 export const Default = TheProgressBar.bind({})
 Default.args = {
+  label: 'Progress',
   value: 50,
 }
 
 export const Multiple: Story = () => (
-  <div className="space-y-4">
-    <TheProgressBar value={0} />
-    <TheProgressBar value={50} />
-    <TheProgressBar value={100} />
+  <div>
+    <TheProgressBar label="Progress" value={0} />
+    <TheProgressBar label="Progress" value={50} />
+    <TheProgressBar label="Progress" value={100} />
   </div>
 )

@@ -1,8 +1,10 @@
-import { groupBy, head, map } from 'ramda';
+import { groupBy, head, map, sortWith, descend, prop } from 'ramda'
 
 export const isServer = typeof window === 'undefined'
 
 export const noop = (): void => undefined
+
+export const num = Intl.NumberFormat('en-US')
 
 export const round = (n: number, decimals = 0): number =>
   Number(`${Math.round(parseFloat(`${n}e${decimals}`))}e-${decimals}`)
@@ -41,4 +43,50 @@ export function groupById<T extends ObjectWithId>(
 
   const group = groupBy((item) => Number(item.id).toString(), list)
   return map<typeof group, Record<string, T>>(head, group)
+}
+
+export const qs = (
+  data: Record<string, any>,
+  { preppendPrefix = true } = {}
+): string => {
+  if (!data) {
+    return ''
+  }
+
+  const params = new URLSearchParams()
+
+  Object.keys(data).map((key) => {
+    const value = data[key]
+
+    if (typeof value === 'undefined') {
+      return
+    }
+
+    if (Array.isArray(value)) {
+      value.map((item) => params.append(key, item))
+    } else {
+      params.append(key, value)
+    }
+  })
+
+  const querystring = params.toString()
+
+  return preppendPrefix ? `?${querystring}` : querystring
+}
+
+export const paginateArray = (array: any[], perPage: number, page: number) => {
+  const start = (page - 1) * perPage
+  const end = Math.min(page * perPage, array.length)
+  return array.slice(start, end)
+}
+
+export const mergeByHighestValue = <T extends unknown>(
+  arr: Record<string, T>[],
+  key: string,
+  propName: string
+): T => {
+  const [head] = sortWith<T>([descend(prop(propName))])(
+    arr.map((item) => item && item[key])
+  )
+  return head
 }

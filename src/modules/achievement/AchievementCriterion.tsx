@@ -1,8 +1,8 @@
-import { memo } from 'react';
+import { memo } from 'react'
 
-import { ProgressBar } from '@/components/ProgressBar';
-import { formatGold } from '@/lib/formatGold';
-import { CharacterAchievementCriterionProgress } from '@/modules/character/types';
+import { ProgressBar } from '@/components/ProgressBar'
+import { formatGold } from '@/lib/formatGold'
+import { CharacterAchievementCriterionProgress } from '@/modules/character/types'
 
 export type AchievementCriterionProps = {
   isGold: boolean
@@ -31,6 +31,7 @@ export const AchievementCriterion: React.FC<AchievementCriterionProps> = memo(
           <ProgressBar
             value={partial}
             total={required}
+            display="values"
             formatter={isGold ? formatGold : undefined}
           />
         )}

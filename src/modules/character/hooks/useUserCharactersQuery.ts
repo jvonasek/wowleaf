@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useQuery, UseQueryOptions } from 'react-query'
 
 import { createCharacterKey } from '@/lib/createCharacterKey'
-import { mergeByHighestValue } from '@/lib/mergeByHighestValue'
+import { mergeByHighestValue } from '@/lib/utils'
 import { groupById } from '@/lib/utils'
 import { useAchievementsQuery } from '@/modules/achievement/hooks/useAchievementsQuery'
 import { useCharacterAchievementsQuery } from '@/modules/character/hooks/useCharacterAchievementsQuery'
