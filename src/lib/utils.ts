@@ -82,11 +82,10 @@ export const paginateArray = (array: any[], perPage: number, page: number) => {
 
 export const mergeByHighestValue = <T extends unknown>(
   arr: Record<string, T>[],
-  key: string,
+  key: number | string,
   propName: string
-): T => {
-  const [head] = sortWith<T>([descend(prop(propName))])(
+): T[] => {
+  return sortWith<T>([descend(prop(propName))])(
     arr.map((item) => item && item[key])
   )
-  return head
 }

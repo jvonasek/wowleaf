@@ -11,10 +11,23 @@ import { ArrowSmRightIcon, CheckIcon, StarIcon } from '@heroicons/react/solid'
 
 import { AchievementCriteriaList } from './AchievementCriteriaList'
 import { Achievement } from './types'
+import { Character } from '@/types'
 
 export type AchievementCardProps = {
   isProgressAggregated: boolean
 } & Achievement
+
+const AchievementCharacterOrder: React.FC<
+  Character & {
+    percent: number
+  }
+> = ({ classId, name, percent }) => {
+  return (
+    <span className={`text-class-${classId}`}>
+      {name} {percent}%
+    </span>
+  )
+}
 
 export const AchievementCard: React.FC<AchievementCardProps> = memo(
   ({
@@ -26,7 +39,6 @@ export const AchievementCard: React.FC<AchievementCardProps> = memo(
     rewardItemId,
     achievementAssets,
     isAccountWide,
-    points,
     factionId,
     isProgressAggregated = false,
   }) => {
@@ -35,6 +47,7 @@ export const AchievementCard: React.FC<AchievementCardProps> = memo(
 
     const {
       getCharAchievementProgressById,
+      getAggregatedProgressOrderById,
       getCharacterInfo,
     } = useCharacterAchievementsStore()
 
@@ -56,19 +69,18 @@ export const AchievementCard: React.FC<AchievementCardProps> = memo(
       completedTimestamp,
       showOverallProgressBar,
       criteria: criteriaProgress,
-      characterKey: achievementCharacterKey,
     } = useMemo(() => getCharAchievementProgressById(id, charKey), [
       getCharAchievementProgressById,
       id,
       charKey,
     ])
 
-    const character = getCharacterInfo(achievementCharacterKey)
+    const characters = getAggregatedProgressOrderById(id)
 
     return (
       <>
         <div className="grid grid-cols-12 gap-4">
-          <div className="col-span-6 flex items-center">
+          <div className="col-span-7 flex items-center">
             {achievementAssets && achievementAssets[0] && (
               <div className="relative mr-5">
                 <span
@@ -141,8 +153,14 @@ export const AchievementCard: React.FC<AchievementCardProps> = memo(
                       Account Wide
                     </span>
                   ) : (
-                    <span className={`text-class-${character?.classId}`}>
-                      {character?.name}
+                    <span className="space-x-3">
+                      {characters.map(({ characterKey, percent }) => (
+                        <AchievementCharacterOrder
+                          percent={percent}
+                          key={characterKey}
+                          {...getCharacterInfo(characterKey)}
+                        />
+                      ))}
                     </span>
                   )}
                   {factionId && (
@@ -154,11 +172,6 @@ export const AchievementCard: React.FC<AchievementCardProps> = memo(
                 </span>
               }
             />
-          </div>
-          <div className="col-span-1 flex items-center justify-center">
-            <span className="flex font-bold items-center text-foreground-muted justify-center w-11 h-11 border-2 rounded-full">
-              {points}
-            </span>
           </div>
           <div className="col-span-1 flex items-center justify-end">
             <Button variant="secondary" onClick={openDialog}>

@@ -32,6 +32,7 @@ export const AchievementCriterion: React.FC<AchievementCriterionProps> = memo(
             value={partial}
             total={required}
             display="values"
+            displayPosition="left"
             formatter={isGold ? formatGold : undefined}
           />
         )}

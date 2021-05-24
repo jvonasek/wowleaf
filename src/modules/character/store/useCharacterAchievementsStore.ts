@@ -7,6 +7,10 @@ import { CharacterStoreProps } from './useCharacterStore'
 
 export type CharacterAchievementsStoreObject = {
   character: CharacterStoreProps
+  characters: Record<
+    string,
+    Pick<CharacterAchievementProgress, 'percent' | 'characterKey'>[]
+  >
   byId: Record<string, CharacterAchievementProgress>
   ids: number[]
 }
@@ -37,6 +41,8 @@ export const useAggregatedAchievementsStore = createStore(
   combine(
     {
       aggregated: {
+        character: null,
+        characters: {},
         byId: {},
         ids: [],
       },
@@ -69,6 +75,11 @@ export const useCharacterAchievementsStore = createStore(
       },
       getCharacterInfo: (key: string) => {
         return getCharacterFromStore(get().characters)(key).character
+      },
+      getAggregatedProgressOrderById: (id: string | number) => {
+        const aggregatedStore = useAggregatedAchievementsStore.getState()
+        const characters = aggregatedStore?.aggregated?.characters
+        return characters ? characters[Number(id).toString()] : []
       },
       getAggregatedAchievements: () => {
         return useAggregatedAchievementsStore.getState().aggregated

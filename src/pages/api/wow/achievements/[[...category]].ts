@@ -92,6 +92,7 @@ const handle = createPrismaHandler<AchievementResult[]>({
     }
 
     return await prisma.achievement.findMany({
+      take: 200,
       where: {
         ...where,
         id: ids.length ? { in: ids } : undefined,

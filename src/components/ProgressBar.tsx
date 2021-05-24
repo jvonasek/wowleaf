@@ -1,14 +1,15 @@
 import { clamp } from 'ramda'
 import cx from 'classnames'
-import { memo, ReactNode, useEffect, useState } from 'react'
+import { memo, ReactNode, useMemo } from 'react'
 
-import { getHslColorByPercent, num } from '@/lib/utils'
+import { getHslColorByPercent, percentage, num } from '@/lib/utils'
 
 export type ProgressBarProps = {
   label?: string | ReactNode
   total?: number
   value: number
   display?: 'values' | 'percent'
+  displayPosition?: 'left' | 'right'
   color?: 'dynamic' | 'accent'
   isReverse?: boolean
   formatter?: (n: number) => string
@@ -20,16 +21,14 @@ export const ProgressBar: React.FC<ProgressBarProps> = memo(
     total = 100,
     value = 0,
     display = 'percent',
+    displayPosition = 'right',
     isReverse = false,
     color = 'dynamic',
     formatter = num.format,
   }) => {
-    const [percentage, setPercentage] = useState(0)
-
-    useEffect(() => {
-      const perc = Math.round(clamp(0, 100, (value * 100) / total))
-
-      setPercentage(isReverse ? 100 - perc : perc)
+    const percent = useMemo(() => {
+      const perc = percentage(value, total)
+      return isReverse ? 100 - perc : perc
     }, [isReverse, total, value])
 
     const current = clamp(0, total, value)
@@ -42,26 +41,31 @@ export const ProgressBar: React.FC<ProgressBarProps> = memo(
       <div className="w-full">
         {!!label && label}
         <div className="flex items-center">
-          <div className="h-2 w-full rounded-full bg-background">
+          <div
+            className={cx('h-2 w-full rounded-full bg-background', {
+              'order-2 ml-3': displayPosition === 'left',
+              'mr-3': displayPosition === 'right',
+            })}
+          >
             <div
               className={cx(`h-2 rounded-l-full transition-all`, {
-                'rounded-r-full': percentage === 100,
+                'rounded-r-full': percent === 100,
                 'bg-accent': color === 'accent',
               })}
               style={{
-                width: `${percentage}%`,
+                width: `${percent}%`,
                 backgroundColor:
                   color === 'dynamic'
-                    ? getHslColorByPercent(percentage)
+                    ? getHslColorByPercent(percent)
                     : undefined,
               }}
             ></div>
           </div>
-          <span className="text-sm text-foreground-muted whitespace-nowrap font-bold ml-3 min-w-42">
+          <span className="text-sm text-foreground-muted whitespace-nowrap font-bold min-w-42">
             {display === 'values' ? (
               <span className="inline-block">{valueLabel}</span>
             ) : (
-              <span className="inline-block w-10">{percentage}%</span>
+              <span className="inline-block w-10">{percent}%</span>
             )}
           </span>
         </div>

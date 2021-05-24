@@ -10,11 +10,13 @@ Todo:
   UI:
     ✔ Create layout system that doesn't re-render all page @done(21-05-15 02:34)
     ☐ Create better color scheme / theme
-    ☐ Rework progress bar
+    ✔ Rework progress bar @done(21-05-25 01:37)
     ✔ Format gold values @done(21-05-22 01:26)
-    Filter:
-      ☐ Expansion
-      ☐ Reward type
+    Components:
+      ☐ Tooltip
+      Filter:
+        ☐ Expansion
+        ☐ Reward type
   Auth:
     ☐ Customize auth pages
   Database:

@@ -1,4 +1,4 @@
-import { prop, uniq } from 'ramda'
+import { prop, uniq, pick } from 'ramda'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useQuery, UseQueryOptions } from 'react-query'
 
@@ -91,22 +91,32 @@ export const useUserCharactersQuery = (
 
   useEffect(() => {
     if (isSuccess) {
-      const allIds = uniq(
+      const allIds: number[] = uniq(
         charactersProgress.reduce((prev, character) => {
           return [...prev, ...character.ids]
         }, [])
       )
 
-      const aggregatedProgress = charactersProgress.map(({ byId }) => byId)
+      const aggregatedProgressArray = charactersProgress.map(({ byId }) => byId)
 
-      const mergedProgress = allIds.map((id) => {
-        return mergeByHighestValue(aggregatedProgress, id, 'percent')
+      const aggregated = allIds.map((id) => {
+        const list = mergeByHighestValue(aggregatedProgressArray, id, 'percent')
+        const characters = list
+          .filter(({ percent }) => percent > 0)
+          .map((item) => pick(['characterKey', 'percent'])(item))
+        return { id, progress: list[0], characters }
       })
+
+      const byId = groupById(aggregated.map(prop('progress')))
+      const characters = Object.fromEntries(
+        aggregated.map(({ id, characters }) => [id, characters])
+      )
 
       set({
         aggregated: {
           character: null,
-          byId: groupById(mergedProgress),
+          characters,
+          byId,
           ids: allIds,
         },
       })
