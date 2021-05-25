@@ -4,7 +4,6 @@ import {
   descend,
   filter,
   gte,
-  lt,
   pick,
   prop,
   sortWith,
@@ -44,14 +43,9 @@ export class AchievementFilterFactory {
   filter(filterValues: AchievementFilterProps) {
     const isIncompleteFilter = this.getFilterFn(
       (_, progress: CharacterAchievementProgress) => {
-        if (filterValues.incomplete) {
-          return !prop('isCompleted', progress)
-        }
-        return true
-        const isNotCompleted =
-          lt(prop('percent', progress), 100) && !prop('isCompleted', progress)
-
-        return !prop('incomplete', filterValues) || isNotCompleted
+        return (
+          !prop('incomplete', filterValues) || !prop('isCompleted', progress)
+        )
       }
     )
 

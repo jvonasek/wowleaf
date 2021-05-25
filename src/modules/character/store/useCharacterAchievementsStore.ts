@@ -11,7 +11,7 @@ export type SimpleCharacterProgres = Pick<
 >[]
 export type CharacterAchievementsStoreObject = {
   character: CharacterStoreProps
-  characters: Record<string, SimpleCharacterProgres>
+  characters?: Record<string, SimpleCharacterProgres>
   byId: Record<string, CharacterAchievementProgress>
   ids: number[]
 }
