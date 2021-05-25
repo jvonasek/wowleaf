@@ -12,6 +12,7 @@ Todo:
     ☐ Create better color scheme / theme
     ✔ Rework progress bar @done(21-05-25 01:37)
     ✔ Format gold values @done(21-05-22 01:26)
+    ☐ Fix Battle.Net data refresh
     Components:
       ☐ Tooltip
       Filter:
