@@ -5,26 +5,43 @@ import { Button } from '@/components/Button'
 import { DateTime } from '@/components/DateTime'
 import { Dialog } from '@/components/Dialog'
 import { ProgressBar } from '@/components/ProgressBar'
+import { Tooltip } from '@/components/Tooltip'
 import { useCharacterAchievementsStore } from '@/modules/character/store/useCharacterAchievementsStore'
 import { useCharacterStore } from '@/modules/character/store/useCharacterStore'
+import { Character } from '@/types'
 import { ArrowSmRightIcon, CheckIcon, StarIcon } from '@heroicons/react/solid'
+import { getHslColorByPercent } from '@/lib/utils'
 
 import { AchievementCriteriaList } from './AchievementCriteriaList'
 import { Achievement } from './types'
-import { Character } from '@/types'
 
 export type AchievementCardProps = {
   isProgressAggregated: boolean
 } & Achievement
 
-const AchievementCharacterOrder: React.FC<
-  Character & {
-    percent: number
-  }
-> = ({ classId, name, percent }) => {
+export type CharacterLine = Character & {
+  className?: string
+  percent?: number
+}
+
+const CharacterLine: React.FC<CharacterLine> = ({
+  classId,
+  name,
+  percent = null,
+  className,
+}) => {
   return (
-    <span className={`text-class-${classId}`}>
-      {name} {percent}%
+    <span
+      className={cx(className, {
+        [`text-class-${classId}`]: !!classId,
+      })}
+    >
+      <span>{name}</span>
+      {Number.isFinite(percent) && (
+        <span className="ml-5" style={{ color: getHslColorByPercent(percent) }}>
+          {percent}%
+        </span>
+      )}
     </span>
   )
 }
@@ -76,30 +93,56 @@ export const AchievementCard: React.FC<AchievementCardProps> = memo(
     ])
 
     const characters = getAggregatedProgressOrderById(id)
+    const topCharacter =
+      characters && !!characters.length
+        ? getCharacterInfo(characters[0].characterKey)
+        : null
 
     const progressBarLabel = useMemo(() => {
       if (isProgressAggregated && !isCompleted) {
         return (
           <span className="font-bold text-sm">
+            {factionId && (
+              <span
+                className={cx({
+                  ['text-blue-500']: factionId === 'ALLIANCE',
+                  ['text-red-500']: factionId === 'HORDE',
+                })}
+              >
+                {factionId === 'ALLIANCE' ? 'A ' : 'H '}
+              </span>
+            )}
             {isAccountWide ? (
               <span className="text-foreground-muted opacity-50">
                 Account Wide
               </span>
             ) : (
-              <span className="space-x-3">
-                {characters.map(({ characterKey, percent }) => (
-                  <AchievementCharacterOrder
-                    percent={percent}
-                    key={characterKey}
-                    {...getCharacterInfo(characterKey)}
-                  />
-                ))}
-              </span>
-            )}
-            {factionId && (
-              <span className="text-foreground-muted opacity-50">
-                {' '}
-                {factionId}
+              <span>
+                {topCharacter && (
+                  <Tooltip
+                    placement="left"
+                    overlay={
+                      <div className="block space-y-2">
+                        {characters.map(({ characterKey, percent }) => (
+                          <CharacterLine
+                            key={characterKey}
+                            percent={percent}
+                            className="flex font-bold justify-between w-full"
+                            {...getCharacterInfo(characterKey)}
+                          />
+                        ))}
+                      </div>
+                    }
+                  >
+                    <CharacterLine {...topCharacter} />
+                    {characters.length > 1 && (
+                      <span className="text-yellow-400">
+                        {' '}
+                        +{characters.length - 1}
+                      </span>
+                    )}
+                  </Tooltip>
+                )}
               </span>
             )}
           </span>
@@ -109,10 +152,11 @@ export const AchievementCard: React.FC<AchievementCardProps> = memo(
       return null
     }, [
       characters,
-      factionId,
       getCharacterInfo,
       isAccountWide,
+      isCompleted,
       isProgressAggregated,
+      topCharacter,
     ])
 
     return (
@@ -170,12 +214,11 @@ export const AchievementCard: React.FC<AchievementCardProps> = memo(
                     data-wh-rename-link="false"
                   />
                 ) : (
-                  <span
-                    className="flex items-center text-foreground-muted justify-center w-11 h-11 border-2 rounded-lg"
-                    title={rewardDescription}
-                  >
-                    <StarIcon className="w-5 h-5" />
-                  </span>
+                  <Tooltip overlay={rewardDescription}>
+                    <span className="flex items-center text-foreground-muted justify-center w-11 h-11 border-2 rounded-lg">
+                      <StarIcon className="w-5 h-5" />
+                    </span>
+                  </Tooltip>
                 )}
               </span>
             )}
