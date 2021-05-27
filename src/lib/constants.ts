@@ -2,6 +2,16 @@ import { BattleNetRegion } from '@/types'
 
 export const BNET_REGIONS: Array<BattleNetRegion> = ['us', 'eu', 'kr', 'tw']
 
+export const EXPANSION_MAP = {
+  3: 'WOTLK',
+  4: 'CATA',
+  5: 'MOP',
+  6: 'WOD',
+  7: 'LEGION',
+  8: 'BFA',
+  9: 'SL',
+}
+
 export const CHARACTER_CLASS_MAP = {
   1: 'Warrior',
   2: 'Paladin',
@@ -49,5 +59,3 @@ export enum Faction {
   Alliance = 'ALLIANCE',
   Horde = 'HORDE',
 }
-
-export const IS_PREMIUM = false

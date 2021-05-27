@@ -27,7 +27,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = memo(
     formatter = num.format,
   }) => {
     const percent = useMemo(() => {
-      const perc = percentage(value, total)
+      const perc = clamp(0, 100, percentage(value, total))
       return isReverse ? 100 - perc : perc
     }, [isReverse, total, value])
 

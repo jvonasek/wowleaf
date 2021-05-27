@@ -29,6 +29,7 @@ export type Character = Optional<
 >
 
 export type Criterion = BaseCriterion & {
+  factionId?: Faction
   linkedAchievement: Achievement
 }
 

@@ -1,9 +1,9 @@
-import { prop, uniq, pick } from 'ramda'
+import { prop, uniq } from 'ramda'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useQuery, UseQueryOptions } from 'react-query'
 
 import { createCharacterKey } from '@/lib/createCharacterKey'
-import { mergeByHighestValue } from '@/lib/utils'
+import { sortByHighest } from '@/lib/utils'
 import { groupById } from '@/lib/utils'
 import { useAchievementsQuery } from '@/modules/achievement/hooks/useAchievementsQuery'
 import { useCharacterAchievementsQuery } from '@/modules/character/hooks/useCharacterAchievementsQuery'
@@ -36,10 +36,12 @@ export const useUserCharactersQuery = (
   useEffect(() => {
     if (isUserCharsSuccess && !!characters.length) {
       setCharacterList(
-        characters.map((character) => ({
-          ...character,
-          characterKey: createCharacterKey(character),
-        }))
+        characters
+          .sort((a, b) => a.classId - b.classId)
+          .map((character) => ({
+            ...character,
+            characterKey: createCharacterKey(character),
+          }))
       )
     }
   }, [isUserCharsSuccess, characters, setCharacterList])
@@ -92,19 +94,25 @@ export const useUserCharactersQuery = (
   useEffect(() => {
     if (isSuccess) {
       const allIds: number[] = uniq(
-        charactersProgress.reduce((prev, character) => {
-          return [...prev, ...character.ids]
-        }, [])
+        charactersProgress.reduce(
+          (prev, character) => prev.concat(character.ids),
+          []
+        )
       )
 
       const aggregatedProgressArray = charactersProgress.map(({ byId }) => byId)
 
       const aggregated = allIds.map((id) => {
-        const list = mergeByHighestValue(aggregatedProgressArray, id, 'percent')
-        const characters = list
+        const items = aggregatedProgressArray.map((item) => item[id])
+        const sorted = sortByHighest(['percent', 'completedTimestamp'], items)
+
+        const characters = sorted
           .filter(({ percent }) => percent > 0)
-          .map((item) => pick(['characterKey', 'percent'])(item))
-        return { id, progress: list[0], characters }
+          .map(({ characterKey, percent }) => ({
+            characterKey,
+            percent,
+          }))
+        return { id, progress: sorted[0], characters }
       })
 
       const byId = groupById(aggregated.map(prop('progress')))

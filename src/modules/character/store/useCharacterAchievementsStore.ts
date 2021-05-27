@@ -29,11 +29,11 @@ export type AggregatedAchievementsStore = {
 export const initialAchievementProgress: CharacterAchievementProgress = {
   id: null,
   percent: 0,
+  isCompleted: false,
+  completedTimestamp: null,
   partial: 0,
   required: 0,
   criteria: {},
-  completedTimestamp: undefined,
-  isCompleted: false,
   showOverallProgressBar: false,
   characterKey: '',
 }

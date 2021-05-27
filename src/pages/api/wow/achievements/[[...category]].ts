@@ -5,18 +5,17 @@ import { AchCategoryApiRouteStruct } from '@/lib/structs'
 import { Achievement } from '@/modules/achievement/types'
 import prisma, { createFactionSelector } from '@/prisma/wow'
 
-type AchievementResult =
-  | Achievement
-  | Pick<
-      Achievement,
-      | 'id'
-      | 'criteriaOperator'
-      | 'requiredCriteriaAmount'
-      | 'isAccountWide'
-      | 'rewardDescription'
-      | 'points'
-      | 'criteria'
-    >
+type PlainAchievement = Pick<
+  Achievement,
+  | 'id'
+  | 'criteriaOperator'
+  | 'requiredCriteriaAmount'
+  | 'isAccountWide'
+  | 'rewardDescription'
+  | 'points'
+>
+
+type AchievementResult = Achievement | PlainAchievement
 
 const handle = createPrismaHandler<AchievementResult[]>({
   selector: async (req) => {
@@ -33,7 +32,9 @@ const handle = createPrismaHandler<AchievementResult[]>({
       ? {
           ...faction,
           achievementCategory: {
-            slug,
+            slug: {
+              startsWith: slug,
+            },
             isGuildCategory: false,
           },
         }
@@ -59,6 +60,7 @@ const handle = createPrismaHandler<AchievementResult[]>({
           id: true,
           amount: true,
           showProgressBar: true,
+          factionId: true,
         },
       },
     }
@@ -76,6 +78,7 @@ const handle = createPrismaHandler<AchievementResult[]>({
       requiredCriteriaAmount: true,
       criteriaOperator: true,
       achievementAssets: true,
+      expansionId: true,
       criteria: {
         where: faction,
         include: {

@@ -62,6 +62,8 @@ model Achievement {
   rewardItemId                                                          Int?                   @map("reward_item_id")
   requiredCriteriaAmount                                                Int?                   @map("required_criteria_amount")
   criteriaOperator                                                      String?                @map("criteria_operator")
+  expansionId                                                           Int?                   @map("expansion_id")
+  patch                                                                 String?
   achievementCategory                                                   AchievementCategory?   @relation("achievement_categoriesToachievements", fields: [categoryId], references: [id])
   achievementsAchievementsToachievementsNextAchievementId               Achievement?           @relation("achievementsToachievements_next_achievement_id", fields: [nextAchievementId], references: [id])
   achievementsAchievementsToachievementsPrerequisiteAchievementId       Achievement?           @relation("achievementsToachievements_prerequisite_achievement_id", fields: [prerequisiteAchievementId], references: [id])

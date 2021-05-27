@@ -11,9 +11,11 @@ import { useCharacterStore } from '@/modules/character/store/useCharacterStore'
 import { Character } from '@/types'
 import { ArrowSmRightIcon, CheckIcon, StarIcon } from '@heroicons/react/solid'
 import { getHslColorByPercent } from '@/lib/utils'
+import { EXPANSION_MAP } from '@/lib/constants'
 
 import { AchievementCriteriaList } from './AchievementCriteriaList'
 import { Achievement } from './types'
+import { prop, uniqBy } from 'ramda'
 
 export type AchievementCardProps = {
   isProgressAggregated: boolean
@@ -57,6 +59,7 @@ export const AchievementCard: React.FC<AchievementCardProps> = memo(
     achievementAssets,
     isAccountWide,
     factionId,
+    expansionId,
     isProgressAggregated = false,
   }) => {
     const [dialogOpen, setDialogOpen] = useState(false)
@@ -98,8 +101,35 @@ export const AchievementCard: React.FC<AchievementCardProps> = memo(
         ? getCharacterInfo(characters[0].characterKey)
         : null
 
+    const criteriaFilteredByFaction = useMemo(() => {
+      if (topCharacter) {
+        return criteria.filter(
+          ({ factionId }) => !factionId || factionId === topCharacter.faction
+        )
+      }
+      return criteria
+    }, [criteria, topCharacter])
+
+    const isProgressIndeterminate =
+      characters.length > 1
+        ? uniqBy(prop('percent'))(characters)?.length <= 1
+        : false
+
+    if (isProgressIndeterminate) {
+      console.log({
+        id,
+        name,
+        characters,
+        isProgressIndeterminate,
+      })
+    }
+
     const progressBarLabel = useMemo(() => {
-      if (isProgressAggregated && !isCompleted) {
+      if (isProgressAggregated) {
+        if (isCompleted) {
+          return <span className="font-bold text-sm">Completed!</span>
+        }
+
         return (
           <span className="font-bold text-sm">
             {factionId && (
@@ -118,7 +148,12 @@ export const AchievementCard: React.FC<AchievementCardProps> = memo(
               </span>
             ) : (
               <span>
-                {topCharacter && (
+                {isProgressIndeterminate && (
+                  <span className="text-foreground-muted opacity-50">
+                    Indeterminate
+                  </span>
+                )}
+                {topCharacter && !isProgressIndeterminate && (
                   <Tooltip
                     placement="left"
                     overlay={
@@ -152,10 +187,12 @@ export const AchievementCard: React.FC<AchievementCardProps> = memo(
       return null
     }, [
       characters,
+      factionId,
       getCharacterInfo,
       isAccountWide,
       isCompleted,
       isProgressAggregated,
+      isProgressIndeterminate,
       topCharacter,
     ])
 
@@ -224,7 +261,11 @@ export const AchievementCard: React.FC<AchievementCardProps> = memo(
             )}
           </div>
           <div className="col-span-3 flex items-center">
-            <ProgressBar value={percent} total={100} label={progressBarLabel} />
+            <ProgressBar
+              value={isCompleted ? 100 : percent}
+              total={100}
+              label={progressBarLabel}
+            />
           </div>
           <div className="col-span-1 flex items-center justify-end">
             <Button variant="secondary" onClick={openDialog}>
@@ -244,7 +285,7 @@ export const AchievementCard: React.FC<AchievementCardProps> = memo(
             <ProgressBar value={partial} total={required} />
           )}
           <AchievementCriteriaList
-            criteria={criteria}
+            criteria={criteriaFilteredByFaction}
             criteriaProgress={criteriaProgress}
             isProgressAggregated={isProgressAggregated}
           />
@@ -254,6 +295,7 @@ export const AchievementCard: React.FC<AchievementCardProps> = memo(
             isCompleted={isCompleted}
             percent={percent}
             completedTimestamp={completedTimestamp}
+            expansionId={expansionId}
           />
         </Dialog>
       </>
@@ -267,10 +309,12 @@ function AchievementMetaData({
   isCompleted,
   percent,
   completedTimestamp,
+  expansionId,
 }) {
   return (
     <div className="space-x-3 text-sm text-foreground-muted mt-3">
       <span>[{id}]</span>
+      <span>[{EXPANSION_MAP[expansionId]}]</span>
       {isAccountWide && <span>[ACCOUNT WIDE]</span>}
       {isCompleted && percent !== 100 && (
         <span>[COMPLETED ON ANOTHER CHAR]</span>
