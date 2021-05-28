@@ -58,12 +58,12 @@ export const Tooltip: React.FC<TooltipProps> = ({
             ref={setTooltipRef}
             {...getTooltipProps({
               className:
-                'tooltip-container shadow-lg max-w-xs text-on-surface px-5 py-4 text-sm bg-white dark:bg-[black] rounded-lg',
+                'tooltip-container shadow-lg max-w-xs text-foreground px-5 py-4 text-sm bg-background-darker rounded-lg',
             })}
           >
             {overlay}
             <div {...getArrowProps({ className: 'tooltip-arrow' })}>
-              <span className="block  bg-white dark:bg-[black] rounded-sm transform rotate-45"></span>
+              <span className="block bg-background-darker transform rotate-45"></span>
             </div>
           </div>,
           document.body

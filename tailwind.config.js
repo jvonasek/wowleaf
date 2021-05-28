@@ -14,7 +14,7 @@ const colors = {
   // Dark Accent
   accent7: '#424559',
   accent8: '#343747',
-  accent9: '#282b35',
+  accent9: '#2c2e3a',
 
   // Reaction Positive
   positive1: '#35df90',
@@ -84,7 +84,10 @@ const createTheme = (theme) => {
       'on-neutral': colors.neutral4,
     },
     light: {
-      background: '#f2f5fa',
+      background: {
+        DEFAULT: '#f2f5fa',
+        darker: '#f2f5fa',
+      },
       foreground: {
         DEFAULT: '#272727',
         muted: '#757575',
@@ -98,7 +101,10 @@ const createTheme = (theme) => {
       'on-accent-alt': colors.accent5,
     },
     dark: {
-      background: '#22252f',
+      background: {
+        DEFAULT: '#22252f',
+        darker: '#1a1c23',
+      },
       foreground: {
         DEFAULT: '#f6f6f6',
         muted: '#9295a4',

@@ -1,10 +1,10 @@
-import cx from 'classnames';
-import { Fragment, ReactNode, useCallback, useRef, useState } from 'react';
+import cx from 'classnames'
+import { Fragment, ReactNode, useCallback, useRef, useState } from 'react'
 
-import { Button, ButtonProps } from '@/components/Button';
-import { noop } from '@/lib/utils';
-import { Dialog as HeadlessDialog, Transition } from '@headlessui/react';
-import { XIcon } from '@heroicons/react/outline';
+import { Button, ButtonProps } from '@/components/Button'
+import { noop } from '@/lib/utils'
+import { Dialog as HeadlessDialog, Transition } from '@headlessui/react'
+import { XIcon } from '@heroicons/react/outline'
 
 const SIZE_MAP = {
   small: 'max-w-md p-6 my-8',
@@ -89,7 +89,7 @@ export const Dialog: React.FC<DialogProps> = ({
               <div
                 className={cx(
                   'relative inline-block w-full text-left align-middle',
-                  'bg-surface shadow-xl rounded-2xl',
+                  'bg-background shadow-xl rounded-2xl',
                   'transition-all transform',
                   SIZE_MAP[size]
                 )}
@@ -121,7 +121,7 @@ export const Dialog: React.FC<DialogProps> = ({
                     'absolute top-0 right-0',
                     'transform translate-x-1/4 -translate-y-1/4',
                     'flex items-center justify-center',
-                    'bg-surface text-foreground shadow dark:bg-background',
+                    'bg-surface text-foreground shadow dark:bg-background-darker',
                     'w-12 h-12 rounded-full',
                     'focus:outline-none hover:text-accent'
                   )}
