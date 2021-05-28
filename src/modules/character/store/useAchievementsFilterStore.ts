@@ -1,8 +1,8 @@
-import { combine } from 'zustand/middleware';
+import { combine } from 'zustand/middleware'
 
-import { createPersistedStore } from '@/lib/createStore';
+import { createPersistedStore } from '@/lib/createStore'
 
-import { AchievementFilterProps } from '../types';
+import { AchievementFilterProps } from '../types'
 
 type AchievementFilterStore = {
   filter: AchievementFilterProps
@@ -20,7 +20,7 @@ export const useAchievementsFilterStore = createPersistedStore(
     } as AchievementFilterStore,
     (set) => ({
       setFilter: (filter: AchievementFilterProps) => {
-        set((state) => ({ ...state, filter: { ...state.filter, ...filter } }))
+        set({ filter })
       },
     })
   ),

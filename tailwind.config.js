@@ -7,14 +7,14 @@ const colors = {
   accent3: '#d9eeff',
 
   // Default Accent
-  accent4: '#33a9ff',
-  accent5: '#0090f7',
-  accent6: '#0171c3',
+  accent4: '#4a7afb',
+  accent5: '#406ff3',
+  accent6: '#365ed2',
 
   // Dark Accent
-  accent7: '#214263',
-  accent8: '#152a40',
-  accent9: '#102132',
+  accent7: '#424559',
+  accent8: '#343747',
+  accent9: '#282b35',
 
   // Reaction Positive
   positive1: '#35df90',
@@ -98,12 +98,12 @@ const createTheme = (theme) => {
       'on-accent-alt': colors.accent5,
     },
     dark: {
-      background: '#151a21',
+      background: '#22252f',
       foreground: {
-        DEFAULT: '#dee3ea',
-        muted: '#a8b7cc',
+        DEFAULT: '#f6f6f6',
+        muted: '#9295a4',
       },
-      surface: '#0b0e11',
+      surface: '#2b2e3b',
       'accent-alt': {
         lighter: colors.accent7,
         DEFAULT: colors.accent8,

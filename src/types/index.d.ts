@@ -59,6 +59,13 @@ export type AchievementCategory = AchievementCategoryProps & {
   otherAchievementCategories: AchievementCategoryProps[]
 }
 
+export type AchievementFilterProps = {
+  incomplete: boolean
+  reward: boolean
+  includeAccountWide: boolean
+  points: number
+}
+
 export type Realm = {
   name: string
   id: number

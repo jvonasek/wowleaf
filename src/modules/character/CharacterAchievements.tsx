@@ -1,3 +1,5 @@
+import { memo, useState } from 'react'
+
 import { Button } from '@/components/Button'
 import { Spinner } from '@/components/Spinner'
 import { useWowheadLinks } from '@/hooks/useWowheadLinks'
@@ -6,6 +8,9 @@ import { Faction } from '@/types'
 
 import { CharacterAchievementsFilter } from './CharacterAchievementsFilter'
 import { usePaginatedAchievementsQuery } from './hooks/usePaginatedAchievementsQuery'
+import { useAchievementsFilterStore } from './store/useAchievementsFilterStore'
+
+import { debounce } from 'debounce'
 
 type CharacterAchievementsProps = {
   category?: string[]
@@ -14,62 +19,65 @@ type CharacterAchievementsProps = {
   isAggregated: boolean
 }
 
-export const CharacterAchievements: React.FC<CharacterAchievementsProps> = ({
-  category,
-  characterKey,
-  factionId,
-  isAggregated = false,
-}) => {
-  const {
-    fetchNextPage,
-    hasNextPage,
-    paginator: { current, total, page, lastPage },
-    data: achievements,
-    isLoading: isAchsLoading,
-    isSuccess: isAchsSuccess,
-  } = usePaginatedAchievementsQuery(
-    {
-      category,
-      characterKey,
-      factionId,
-    },
-    {
-      enabled: !!characterKey,
-    }
-  )
+const getInitialFilter = (state) => state.filter
 
-  const isLoading = isAchsLoading
-  const isSuccess = isAchsSuccess
+export const CharacterAchievements: React.FC<CharacterAchievementsProps> = memo(
+  ({ category, characterKey, factionId, isAggregated = false }) => {
+    const initialFilter = useAchievementsFilterStore(getInitialFilter)
+    const [filter, setFilter] = useState(initialFilter)
 
-  useWowheadLinks({ refresh: isSuccess }, [achievements])
+    const {
+      fetchNextPage,
+      hasNextPage,
+      paginator: { current, total, page, lastPage },
+      data: achievements,
+      isLoading: isAchsLoading,
+      isSuccess: isAchsSuccess,
+    } = usePaginatedAchievementsQuery(
+      {
+        category,
+        filter,
+        characterKey,
+        factionId,
+      },
+      {
+        enabled: !!characterKey,
+      }
+    )
 
-  return (
-    <div>
-      <CharacterAchievementsFilter />
-      {isLoading ? <Spinner size="6" /> : ''}
-      {!!achievements.length && (
-        <span>
-          Page {page} / {lastPage} (Showing {current} out of {total})
-        </span>
-      )}
-      <div className="space-y-7">
-        {isSuccess &&
-          achievements.map((ach) => (
-            <AchievementCard
-              key={ach.id}
-              {...ach}
-              isProgressAggregated={isAggregated}
-            />
-          ))}
+    const isLoading = isAchsLoading
+    const isSuccess = isAchsSuccess
+
+    useWowheadLinks({ refresh: isSuccess }, [achievements])
+
+    return (
+      <div>
+        <CharacterAchievementsFilter onChange={debounce(setFilter, 1)} />
+        {isLoading ? <Spinner size="6" /> : ''}
+        {!!achievements.length && (
+          <span>
+            Page {page} / {lastPage} (Showing {current} out of {total})
+          </span>
+        )}
+        <div className="space-y-7">
+          {isSuccess &&
+            achievements.map((ach) => (
+              <AchievementCard
+                key={ach.id}
+                {...ach}
+                isProgressAggregated={isAggregated}
+              />
+            ))}
+        </div>
+        {hasNextPage && (
+          <Button onClick={() => fetchNextPage()}>LOAD MORE</Button>
+        )}
+        {!!achievements.length && (
+          <span>
+            Page {page} / {lastPage} (Showing {current} out of {total})
+          </span>
+        )}
       </div>
-      {hasNextPage && (
-        <Button onClick={() => fetchNextPage()}>LOAD MORE</Button>
-      )}
-      {!!achievements.length && (
-        <span>
-          Page {page} / {lastPage} (Showing {current} out of {total})
-        </span>
-      )}
-    </div>
-  )
-}
+    )
+  }
+)

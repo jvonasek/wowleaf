@@ -8,7 +8,6 @@ import { AchievementProgressFactory } from '@/lib/AchievementProgressFactory'
 import { groupById } from '@/lib/utils'
 import { useAchievementsStore } from '@/modules/achievement/store/useAchievementsStore'
 
-import { useAchievementsFilterStore } from '../store/useAchievementsFilterStore'
 import { useCharacterAchievementsStore } from '../store/useCharacterAchievementsStore'
 import { CharacterStoreProps } from '../store/useCharacterStore'
 import { CharacterAchievement } from '../types'
@@ -26,7 +25,6 @@ export const useCharacterAchievementsQuery = (
   { enabled = false }: UseQueryOptions = {}
 ): CharacterAchievementsHookProps => {
   const achievementsData = useAchievementsStore()
-  const filterValues = useAchievementsFilterStore((state) => state.filter)
 
   const { set, setCharacters } = useCharacterAchievementsStore()
   const [isReady, setIsReady] = useState(false)
@@ -67,13 +65,7 @@ export const useCharacterAchievementsQuery = (
       setIsReady(true)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    isSuccess,
-    filterValues,
-    achievementsData,
-    achievementsData.isSuccess,
-    set,
-  ])
+  }, [isSuccess, achievementsData, achievementsData.isSuccess, set])
 
   return {
     isLoading: isLoading && !isReady,

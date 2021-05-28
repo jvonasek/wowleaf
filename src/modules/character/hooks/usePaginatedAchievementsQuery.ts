@@ -7,13 +7,13 @@ import { AchievementFilterFactory } from '@/lib/AchievementFilterFactory'
 import { paginateArray, qs } from '@/lib/utils'
 import { useAchievementsStore } from '@/modules/achievement/store/useAchievementsStore'
 import { Achievement } from '@/modules/achievement/types'
-import { Faction } from '@/types'
+import { Faction, AchievementFilterProps } from '@/types'
 
-import { useAchievementsFilterStore } from '@/modules/character/store/useAchievementsFilterStore'
 import { useCharacterAchievementsStore } from '@/modules/character/store/useCharacterAchievementsStore'
 
 type PaginatedAchievementsQueryHookProps = {
   perPage?: number
+  filter: AchievementFilterProps
   category: string[]
   characterKey: string
   factionId: Faction
@@ -39,6 +39,7 @@ export const usePaginatedAchievementsQuery = (
   {
     category,
     characterKey,
+    filter,
     factionId,
     perPage = 20,
   }: PaginatedAchievementsQueryHookProps,
@@ -49,7 +50,6 @@ export const usePaginatedAchievementsQuery = (
   const [achievementIds, setAchievementIds] = useState([])
   const [data, setData] = useState<Achievement[]>([])
 
-  const { filter } = useAchievementsFilterStore()
   const achievements = useAchievementsStore()
 
   const {
@@ -129,10 +129,6 @@ export const usePaginatedAchievementsQuery = (
   }, [hasCategoryChanged, hasFilterChanged, queryClient])
 
   useEffect(() => {
-    if (isLoading) {
-      setData([])
-    }
-
     if (isSuccess && queryData?.pages) {
       const pages =
         queryData.pages.length > 1

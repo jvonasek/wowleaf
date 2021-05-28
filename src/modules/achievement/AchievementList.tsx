@@ -15,12 +15,12 @@ export const AchievementList: React.FC<AchievementListProps> = ({
   isAggregated = false,
 }) => (
   <div className="grid grid-cols-12 gap-7">
-    <div className="col-span-3 bg-surface p-7 rounded-lg">
+    <div className="col-span-3">
       <AchievementCategories
         basePath={isAggregated ? '/dashboard' : `/character/${characterKey}`}
       />
     </div>
-    <div className="col-span-9 bg-surface p-7 rounded-lg">
+    <div className="col-span-9">
       <CharacterAchievements
         isAggregated={isAggregated}
         category={category}

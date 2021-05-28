@@ -28,7 +28,7 @@ export const AchievementCategories: React.FC<AchievementCategoriesProps> = ({
     <div className="space-y-3">
       {isSuccess &&
         data.map(({ id, name, slug, otherAchievementCategories }) => (
-          <div className="bg-surface p-3 rounded text-lg" key={id}>
+          <div className="text-lg" key={id}>
             <ActiveLink href={`${basePath}/achievements/${slug}`}>
               {name}
             </ActiveLink>
