@@ -2,6 +2,7 @@ import { memo, useState } from 'react'
 
 import { Button } from '@/components/Button'
 import { Spinner } from '@/components/Spinner'
+import { Card } from '@/components/Card'
 import { useWowheadLinks } from '@/hooks/useWowheadLinks'
 import { AchievementCard } from '@/modules/achievement/AchievementCard'
 import { Faction } from '@/types'
@@ -61,12 +62,11 @@ export const CharacterAchievements: React.FC<CharacterAchievementsProps> = memo(
         )}
         <div className="space-y-7">
           {isSuccess &&
+            !isLoading &&
             achievements.map((ach) => (
-              <AchievementCard
-                key={ach.id}
-                {...ach}
-                isProgressAggregated={isAggregated}
-              />
+              <Card key={ach.id}>
+                <AchievementCard {...ach} isProgressAggregated={isAggregated} />
+              </Card>
             ))}
         </div>
         {hasNextPage && (

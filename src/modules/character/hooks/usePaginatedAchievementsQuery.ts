@@ -172,7 +172,7 @@ export const usePaginatedAchievementsQuery = (
   return {
     ...queryResult,
     data,
-    isSuccess,
+    isSuccess: isSuccess && !isLoading,
     isLoading,
     fetchNextPage: fetchNextPageFn,
     hasNextPage,

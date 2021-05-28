@@ -5,6 +5,8 @@ import { createCharacterKey } from '@/lib/createCharacterKey'
 import { CharacterRouteStruct } from '@/lib/structs'
 import { useAchievementsQuery } from '@/modules/achievement/hooks/useAchievementsQuery'
 import { AchievementList } from '@/modules/achievement/AchievementList'
+import { withLayout } from '@moxy/next-layout'
+import { DashboardLayout } from '@/modules/layout/DashboardLayout'
 
 import { CharacterPageHeader } from '@/modules/character/CharacterPageHeader'
 import {
@@ -19,7 +21,7 @@ type CharacterAchievementsPageProps = {
   character: Character
 }
 
-export const CharacterAchievementsPage: NextPage<CharacterAchievementsPageProps> = ({
+export const _CharacterAchievementsPage: NextPage<CharacterAchievementsPageProps> = ({
   category,
   character,
 }) => {
@@ -65,8 +67,7 @@ export const CharacterAchievementsPage: NextPage<CharacterAchievementsPageProps>
   const isSuccess = isAchsSuccess && isCharAchsSuccess
 
   return (
-    <div className="space-y-7">
-      <CharacterPageHeader />
+    <div className="space-y-8">
       {isSuccess && (
         <AchievementList
           category={category}
@@ -77,6 +78,10 @@ export const CharacterAchievementsPage: NextPage<CharacterAchievementsPageProps>
     </div>
   )
 }
+
+export const CharacterAchievementsPage = withLayout(
+  <DashboardLayout header={<CharacterPageHeader />} />
+)(_CharacterAchievementsPage)
 
 const fetchCharacter = async ({
   region,

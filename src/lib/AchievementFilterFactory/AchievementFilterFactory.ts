@@ -82,6 +82,9 @@ export class AchievementFilterFactory {
   sort() {
     const sortProps: Record<string, SortDir>[] = [
       {
+        isCompleted: 'DESC',
+      },
+      {
         percent: 'DESC',
       },
       {
@@ -101,7 +104,7 @@ export class AchievementFilterFactory {
 
           const values = {
             ...pick(['name', 'id'], ach),
-            ...pick(['completedTimestamp', 'percent'], progress),
+            ...pick(['completedTimestamp', 'percent', 'isCompleted'], progress),
             completedTimestamp: progress?.completedTimestamp || 0,
           }
 

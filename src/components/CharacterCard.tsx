@@ -20,7 +20,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
   realmSlug,
   gender,
 }): JSX.Element => (
-  <div className="bg-surface p-3 rounded-lg flex space-x-2">
+  <div className="flex space-x-2">
     <CharacterAvatar
       region={region}
       realmSlug={realmSlug}

@@ -198,7 +198,7 @@ export const AchievementCard: React.FC<AchievementCardProps> = memo(
 
     return (
       <>
-        <div className="grid grid-cols-12 gap-4 bg-surface rounded-lg p-7">
+        <div className="grid grid-cols-12 gap-4">
           <div className="col-span-7 flex items-center">
             {achievementAssets && achievementAssets[0] && (
               <div className="relative mr-5">

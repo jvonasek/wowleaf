@@ -1,13 +1,14 @@
-import '../styles/base.css';
+import '../styles/base.css'
 
-import { Provider as SessionProvider } from 'next-auth/client';
-import App from 'next/app';
-import { QueryClient, QueryClientProvider } from 'react-query';
-import { ReactQueryDevtools } from 'react-query/devtools';
+import { Provider as SessionProvider } from 'next-auth/client'
+import App from 'next/app'
+import Head from 'next/head'
+import { QueryClient, QueryClientProvider } from 'react-query'
+import { ReactQueryDevtools } from 'react-query/devtools'
 
-import { createQueryFn } from '@/lib/createQueryFn';
-import { MainLayout } from '@/modules/layout/MainLayout';
-import { LayoutTree } from '@moxy/next-layout';
+import { createQueryFn } from '@/lib/createQueryFn'
+import { DashboardLayout } from '@/modules/layout/DashboardLayout'
+import { LayoutTree } from '@moxy/next-layout'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -23,16 +24,22 @@ class RootApp extends App {
   render(): JSX.Element {
     const { Component, pageProps } = this.props
     return (
-      <SessionProvider session={pageProps.session}>
-        <QueryClientProvider client={queryClient}>
-          <LayoutTree
-            Component={Component}
-            pageProps={pageProps}
-            defaultLayout={<MainLayout />}
-          />
-          <ReactQueryDevtools initialIsOpen={false} />
-        </QueryClientProvider>
-      </SessionProvider>
+      <>
+        <Head>
+          <script>{`const whTooltips = {colorLinks: true, iconizeLinks: false, renameLinks: true, iconSize: true}`}</script>
+          <script src="https://wow.zamimg.com/widgets/power.js"></script>
+        </Head>
+        <SessionProvider session={pageProps.session}>
+          <QueryClientProvider client={queryClient}>
+            <LayoutTree
+              Component={Component}
+              pageProps={pageProps}
+              defaultLayout={<DashboardLayout />}
+            />
+            <ReactQueryDevtools initialIsOpen={false} />
+          </QueryClientProvider>
+        </SessionProvider>
+      </>
     )
   }
 }
