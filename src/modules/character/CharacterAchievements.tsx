@@ -30,7 +30,7 @@ export const CharacterAchievements: React.FC<CharacterAchievementsProps> = memo(
     const {
       fetchNextPage,
       hasNextPage,
-      paginator: { current, total, page, lastPage },
+      paginator: { current, total, page, lastPage, isLoadingNext },
       data: achievements,
       isLoading: isAchsLoading,
       isSuccess: isAchsSuccess,
@@ -61,6 +61,11 @@ export const CharacterAchievements: React.FC<CharacterAchievementsProps> = memo(
 
     useWowheadLinks({ refresh: isSuccess }, [achievements])
 
+    console.log({
+      isLoading,
+      isSuccess,
+    })
+
     return (
       <div>
         <div className="mb-9 relative">
@@ -75,7 +80,7 @@ export const CharacterAchievements: React.FC<CharacterAchievementsProps> = memo(
             <CharacterAchievementsFilter onChange={debounce(setFilter, 1)} />
           </Card>
         </div>
-        {isLoading ? <Spinner size="6" /> : ''}
+        {isLoading ? <Spinner /> : ''}
         <div className="space-y-7">
           {isSuccess &&
             !isLoading &&
@@ -87,7 +92,11 @@ export const CharacterAchievements: React.FC<CharacterAchievementsProps> = memo(
         </div>
         <div className="text-center mt-7">
           {hasNextPage && (
-            <Button size="large" onClick={() => fetchNextPage()}>
+            <Button
+              size="large"
+              isLoading={isLoadingNext}
+              onClick={() => fetchNextPage()}
+            >
               Load More
             </Button>
           )}

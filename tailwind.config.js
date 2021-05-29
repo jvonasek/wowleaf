@@ -3,12 +3,12 @@ const tailwindColors = require('tailwindcss/colors')
 
 const colors = {
   // Light Accent
-  accent1: '#f2faff',
-  accent2: '#ecf7ff',
-  accent3: '#d9eeff',
+  accent1: '#f7f9ff',
+  accent2: '#eaefff',
+  accent3: '#dfe7ff',
 
   // Default Accent
-  accent4: '#4a7afb',
+  accent4: '#5581fc',
   accent5: '#406ff3',
   accent6: '#365ed2',
 
@@ -18,22 +18,22 @@ const colors = {
   accent9: '#2c2e3a',
 
   // Reaction Positive
-  positive1: '#35df90',
-  positive2: '#1eb871',
-  positive3: '#188e57',
-  positive4: '#0a3d25',
-
-  // Reaction Negative
-  negative1: '#f47961',
-  negative2: '#ea4f30',
-  negative3: '#d52f0f',
-  negative4: '#380e06',
+  positive1: '#61d17d',
+  positive2: '#4dcb6d',
+  positive3: '#39c65c',
+  positive4: '#ffffff',
 
   // Reaction Neutral
-  neutral1: '#fac661',
-  neutral2: '#f0ae2d',
-  neutral3: '#e19607',
-  neutral4: '#4c3505',
+  neutral1: '#d1c661',
+  neutral2: '#cbbf4d',
+  neutral3: '#c6b839',
+  neutral4: '#ffffff',
+
+  // Reaction Negative
+  negative1: '#d16161',
+  negative2: '#cb4d4d',
+  negative3: '#c63939',
+  negative4: '#ffffff',
 
   // other
   white: '#ffffff',

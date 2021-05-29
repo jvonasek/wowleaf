@@ -17,10 +17,10 @@ export const percentage = (
 
 export const getHslColorByPercent = (
   percent = 0,
+  saturation = 55,
+  lightness = 55,
   start = 0,
-  end = 100,
-  saturation = 70,
-  lightness = 55
+  end = 135
 ): string => {
   const proportion = percent / 100
   const hue = start + (end - start) * proportion

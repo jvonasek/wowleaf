@@ -8,6 +8,7 @@ export type ProgressBarProps = {
   label?: string | ReactNode
   total?: number
   value: number
+  precision?: number
   display?: 'values' | 'percent'
   displayPosition?: 'left' | 'right'
   color?: 'dynamic' | 'accent'
@@ -20,6 +21,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = memo(
     label,
     total = 100,
     value = 0,
+    precision = 1,
     display = 'percent',
     displayPosition = 'right',
     isReverse = false,
@@ -27,15 +29,23 @@ export const ProgressBar: React.FC<ProgressBarProps> = memo(
     formatter = num.format,
   }) => {
     const percent = useMemo(() => {
-      const perc = clamp(0, 100, percentage(value, total))
+      const perc = clamp(0, 100, percentage(value, total, precision))
       return isReverse ? 100 - perc : perc
-    }, [isReverse, total, value])
+    }, [isReverse, precision, total, value])
 
     const current = clamp(0, total, value)
 
     const valueLabel = formatter
       ? `${formatter(current)} / ${formatter(total)}`
       : `${current} / ${total}`
+
+    const background = useMemo(() => {
+      return color === 'dynamic'
+        ? `linear-gradient(to right, ${getHslColorByPercent(
+            percent
+          )}, ${getHslColorByPercent(percent, 70, 60)})`
+        : undefined
+    }, [color, percent])
 
     return (
       <div className="w-full">
@@ -54,10 +64,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = memo(
               })}
               style={{
                 width: `${percent}%`,
-                backgroundColor:
-                  color === 'dynamic'
-                    ? getHslColorByPercent(percent)
-                    : undefined,
+                background,
               }}
             ></div>
           </div>
@@ -65,7 +72,9 @@ export const ProgressBar: React.FC<ProgressBarProps> = memo(
             {display === 'values' ? (
               <span className="inline-block">{valueLabel}</span>
             ) : (
-              <span className="inline-block w-10">{percent}%</span>
+              <span className="inline-block w-10">
+                {percent.toFixed(percent > 0 ? precision : 0)}%
+              </span>
             )}
           </span>
         </div>

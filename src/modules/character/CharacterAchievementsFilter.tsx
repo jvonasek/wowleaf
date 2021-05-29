@@ -36,7 +36,7 @@ export const _CharacterAchievementsFilter: React.FC<CharacterAchievementsFilter>
 
     return (
       <form onChange={handleOnChange}>
-        <div className="flex align-center space-x-4">
+        <div className="flex flex-wrap align-center space-x-4">
           <span>
             <input {...register('incomplete')} type="checkbox" /> Incomplete
             Only

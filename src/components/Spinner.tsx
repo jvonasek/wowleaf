@@ -1,11 +1,11 @@
 const sizes = {
-  '2': 'h-2 w-2',
-  '4': 'h-4 w-4',
-  '6': 'h-6 w-6',
+  small: 'h-3 w-3',
+  medium: 'h-4 w-4',
+  large: 'h-5 w-5',
 }
 
 export const Spinner: React.FC<{ size?: keyof typeof sizes }> = ({
-  size = '4',
+  size = 'medium',
 }) => {
   return (
     <svg

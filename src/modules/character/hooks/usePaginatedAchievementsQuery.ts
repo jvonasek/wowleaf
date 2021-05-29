@@ -45,6 +45,7 @@ export const usePaginatedAchievementsQuery = (
   }: PaginatedAchievementsQueryHookProps,
   { enabled }: UseQueryOptions
 ) => {
+  const [isLoadingNext, setIsLoadingNext] = useState(false)
   const queryClient = useQueryClient()
   const [page, setPage] = useState(1)
   const [achievementIds, setAchievementIds] = useState([])
@@ -146,6 +147,7 @@ export const usePaginatedAchievementsQuery = (
         })
 
       setData(sortedPages)
+      setIsLoadingNext(false)
     }
   }, [achievementIds, isCategoryPage, isLoading, isSuccess, queryData])
 
@@ -157,6 +159,8 @@ export const usePaginatedAchievementsQuery = (
 
   const fetchNextPageFn = useCallback(() => {
     if (hasNextPage) {
+      setIsLoadingNext(true)
+
       const nextPage = page + 1
 
       const pageIds = paginateArray(achievementIds, perPage, nextPage)
@@ -172,7 +176,7 @@ export const usePaginatedAchievementsQuery = (
   return {
     ...queryResult,
     data,
-    isSuccess: isSuccess && !isLoading,
+    isSuccess,
     isLoading,
     fetchNextPage: fetchNextPageFn,
     hasNextPage,
@@ -181,6 +185,7 @@ export const usePaginatedAchievementsQuery = (
       total,
       page,
       lastPage,
+      isLoadingNext,
     },
   }
 }

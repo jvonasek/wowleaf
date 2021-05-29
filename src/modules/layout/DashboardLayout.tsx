@@ -2,7 +2,7 @@ import { ReactNode } from 'react'
 import ThemeSwitch from '@/components/ThemeSwitch'
 import { HeaderLogin } from '@/components/HeaderLogin'
 
-import cx from 'classnames'
+import { Breadcrumbs } from '@/modules/breadcrumbs/Breadcrumbs'
 
 export type DashboardLayoutProps = {
   children?: ReactNode
@@ -194,23 +194,20 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
             </div>
           </div>
         </nav>
-        {header && (
-          <div className="relative md:pt-32 pb-12 pt-12">
-            <div className="container mx-auto">
-              <div className="px-4 md:px-10 mx-auto w-full">
-                <div className="flex flex-wrap">
-                  <div className="w-full px-4">{header}</div>
+        <div className="relative md:pt-32 pb-12 pt-12">
+          <div className="container mx-auto">
+            <div className="px-4 md:px-10 mx-auto w-full">
+              <div className="flex flex-wrap">
+                {header && <div className="w-full px-4">{header}</div>}
+                <div className="w-full px-4 mt-4">
+                  <Breadcrumbs />
                 </div>
               </div>
             </div>
           </div>
-        )}
+        </div>
         <div className="container mx-auto">
-          <div
-            className={cx('px-4 md:px-10 mx-auto w-full', {
-              'md:pt-32 pt-12': !header,
-            })}
-          >
+          <div className="px-4 md:px-10 mx-auto w-full">
             <div className="flex flex-wrap">
               <div className="w-full px-4">
                 <div className="relative flex flex-col min-w-0 break-words w-full">

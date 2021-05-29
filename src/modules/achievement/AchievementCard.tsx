@@ -268,8 +268,12 @@ export const AchievementCard: React.FC<AchievementCardProps> = memo(
             />
           </div>
           <div className="col-span-1 flex items-center justify-end">
-            <Button variant="secondary" onClick={openDialog}>
-              <ArrowSmRightIcon className="h-5 w-5" />
+            <Button
+              variant="secondary"
+              onClick={openDialog}
+              className="w-11 h-11 !p-0"
+            >
+              <ArrowSmRightIcon className="h-5 w-5 text-accent-lighter" />
             </Button>
           </div>
         </div>
