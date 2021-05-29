@@ -1,12 +1,12 @@
-import { useRouter } from 'next/router';
-import { groupBy, prop } from 'ramda';
-import { useCallback, useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
+import { useRouter } from 'next/router'
+import { groupBy, prop } from 'ramda'
+import { useCallback, useEffect, useState } from 'react'
+import { useQuery } from 'react-query'
 
-import { Button } from '@/components/Button';
-import { FormInput } from '@/components/FormInput';
-import { FormSelect } from '@/components/FormSelect';
-import { Realm } from '@/prisma/wow';
+import { Button } from '@/components/Button'
+import { FormInput } from '@/components/FormInput'
+import { FormSelect } from '@/components/FormSelect'
+import { Realm } from '@/prisma/wow'
 
 export const CharacterSearch: React.FC = () => {
   const [regions, setRegions] = useState([])
@@ -40,7 +40,7 @@ export const CharacterSearch: React.FC = () => {
   }, [])
 
   return (
-    <div className="flex bg-surface rounded-lg p-7 space-x-7">
+    <div className="flex rounded-lg pace-x-7">
       <FormInput
         name="character-name"
         placeholder="Character name..."

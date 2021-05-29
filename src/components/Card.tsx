@@ -5,19 +5,19 @@ export type CardProps = {
   header?: ReactNode
   footer?: ReactNode
   children?: ReactNode
-  variant?: 'dark' | 'default'
+  variant?: 'tertiary' | 'surface'
 }
 
 export const Card: React.FC<CardProps> = ({
   children,
   header,
   footer,
-  variant = 'default',
+  variant = 'surface',
 }) => (
   <div
     className={cx(
-      'rounded-lg shadow-lg',
-      variant === 'dark' ? 'bg-background-darker' : 'bg-surface'
+      'rounded-lg shadow',
+      variant === 'tertiary' ? 'bg-tertiary-2 text-on-tertiary' : 'bg-surface-1'
     )}
   >
     {header && (

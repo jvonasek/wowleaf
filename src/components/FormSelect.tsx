@@ -1,5 +1,5 @@
-import cx from 'classnames';
-import { Fragment, OptionHTMLAttributes, SelectHTMLAttributes } from 'react';
+import cx from 'classnames'
+import { Fragment, OptionHTMLAttributes, SelectHTMLAttributes } from 'react'
 
 type SelectOption = OptionHTMLAttributes<HTMLOptionElement> & {
   label: string
@@ -36,8 +36,10 @@ export const FormSelect: React.FC<FormSelectProps> = ({
         id={name}
         {...rest}
         className={cx(
-          'block border-2 px-4 py-3 w-full rounded-lg bg-background border-transparent',
-          'focus:border-accent-light focus:bg-surface focus:ring-0'
+          'block border border-transparent px-4 py-3 w-full rounded-lg bg-secondary-2',
+          'focus:ring-0 focus:bg-surface-1 focus:border-surface-2',
+          'dark:focus:bg-secondary-3 dark:focus:border-secondary-1',
+          'transition-colors'
         )}
       >
         {options.map(({ options, ...rest }) => (

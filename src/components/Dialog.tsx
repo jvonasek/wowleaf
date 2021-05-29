@@ -66,7 +66,7 @@ export const Dialog: React.FC<DialogProps> = ({
               leaveTo="opacity-0"
             >
               <HeadlessDialog.Overlay className="fixed inset-0 transition-opacity backdrop-filter backdrop-blur">
-                <div className="absolute inset-0 bg-foreground opacity-5" />
+                <div className="absolute inset-0 bg-background opacity-30" />
               </HeadlessDialog.Overlay>
             </Transition.Child>
 
@@ -89,7 +89,7 @@ export const Dialog: React.FC<DialogProps> = ({
               <div
                 className={cx(
                   'relative inline-block w-full text-left align-middle',
-                  'bg-background-darker shadow-xl rounded-2xl',
+                  'bg-surface-1 shadow-xl rounded-2xl',
                   'transition-all transform',
                   SIZE_MAP[size]
                 )}
@@ -121,9 +121,9 @@ export const Dialog: React.FC<DialogProps> = ({
                     'absolute top-0 right-0',
                     'transform translate-x-1/4 -translate-y-1/4',
                     'flex items-center justify-center',
-                    'bg-surface text-foreground shadow dark:bg-gray-900',
+                    'bg-surface-1 text-foreground shadow dark:bg-gray-900',
                     'w-12 h-12 rounded-full',
-                    'focus:outline-none hover:text-accent'
+                    'focus:outline-none hover:text-primary-2'
                   )}
                 >
                   <XIcon className="w-6 h-6" />

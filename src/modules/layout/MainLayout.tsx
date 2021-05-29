@@ -17,7 +17,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => (
     <div className="relative">
       <div className="flex">
         <div className="sticky left-0 top-0 w-80 h-screen p-5">
-          <div className="p-5 bg-surface h-screen rounded-xl">
+          <div className="p-5 bg-surface-1 h-screen rounded-xl">
             <h2 className="font-bold text-lg mb-5">FUNCRAFT</h2>
             <Link href="/">
               <a className="block mb-2">Home</a>

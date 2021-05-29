@@ -52,7 +52,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = memo(
         {!!label && label}
         <div className="flex items-center">
           <div
-            className={cx('h-2 w-full rounded-full bg-background-darker', {
+            className={cx('h-2 w-full rounded-full bg-surface-2', {
               'order-2 ml-3': displayPosition === 'left',
               'mr-3': displayPosition === 'right',
             })}
@@ -60,7 +60,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = memo(
             <div
               className={cx(`h-2 rounded-l-full transition-all`, {
                 'rounded-r-full': percent === 100,
-                'bg-accent': color === 'accent',
+                'bg-primary-2': color === 'accent',
               })}
               style={{
                 width: `${percent}%`,

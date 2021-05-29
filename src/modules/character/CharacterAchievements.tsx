@@ -70,7 +70,7 @@ export const CharacterAchievements: React.FC<CharacterAchievementsProps> = memo(
       <div>
         <div className="mb-9 relative">
           <Card
-            variant="dark"
+            variant="tertiary"
             footer={
               pageInfo && (
                 <span className="text-foreground-muted">{pageInfo}</span>

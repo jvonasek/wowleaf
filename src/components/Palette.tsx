@@ -1,29 +1,44 @@
 import { Button, ButtonVariant } from '@/components/Button'
+import { FormInput } from '@/components/FormInput'
 
 import { getHslColorByPercent } from '@/lib/utils'
 
 const definitions = [
   {
-    name: 'Backgrounds',
+    name: 'Background',
     palette: {
       background: ['bg-background', 'text-foreground'],
-      surface: ['bg-surface', 'text-foreground'],
     },
   },
   {
-    name: 'Accent',
+    name: 'Surface',
     palette: {
-      lighter: ['bg-accent-lighter', 'text-on-accent'],
-      default: ['bg-accent', 'text-on-accent'],
-      darker: ['bg-accent-darker', 'text-on-accent'],
+      'surface-1': ['bg-surface-1', 'text-foreground'],
+      'surface-2': ['bg-surface-2', 'text-foreground'],
     },
   },
   {
-    name: 'Alternative Accent',
+    name: 'Primary',
     palette: {
-      lighter: ['bg-accent-alt-lighter', 'text-on-accent-alt'],
-      default: ['bg-accent-alt', 'text-on-accent-alt'],
-      darker: ['bg-accent-alt-darker', 'text-on-accent-alt'],
+      'primary-1': ['bg-primary-1', 'text-on-primary'],
+      'primary-2': ['bg-primary-2', 'text-on-primary'],
+      'primary-3': ['bg-primary-3', 'text-on-primary'],
+    },
+  },
+  {
+    name: 'Secondary',
+    palette: {
+      'secondary-1': ['bg-secondary-1', 'text-on-secondary'],
+      'secondary-2': ['bg-secondary-2', 'text-on-secondary'],
+      'secondary-3': ['bg-secondary-3', 'text-on-secondary'],
+    },
+  },
+  {
+    name: 'Tertiary',
+    palette: {
+      'tertiary-1': ['bg-tertiary-1', 'text-on-tertiary'],
+      'tertiary-2': ['bg-tertiary-2', 'text-on-tertiary'],
+      'tertiary-3': ['bg-tertiary-3', 'text-on-tertiary'],
     },
   },
   {
@@ -59,6 +74,12 @@ const buttons = [
     },
   },
   {
+    name: 'Tertiary',
+    props: {
+      variant: 'tertiary' as ButtonVariant,
+    },
+  },
+  {
     name: 'Positive',
     props: {
       variant: 'positive' as ButtonVariant,
@@ -86,6 +107,14 @@ const reactionScale = [
 
 export const Palette: React.FC = () => (
   <div>
+    <h1 className="text-4xl font-bold mb-2 text-foreground">
+      Foreground Text Color
+    </h1>
+    <p className="text-foreground-muted mb-10">Foreground muted text color</p>
+    <div className="mb-10">
+      <h1 className="text-4xl font-bold mb-2 text-foreground">Form</h1>
+      <FormInput name="input-1" placeholder="Placeholder..." />
+    </div>
     {definitions.map(({ name, palette }) => (
       <div key={name}>
         <h1 className="text-4xl font-bold mb-2">{name}</h1>

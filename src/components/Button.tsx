@@ -13,10 +13,13 @@ import { Spinner } from '@/components/Spinner'
 
 const VARIANT_MAP = {
   primary: cx(
-    'bg-accent hover:bg-accent-darker active:bg-accent-lighter text-on-accent focus:ring-accent-lighter'
+    'bg-primary-2 hover:bg-primary-3 active:bg-primary-1 text-on-primary focus:ring-primary-1'
   ),
   secondary: cx(
-    'bg-accent-alt hover:bg-accent-alt-darker active:bg-accent-alt-lighter text-on-accent-alt focus:ring-accent-alt-lighter'
+    'bg-secondary-2 hover:bg-secondary-3 active:bg-secondary-1 text-on-secondary focus:ring-secondary-1'
+  ),
+  tertiary: cx(
+    'bg-tertiary-2 hover:bg-tertiary-3 active:bg-tertiary-1 text-on-tertiary focus:ring-tertiary-1'
   ),
   positive: cx(
     'bg-positive hover:bg-positive-darker active:bg-positive-lighter text-on-positive focus:ring-positive-lighter'

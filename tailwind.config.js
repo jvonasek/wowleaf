@@ -2,38 +2,34 @@ const themeSwapper = require('tailwindcss-theme-swapper')
 const tailwindColors = require('tailwindcss/colors')
 
 const colors = {
-  // Light Accent
-  accent1: '#f7f9ff',
-  accent2: '#eaefff',
-  accent3: '#dfe7ff',
+  textLight: '#2a2d34',
+  textLightMuted: '#6f6e7b',
 
-  // Default Accent
-  accent4: '#5581fc',
-  accent5: '#406ff3',
-  accent6: '#365ed2',
+  textDark: '#fbfbf9',
+  textDarkMuted: '#9295a4',
 
-  // Dark Accent
-  accent7: '#424559',
-  accent8: '#343747',
-  accent9: '#2c2e3a',
+  bgLight: '#eaedf2',
+  bgDark: '#14151a',
+
+  // Primary Accent
+  primary1: '#5581fc',
+  primary2: '#406ff3',
+  primary3: '#365ed2',
 
   // Reaction Positive
   positive1: '#61d17d',
   positive2: '#4dcb6d',
   positive3: '#39c65c',
-  positive4: '#ffffff',
 
   // Reaction Neutral
   neutral1: '#d1c661',
   neutral2: '#cbbf4d',
   neutral3: '#c6b839',
-  neutral4: '#ffffff',
 
   // Reaction Negative
   negative1: '#d16161',
   negative2: '#cb4d4d',
   negative3: '#c63939',
-  negative4: '#ffffff',
 
   // other
   white: '#ffffff',
@@ -59,64 +55,70 @@ const createTheme = (theme) => {
         11: '#FF7D0A',
         12: '#A330C9',
       },
-      accent: {
-        lighter: colors.accent4,
-        DEFAULT: colors.accent5,
-        darker: colors.accent6,
+      primary: {
+        1: colors.primary1,
+        2: colors.primary2,
+        3: colors.primary3,
       },
-      'on-accent': colors.white,
+      'on-primary': colors.white,
+      tertiary: {
+        1: '#14151a',
+        2: '#0a0b0c',
+        3: '#000',
+      },
+      'on-tertiary': colors.white,
       positive: {
         lighter: colors.positive1,
         DEFAULT: colors.positive2,
         darker: colors.positive3,
       },
-      'on-positive': colors.positive4,
+      'on-positive': colors.white,
       negative: {
         lighter: colors.negative1,
         DEFAULT: colors.negative2,
         darker: colors.negative3,
       },
-      'on-negative': colors.negative4,
+      'on-negative': colors.white,
       neutral: {
         lighter: colors.neutral1,
         DEFAULT: colors.neutral2,
         darker: colors.neutral3,
       },
-      'on-neutral': colors.neutral4,
+      'on-neutral': colors.white,
     },
     light: {
-      background: {
-        DEFAULT: '#f2f5fa',
-        darker: '#ffffff',
-      },
+      background: colors.bgLight,
       foreground: {
-        DEFAULT: '#272727',
-        muted: '#757575',
+        DEFAULT: colors.textLight,
+        muted: colors.textLightMuted,
       },
-      surface: '#ffffff',
-      'accent-alt': {
-        lighter: colors.accent1,
-        DEFAULT: colors.accent2,
-        darker: colors.accent3,
+      surface: {
+        1: '#ffffff',
+        2: '#e0e0e8',
       },
-      'on-accent-alt': colors.accent5,
+      secondary: {
+        1: '#e6e8ee',
+        2: '#dee1e8',
+        3: '#d7dbe3',
+      },
+      'on-secondary': colors.textLight,
     },
     dark: {
-      background: {
-        DEFAULT: '#22252f',
-        darker: '#1a1c23',
-      },
+      background: colors.bgDark,
       foreground: {
-        DEFAULT: '#f6f6f6',
-        muted: '#9295a4',
+        DEFAULT: colors.textDark,
+        muted: colors.textDarkMuted,
       },
-      surface: '#2b2e3b',
-      'accent-alt': {
-        lighter: colors.accent7,
-        DEFAULT: colors.accent8,
-        darker: colors.accent9,
+      surface: {
+        1: '#1c1c24',
+        2: '#262630',
       },
-      'on-accent-alt': colors.white,
+      secondary: {
+        1: '#373645',
+        2: '#2e2d3b',
+        3: '#252431',
+      },
+      'on-secondary': colors.textDark,
     },
   }
 

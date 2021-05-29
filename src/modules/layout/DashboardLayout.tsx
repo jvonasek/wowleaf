@@ -1,6 +1,7 @@
 import { ReactNode } from 'react'
 import ThemeSwitch from '@/components/ThemeSwitch'
 import { HeaderLogin } from '@/components/HeaderLogin'
+import { FormInput } from '@/components/FormInput'
 
 import { Breadcrumbs } from '@/modules/breadcrumbs/Breadcrumbs'
 
@@ -15,7 +16,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 }) => {
   return (
     <>
-      {/* <nav className="bg-surface md:left-0 md:block md:fixed md:top-0 md:bottom-0 md:overflow-y-auto md:flex-row md:flex-nowrap md:overflow-hidden flex flex-wrap items-center justify-between relative md:w-64 z-10 py-4 px-6">
+      {/* <nav className="bg-surface-1 md:left-0 md:block md:fixed md:top-0 md:bottom-0 md:overflow-y-auto md:flex-row md:flex-nowrap md:overflow-hidden flex flex-wrap items-center justify-between relative md:w-64 z-10 py-4 px-6">
         <div className="md:flex-col md:items-stretch md:min-h-full md:flex-nowrap px-0 flex flex-wrap items-center justify-between w-full mx-auto">
           <button
             className="cursor-pointer text-black opacity-50 md:hidden px-3 py-1 text-xl leading-none bg-transparent rounded border border-solid border-transparent"
@@ -170,16 +171,12 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       </nav>
  */}
       <div className="relative pb-24">
-        <nav className="absolute top-0 left-0 w-full z-10 bg-surface dark:bg-background-darker md:flex-row md:flex-nowrap md:justify-start flex items-center p-4">
+        <nav className="absolute top-0 left-0 w-full z-10 bg-surface-1 border-b border-surface-2 md:flex-row md:flex-nowrap md:justify-start flex items-center px-4 py-3">
           <div className="w-full mx-autp items-center flex justify-between md:flex-nowrap flex-wrap md:px-10 px-4">
             <ThemeSwitch />
             <form className="md:flex hidden flex-row flex-wrap items-center lg:ml-auto mr-3">
               <div className="relative flex w-full flex-wrap items-stretch">
-                <input
-                  className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 relative rounded text-sm shadow outline-none focus:outline-none focus:ring w-full pl-10"
-                  type="text"
-                  placeholder="Search here..."
-                />
+                <FormInput name="search" placeholder="Search..." />
               </div>
             </form>
             <div className="items-center flex">

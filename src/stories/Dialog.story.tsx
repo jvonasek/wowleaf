@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState } from 'react'
 
-import { Button } from '@/components/Button';
-import { Dialog, DialogProps } from '@/components/Dialog';
-import { Meta, Story } from '@storybook/react';
+import { Button } from '@/components/Button'
+import { Dialog, DialogProps } from '@/components/Dialog'
+import { Meta, Story } from '@storybook/react'
 
 export default {
   title: 'Components/Dialog',
@@ -26,7 +26,7 @@ export const Default: Story = () => {
     setOpen(true)
   }
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-gradient-to-r from-accent-alt-lighter to-accent-alt-darker">
+    <div className="fixed inset-0 flex items-center justify-center bg-gradient-to-r from-primary-2-alt-lighter to-primary-2-alt-darker">
       <Button
         size="large"
         variant="secondary"

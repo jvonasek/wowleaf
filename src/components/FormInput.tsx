@@ -1,5 +1,5 @@
-import cx from 'classnames';
-import { InputHTMLAttributes } from 'react';
+import cx from 'classnames'
+import { InputHTMLAttributes } from 'react'
 
 export type FormInputProps = InputHTMLAttributes<HTMLInputElement> & {
   name: string
@@ -20,8 +20,10 @@ export const FormInput: React.FC<FormInputProps> = ({
       type={type}
       {...rest}
       className={cx(
-        'block border-2 px-4 py-3 w-full rounded-lg bg-background border-transparent',
-        'focus:border-accent-light focus:bg-surface focus:ring-0'
+        'block border border-transparent px-4 py-3 w-full rounded-lg bg-secondary-2',
+        'focus:ring-0 focus:bg-surface-1 focus:border-surface-2',
+        'dark:focus:bg-secondary-3 dark:focus:border-secondary-1',
+        'transition-colors'
       )}
     />
   </>

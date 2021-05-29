@@ -21,7 +21,7 @@ export default {
 } as Meta
 
 const TheProgressBar: Story<ProgressBarProps> = (args) => (
-  <div className="bg-surface p-5">
+  <div className="bg-surface-1 p-5">
     <ProgressBar {...args} />
   </div>
 )
