@@ -1,4 +1,4 @@
-import { memo, useState } from 'react'
+import { memo, useMemo, useState } from 'react'
 
 import { Button } from '@/components/Button'
 import { Spinner } from '@/components/Spinner'
@@ -46,6 +46,16 @@ export const CharacterAchievements: React.FC<CharacterAchievementsProps> = memo(
       }
     )
 
+    const pageInfo = useMemo(() => {
+      if (achievements.length) {
+        return (
+          <span>
+            Page {page} / {lastPage} (Showing {current} out of {total})
+          </span>
+        )
+      }
+    }, [achievements.length, current, lastPage, page, total])
+
     const isLoading = isAchsLoading
     const isSuccess = isAchsSuccess
 
@@ -53,13 +63,19 @@ export const CharacterAchievements: React.FC<CharacterAchievementsProps> = memo(
 
     return (
       <div>
-        <CharacterAchievementsFilter onChange={debounce(setFilter, 1)} />
+        <div className="mb-9 relative">
+          <Card
+            variant="dark"
+            footer={
+              pageInfo && (
+                <span className="text-foreground-muted">{pageInfo}</span>
+              )
+            }
+          >
+            <CharacterAchievementsFilter onChange={debounce(setFilter, 1)} />
+          </Card>
+        </div>
         {isLoading ? <Spinner size="6" /> : ''}
-        {!!achievements.length && (
-          <span>
-            Page {page} / {lastPage} (Showing {current} out of {total})
-          </span>
-        )}
         <div className="space-y-7">
           {isSuccess &&
             !isLoading &&
@@ -69,14 +85,18 @@ export const CharacterAchievements: React.FC<CharacterAchievementsProps> = memo(
               </Card>
             ))}
         </div>
-        {hasNextPage && (
-          <Button onClick={() => fetchNextPage()}>LOAD MORE</Button>
-        )}
-        {!!achievements.length && (
-          <span>
-            Page {page} / {lastPage} (Showing {current} out of {total})
-          </span>
-        )}
+        <div className="text-center mt-7">
+          {hasNextPage && (
+            <Button size="large" onClick={() => fetchNextPage()}>
+              Load More
+            </Button>
+          )}
+          {pageInfo && (
+            <span className="block mt-4 text-xs text-foreground-muted">
+              {pageInfo}
+            </span>
+          )}
+        </div>
       </div>
     )
   }

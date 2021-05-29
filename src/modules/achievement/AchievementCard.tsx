@@ -204,8 +204,8 @@ export const AchievementCard: React.FC<AchievementCardProps> = memo(
               <div className="relative mr-5">
                 <span
                   className={cx(
-                    'block p-0.5 border-2 w-16 h-16 rounded-xl',
-                    isCompleted ? 'border-positive' : 'border-background'
+                    'w-16 h-16 block border-2 bg-background-darker p-0.5 rounded-xl',
+                    isCompleted ? 'border-positive' : 'border-accent-alt'
                   )}
                 >
                   <img
@@ -222,7 +222,7 @@ export const AchievementCard: React.FC<AchievementCardProps> = memo(
                         'absolute top-0 left-0 w-7 h-7',
                         'transform -translate-x-1/4 -translate-y-1/4',
                         'border-2 border-positive',
-                        'bg-surface text-positive rounded-full'
+                        'bg-background-darker text-positive rounded-full'
                       )}
                     >
                       <CheckIcon className="w-5 h-5" />
@@ -232,7 +232,7 @@ export const AchievementCard: React.FC<AchievementCardProps> = memo(
               </div>
             )}
             <div>
-              <span>{name}</span>
+              <h3 className="text-lg">{name}</h3>
               <span className="block text-sm text-foreground-muted">
                 {description}{' '}
               </span>

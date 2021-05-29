@@ -14,8 +14,8 @@ export const AchievementList: React.FC<AchievementListProps> = ({
   factionId,
   isAggregated = false,
 }) => (
-  <div className="grid grid-cols-12 gap-8">
-    <div className="col-span-3 bg-surface p-5 rounded-lg shadow-lg">
+  <div className="grid grid-cols-12 gap-12">
+    <div className="col-span-3 ">
       <AchievementCategories
         basePath={isAggregated ? '/dashboard' : `/character/${characterKey}`}
       />

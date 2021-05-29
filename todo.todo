@@ -13,8 +13,9 @@ Todo:
     ✔ Rework progress bar @done(21-05-25 01:37)
     ✔ Format gold values @done(21-05-22 01:26)
     ☐ Fix Battle.Net data refresh
+    ☐ Breadcrumb
     Components:
-      ☐ Tooltip
+      ✔ Tooltip @done(21-05-29 01:33)
       Filter:
         ☐ Expansion
         ☐ Reward type
@@ -22,7 +23,7 @@ Todo:
     ☐ Customize auth pages
   Database:
     Achievement:
-      ☐ Add expansion field
+      ✔ Add expansion field @done(21-05-29 01:33)
       ☐ Meta achievements
       ☐ Remove guild achievements and categories
 

@@ -1,13 +1,9 @@
-import { Spinner } from '@/components/Spinner';
-import { Gender } from '@/types';
+import { Spinner } from '@/components/Spinner'
 
-import { useCharacterMediaQuery } from './hooks/useCharacterMediaQuery';
-import { CharacterParams } from './types';
+import { useCharacterMediaQuery } from './hooks/useCharacterMediaQuery'
+import { Character } from '@/types'
 
-export type CharacterAvatarProps = CharacterParams & {
-  gender?: Gender
-  raceId?: number
-}
+export type CharacterAvatarProps = Character
 
 export const CharacterAvatar: React.FC<CharacterAvatarProps> = ({
   region,
@@ -31,9 +27,18 @@ export const CharacterAvatar: React.FC<CharacterAvatarProps> = ({
   )
 
   return (
-    <div className="inline-block w-20 h-20">
-      {isLoading && <Spinner />}
-      {isSuccess && avatar && <img src={avatar} className="rounded-lg" />}
+    <div className="inline-block w-[84px] h-[84px]">
+      <span className="w-full h-full border-2 bg-background-darker p-0.5 rounded-xl border-surface flex items-center justify-center">
+        {isLoading && <Spinner />}
+        {isSuccess && avatar && (
+          <img
+            src={avatar}
+            width={84}
+            height={84}
+            className="block rounded-lg"
+          />
+        )}
+      </span>
     </div>
   )
 }

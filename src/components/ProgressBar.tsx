@@ -42,7 +42,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = memo(
         {!!label && label}
         <div className="flex items-center">
           <div
-            className={cx('h-2 w-full rounded-full bg-background', {
+            className={cx('h-2 w-full rounded-full bg-background-darker', {
               'order-2 ml-3': displayPosition === 'left',
               'mr-3': displayPosition === 'right',
             })}

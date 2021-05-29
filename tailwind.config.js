@@ -1,4 +1,5 @@
 const themeSwapper = require('tailwindcss-theme-swapper')
+const tailwindColors = require('tailwindcss/colors')
 
 const colors = {
   // Light Accent
@@ -86,7 +87,7 @@ const createTheme = (theme) => {
     light: {
       background: {
         DEFAULT: '#f2f5fa',
-        darker: '#f2f5fa',
+        darker: '#ffffff',
       },
       foreground: {
         DEFAULT: '#272727',
@@ -137,6 +138,7 @@ const themeSwapperConfig = {
       selectors: [':root'],
       theme: {
         colors: {
+          ...tailwindColors,
           ...createTheme('base'),
         },
       },
@@ -146,6 +148,7 @@ const themeSwapperConfig = {
       selectors: ['.dark'],
       theme: {
         colors: {
+          ...tailwindColors,
           ...createTheme('dark'),
         },
       },

@@ -10,10 +10,12 @@ import {
 import { CharacterStoreProps } from '@/modules/character/store/useCharacterStore'
 import {
   CharacterAchievement,
+  CharacterAchievementCriterion,
   CharacterAchievementCriterionProgress,
   CharacterAchievementProgress,
   CharacterAchievementsQueryResult,
 } from '@/modules/character/types'
+import { Faction } from '@/types'
 
 export class AchievementProgressFactory {
   private achievements: AchievementsStoreObject
@@ -81,58 +83,26 @@ export class AchievementProgressFactory {
 
     const { isCompleted, completedTimestamp } = characterAchievement
 
-    const childCriteriaById = groupById(
-      characterAchievement?.criteria?.childCriteria
-    )
-
     const mainCriteria = characterAchievement?.criteria
     const mainCriteriaAmount = mainCriteria?.amount || 0
     const isAchievementCompleted = isCompleted
     const isMainCriteriaCompleted = !!mainCriteria && mainCriteria.isCompleted
 
-    const criteriaProgress = criteria
-      .filter(({ factionId }) => {
-        return !factionId || factionId === faction
-      })
-      .map(({ id, amount: requiredAmount }) => {
-        const { amount = 0, isCompleted = false } =
-          childCriteriaById?.[id] || {}
-
-        const showProgressBar =
-          requiredAmount <= 0 ? false : requiredAmount >= 5 ? true : false
-
-        let partial: number
-        let required: number
-
-        if (showProgressBar) {
-          partial = amount
-          required = requiredAmount
-        } else {
-          partial = isCompleted ? 1 : 0
-          required = 1
-        }
-
-        const shouldForceTo100Perc =
-          criteria.length <= 1 &&
-          isAchievementCompleted &&
-          !isMainCriteriaCompleted
-
-        const perc = percentage(clamp(0, required, partial), required, 1)
-
-        const percent = shouldForceTo100Perc ? 100 : perc
-
-        return {
-          id,
-          showProgressBar,
-          partial,
-          required,
-          percent,
-          isCompleted,
-        }
-      })
+    const criteriaProgress = this.createCriteriaProgress({
+      faction,
+      criteria,
+      characterCriteria: characterAchievement?.criteria?.childCriteria,
+      isAchievementCompleted,
+      isMainCriteriaCompleted,
+    })
 
     const hasChildCriteria = criteriaProgress.length > 0
-    const partialAmount = mainCriteriaAmount || isMainCriteriaCompleted ? 1 : 0
+    const partialAmount =
+      mainCriteriaAmount > 0
+        ? mainCriteriaAmount
+        : isMainCriteriaCompleted
+        ? 1
+        : 0
     const requiredAmount = requiredCriteriaAmount || 1
     const overallCriteriaPercent = this.calculateOverallCriteriaPercentage(
       criteriaProgress,
@@ -198,6 +168,62 @@ export class AchievementProgressFactory {
         criteriaProgress
       ),
     }
+  }
+
+  createCriteriaProgress({
+    faction,
+    criteria,
+    characterCriteria,
+    isAchievementCompleted,
+    isMainCriteriaCompleted,
+  }: {
+    faction: Faction
+    criteria: Achievement['criteria']
+    characterCriteria: CharacterAchievementCriterion[]
+    isAchievementCompleted: boolean
+    isMainCriteriaCompleted: boolean
+  }) {
+    const characterCriteriaById = groupById(characterCriteria)
+    return criteria
+      .filter(({ factionId }) => {
+        return !factionId || factionId === faction
+      })
+      .map(({ id, amount: requiredAmount }) => {
+        const { amount = 0, isCompleted = false } =
+          characterCriteriaById?.[id] || {}
+
+        const showProgressBar =
+          requiredAmount <= 0 ? false : requiredAmount >= 5 ? true : false
+
+        let partial: number
+        let required: number
+
+        if (showProgressBar) {
+          partial = amount
+          required = requiredAmount
+        } else {
+          partial = isCompleted ? 1 : 0
+          required = 1
+        }
+
+        const shouldForceTo100Perc =
+          criteria.length <= 1 &&
+          isAchievementCompleted &&
+          !isMainCriteriaCompleted
+
+        const perc = percentage(clamp(0, required, partial), required, 1)
+
+        const percent = shouldForceTo100Perc ? 100 : perc
+
+        return {
+          id,
+          showProgressBar,
+          partial,
+          required,
+          percent,
+          isCompleted,
+        }
+      })
   }
 
   calculateOverallCriteriaPercentage(
