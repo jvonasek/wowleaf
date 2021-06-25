@@ -29,7 +29,7 @@ const LINK_ICON_COLOR_MAP = {
   1: ['text-violet-500 dark:text-violet-300', '!bg-violet-500'],
   2: ['text-indigo-500 dark:text-indigo-300', '!bg-indigo-500'],
   3: ['text-blue-500 dark:text-blue-300', '!bg-blue-500'],
-  4: ['text-lightBlue-500 dark:text-lightBlue-300', '!bg-lightBlue-500'],
+  4: ['text-sky-500 dark:text-sky-300', '!bg-sky-500'],
   5: ['text-cyan-500 dark:text-cyan-300', '!bg-cyan-500'],
   6: ['text-teal-500 dark:text-teal-300', '!bg-teal-500'],
   7: ['text-emerald-500 dark:text-emerald-300', '!bg-emerald-500'],

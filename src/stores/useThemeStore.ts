@@ -1,6 +1,6 @@
-import { combine } from 'zustand/middleware';
+import { combine } from 'zustand/middleware'
 
-import { createPersistedStore } from '@/lib/createStore';
+import { createPersistedStore } from '@/lib/createStore'
 
 export enum Theme {
   Light = 'light',
@@ -32,13 +32,4 @@ export const useThemeStore = createPersistedStore(
     name: 'theme',
     version: 1,
   }
-)
-
-useThemeStore.subscribe(
-  (theme: Theme) => {
-    const body = window.document.body
-    body.classList.remove(...Object.values(Theme))
-    body.classList.add(theme)
-  },
-  (state) => state.theme
 )

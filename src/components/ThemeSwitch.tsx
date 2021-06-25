@@ -1,15 +1,21 @@
-import dynamic from 'next/dynamic';
-import { useCallback } from 'react';
+import dynamic from 'next/dynamic'
+import { useCallback, useEffect } from 'react'
 
-import { Button } from '@/components/Button';
+import { Button } from '@/components/Button'
 
-import { Theme, useThemeStore } from '../stores/useThemeStore';
+import { Theme, useThemeStore } from '../stores/useThemeStore'
 
 const ThemeSwitch: React.FC = () => {
   const { theme: currentTheme, setTheme } = useThemeStore()
 
   const setLight = useCallback(() => setTheme(Theme.Light), [setTheme])
   const setDark = useCallback(() => setTheme(Theme.Dark), [setTheme])
+
+  useEffect(() => {
+    const body = window.document.body
+    body.classList.remove(...Object.values(Theme))
+    body.classList.add(currentTheme)
+  }, [currentTheme])
 
   return (
     <>

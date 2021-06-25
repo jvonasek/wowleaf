@@ -1,9 +1,7 @@
 const withMDX = require('@next/mdx')()
 
 module.exports = withMDX({
-  /* future: {
-    webpack5: true,
-  }, */
+  webpack5: false,
   typescript: {
     // !! WARN !!
     // Dangerously allow production builds to successfully complete even if

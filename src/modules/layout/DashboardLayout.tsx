@@ -133,7 +133,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
               <ul className="md:flex-col md:min-w-full flex flex-col list-none">
                 <li className="items-center">
                   <a
-                    className="text-xs uppercase py-3 font-bold block text-lightBlue-500 hover:text-lightBlue-600"
+                    className="text-xs uppercase py-3 font-bold block text-sky-500 hover:text-sky-600"
                     href="#/admin/dashboard"
                   >
                     {' '}
