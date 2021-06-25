@@ -13,29 +13,29 @@ import { Spinner } from '@/components/Spinner'
 
 const VARIANT_MAP = {
   primary: cx(
-    'bg-primary-2 hover:bg-primary-3 active:bg-primary-1 text-on-primary focus:ring-primary-1'
+    'bg-primary-2 hover:bg-primary-1 active:bg-primary-3 text-on-primary focus:ring-primary-1'
   ),
   secondary: cx(
-    'bg-secondary-2 hover:bg-secondary-3 active:bg-secondary-1 text-on-secondary focus:ring-secondary-1'
+    'bg-secondary-2 hover:bg-secondary-1 active:bg-secondary-3 text-on-secondary focus:ring-secondary-1'
   ),
   tertiary: cx(
-    'bg-tertiary-2 hover:bg-tertiary-3 active:bg-tertiary-1 text-on-tertiary focus:ring-tertiary-1'
+    'bg-tertiary-2 hover:bg-tertiary-1 active:bg-tertiary-3 text-on-tertiary focus:ring-tertiary-1'
   ),
   positive: cx(
-    'bg-positive hover:bg-positive-darker active:bg-positive-lighter text-on-positive focus:ring-positive-lighter'
+    'bg-positive hover:bg-positive-lighter active:bg-positive-darker text-on-positive focus:ring-positive-lighter'
   ),
   neutral: cx(
-    'bg-neutral hover:bg-neutral-darker active:bg-neutral-lighter text-on-neutral focus:ring-neutral-lighter'
+    'bg-neutral hover:bg-neutral-lighter active:bg-neutral-darker text-on-neutral focus:ring-neutral-lighter'
   ),
   negative: cx(
-    'bg-negative hover:bg-negative-darker active:bg-negative-lighter text-on-negative focus:ring-negative-lighter'
+    'bg-negative hover:bg-negative-lighter active:bg-negative-darker text-on-negative focus:ring-negative-lighter'
   ),
   transparent: cx('text-foreground bg-transparent hover:underline'),
 }
 
 const SIZE_MAP = {
   small: cx('px-2.5 py-1.5 text-xs rounded'),
-  medium: cx('py-2.5 px-5 text-sm rounded'),
+  medium: cx('py-2.5 px-5 leading-5 text-sm rounded'),
   large: cx('py-4 px-7 text-sm rounded'),
 }
 
@@ -78,7 +78,7 @@ export const Button: React.FC<ButtonProps> = memo(
           )}
         >
           <span
-            className={`transition-opacity duration-100 ${
+            className={`transition-opacity duration-100 flex items-center ${
               isLoading ? 'opacity-0' : 'opacity-100'
             }`}
           >

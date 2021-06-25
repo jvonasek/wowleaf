@@ -1,11 +1,9 @@
-import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
-import nc from 'next-connect';
+import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next'
 
-import getJWT from '@/lib/getJWT';
-import { responseErrorMessage } from '@/lib/responseErrorMessage';
-import cors from '@/middlewares/cors';
-import requireAuthMiddleware from '@/middlewares/requireAuth';
-import { JWToken } from '@/types';
+import getJWT from '@/lib/getJWT'
+import { responseErrorMessage } from '@/lib/responseErrorMessage'
+import { JWToken } from '@/types'
+import { apiHandler } from '@/lib/apiHandler'
 
 type PrismaApiHandlerOptions<R> = {
   selector: (
@@ -22,18 +20,15 @@ export function createPrismaHandler<R>({
   onSuccess,
   requireAuth = false,
 }: PrismaApiHandlerOptions<R>): NextApiHandler {
-  return nc<NextApiRequest, NextApiResponse>()
-    .use(cors)
-    .use(requireAuthMiddleware(requireAuth))
-    .get(async (req, res) => {
-      const token = await getJWT(req)
-      const data = await selector(req, res, token)
+  return apiHandler({ requireAuth }).get(async (req, res) => {
+    const token = await getJWT(req)
+    const data = await selector(req, res, token)
 
-      if (data) {
-        res.status(200).json(data)
-        if (onSuccess) onSuccess(data)
-      } else {
-        res.status(404).json(responseErrorMessage(404))
-      }
-    })
+    if (data) {
+      res.status(200).json(data)
+      if (onSuccess) onSuccess(data)
+    } else {
+      res.status(404).json(responseErrorMessage(404))
+    }
+  })
 }

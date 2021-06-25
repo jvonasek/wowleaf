@@ -61,3 +61,19 @@ body {
   margin-right: -0.2rem;
   right: 0;
 }
+
+table {
+  @apply table-fixed min-w-full text-foreground;
+  th {
+    @apply bg-surface-1 px-5 py-4 text-left text-xs font-semibold uppercase tracking-wider;
+    &:first-child {
+      @apply rounded-l-lg;
+    }
+    &:last-child {
+      @apply rounded-r-lg;
+    }
+  }
+  td {
+    @apply px-5 py-4 border-b border-surface-2 text-sm;
+  }
+}

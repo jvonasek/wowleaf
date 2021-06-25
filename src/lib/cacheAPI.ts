@@ -46,10 +46,15 @@ const cacheAPI = async <R extends BattleNetResponse>(
   const redisKey = createRedisKey(key, token)
 
   const payload = await method(req, res, token)
+
+  if (payload.error) {
+    return res.status(payload.code).json(responseErrorMessage(payload.code))
+  }
+
   const data = await cache.save<R>({
     key: redisKey,
     expiration,
-    purge: purge || payload.error,
+    purge,
     payload,
   })
 

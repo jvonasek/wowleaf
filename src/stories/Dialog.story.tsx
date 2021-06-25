@@ -26,7 +26,7 @@ export const Default: Story = () => {
     setOpen(true)
   }
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-gradient-to-r from-primary-2-alt-lighter to-primary-2-alt-darker">
+    <div className="fixed inset-0 flex items-center justify-center bg-gradient-to-r from-primary-1 to-primary-3">
       <Button
         size="large"
         variant="secondary"

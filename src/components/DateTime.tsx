@@ -1,4 +1,8 @@
-import { format as dateFormat, formatDistanceToNowStrict, isFuture, isValid } from 'date-fns';
+import {
+  format as dateFormat,
+  formatDistanceToNowStrict,
+  isValid,
+} from 'date-fns'
 
 export type DateTimeProps = {
   date: Date
@@ -13,14 +17,11 @@ export const DateTime: React.FC<DateTimeProps> = ({
 }) => {
   const d = new Date(date)
   if (isValid(d)) {
-    const future = isFuture(d)
-    const prefix = relative && future ? 'in ' : ''
-    const suffix = relative && !future ? ' ago' : ''
     return (
       <>
-        {prefix}
-        {relative ? formatDistanceToNowStrict(d) : dateFormat(d, format)}
-        {suffix}
+        {relative
+          ? formatDistanceToNowStrict(d, { addSuffix: true })
+          : dateFormat(d, format)}
       </>
     )
   }

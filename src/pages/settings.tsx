@@ -1,78 +1,69 @@
-import { BattleNetRegion } from 'battlenet-api';
-import { GetServerSideProps, GetServerSidePropsContext } from 'next';
-import { getSession, providers, useSession } from 'next-auth/client';
-import { useCallback, useState } from 'react';
-import { useMutation, useQuery } from 'react-query';
+import { differenceInMinutes } from 'date-fns'
+import { GetServerSideProps, GetServerSidePropsContext } from 'next'
+import {
+  getSession,
+  providers as getProviders,
+  useSession,
+} from 'next-auth/client'
+import { useEffect, useRef, useState } from 'react'
 
-import { AuthProviders } from '@/components/AuthProviders';
-import { CharacterCard } from '@/components/CharacterCard';
-import { DateTime } from '@/components/DateTime';
-import { SessionProviders } from '@/types';
-
-type CharacterSelectionProps = {
-  region: BattleNetRegion
-  realmSlug: string
-  name: string
-}
+import { AuthProviders } from '@/components/AuthProviders'
+import { DateTime } from '@/components/DateTime'
+import { useSSR } from '@/hooks/useSSR'
+import { CharacterSelectTable } from '@/modules/character-select/CharacterSelectTable'
+import {
+  useBnetCharactersStore,
+  BNET_CHARS_STORAGE_KEY,
+} from '@/modules/character-select/store/useBnetCharactersStore'
+import { SessionProviders } from '@/types'
 
 export type SettingsProps = {
   providers: SessionProviders
 }
 
-const createCharacter = ({
-  region,
-  realmSlug,
-  name,
-}: CharacterSelectionProps) =>
-  fetch(`/api/bnet/character/${region}/${realmSlug}/${name}`, {
-    method: 'PUT',
-  })
+const clearBnetCharacterStorage = () =>
+  window.localStorage.removeItem(BNET_CHARS_STORAGE_KEY)
 
 const Settings: React.FC<SettingsProps> = ({ providers }) => {
   const [session] = useSession()
-  const [selection, setSelection] = useState<Array<CharacterSelectionProps>>([])
+  const { isBrowser } = useSSR()
+  const [refreshButtonVisible, setRefreshButtonVisible] = useState(false)
 
-  const { mutate } = useMutation(createCharacter)
-  const { isLoading, error, data: characters } = useQuery('/api/bnet/user')
+  const lastUpdatedAtRef = useRef(
+    useBnetCharactersStore.getState().lastUpdatedAt
+  )
 
-  const submitCharacters = useCallback(() => {
-    for (const character of selection) {
-      mutate(character)
+  useEffect(() => {
+    if (lastUpdatedAtRef.current) {
+      const diff = differenceInMinutes(
+        new Date(),
+        new Date(lastUpdatedAtRef.current)
+      )
+      setRefreshButtonVisible(diff > 60)
     }
-  }, [selection, mutate])
+  }, [])
 
   return (
     <>
-      <pre>{JSON.stringify(session, null, 2)}</pre>
-      <pre>{JSON.stringify(selection, null, 2)}</pre>
-      <div className="bold text-lg">
-        Expiration: <DateTime date={session?.battlenet?.expires} relative /> (
-        <DateTime date={session?.battlenet?.expires} />)
-        <AuthProviders providers={providers} />
-      </div>
-      <div className="grid grid-cols-4 gap-2">
-        <button onClick={submitCharacters}>submit</button>
-        {isLoading || error ? (
-          <span>{JSON.stringify(error)} LOADING</span>
-        ) : (
-          Array.isArray(characters) &&
-          characters.map((character) => (
-            <CharacterCard
-              key={character.id}
-              {...character}
-              onClick={(realmSlug: string, name: string) =>
-                setSelection([
-                  ...selection,
-                  {
-                    region: session?.battlenet?.region,
-                    realmSlug,
-                    name: name.toLowerCase(),
-                  },
-                ])
-              }
-            />
-          ))
-        )}
+      <h1 className="text-2xl mb-4">Characters</h1>
+      <div className="grid grid-cols-12 gap-12">
+        <div className="col-span-12 xl:col-span-3">
+          <div className="bold text-lg">
+            {refreshButtonVisible && (
+              <AuthProviders
+                onClick={clearBnetCharacterStorage}
+                providers={providers}
+                size="large"
+              />
+            )}
+            <DateTime date={session?.battlenet?.expires} />
+            <br />
+            <DateTime date={session?.battlenet?.expires} relative />
+          </div>
+        </div>
+        <div className="col-span-12 xl:col-span-9">
+          {isBrowser && <CharacterSelectTable />}
+        </div>
       </div>
     </>
   )
@@ -84,15 +75,16 @@ export const getServerSideProps: GetServerSideProps = async (
   const session = await getSession(context)
 
   if (!session) {
-    const { res } = context
-    res.setHeader('location', '/')
-    res.statusCode = 302
-    res.end()
-    return { props: {} }
+    return {
+      redirect: {
+        permanent: false,
+        destination: '/',
+      },
+    }
   }
 
   return {
-    props: { session, providers: await providers() },
+    props: { session, providers: await getProviders() },
   }
 }
 

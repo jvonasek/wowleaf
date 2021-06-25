@@ -22,7 +22,7 @@ export const CharacterPageHeader: React.FC = () => {
               {guild && <span> &lt;{guild}&gt;</span>}
               <span>
                 {' '}
-                {realm} {region?.toUpperCase()}
+                {realm} ({region?.toUpperCase()})
               </span>
             </span>
           </span>

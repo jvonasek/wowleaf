@@ -1,14 +1,22 @@
-import { signIn, useSession } from 'next-auth/client';
-import { useEffect, useState } from 'react';
+import { signIn, useSession } from 'next-auth/client'
+import { useEffect, useState } from 'react'
 
-import { Button } from '@/components/Button';
-import { SessionProviders } from '@/types';
+import { Button, ButtonProps } from '@/components/Button'
+import { SessionProviders } from '@/types'
+
+import { FaBattleNet } from 'react-icons/fa'
 
 export type AuthProvidersProps = {
   providers: SessionProviders
+  size?: ButtonProps['size']
+  onClick?: () => void
 }
 
-export const AuthProviders: React.FC<AuthProvidersProps> = ({ providers }) => {
+export const AuthProviders: React.FC<AuthProvidersProps> = ({
+  providers,
+  size,
+  onClick,
+}) => {
   const [session] = useSession()
   const [availableProviders, setAvailableProviders] = useState([])
 
@@ -30,14 +38,17 @@ export const AuthProviders: React.FC<AuthProvidersProps> = ({ providers }) => {
       {availableProviders.map((provider) => (
         <div key={provider.name}>
           <Button
-            onClick={() =>
+            size={size}
+            onClick={() => {
               signIn(provider.id, {
                 callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/settings`,
               })
-            }
+              onClick?.()
+            }}
           >
+            <FaBattleNet className="h-6 w-6 mr-4" />
             {session
-              ? `Refresh ${provider.name} account data`
+              ? `Refresh ${provider.name}`
               : `Sign in with ${provider.name}`}
           </Button>
         </div>

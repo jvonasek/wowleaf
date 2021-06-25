@@ -8,8 +8,10 @@ export const createQueryFn = (baseUrl: string): QueryFunction => {
 
     const res = await fetch(baseUrl + path)
 
-    if (!res.ok) throw new Error(await res.json())
+    if (!res.ok) throw new Error(res.statusText)
 
-    return res.json()
+    const r = await res.json()
+    console.log(queryKey, r)
+    return r
   }
 }

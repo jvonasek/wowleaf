@@ -1,52 +1,27 @@
 import Link from 'next/link'
 
-import { Button } from '@/components/Button'
-import { CHARACTER_CLASS_MAP, CHARACTER_RACE_MAP } from '@/lib/constants'
+import { CharacterInfo } from '@/components/CharacterInfo'
 import { CharacterAvatar } from '@/modules/character/CharacterAvatar'
 import { Character } from '@/types'
 
-export type CharacterCardProps = {
-  onClick?: (realmSlug: string, name: string) => void
-} & Character
+export type CharacterCardProps = Character
 
 export const CharacterCard: React.FC<CharacterCardProps> = (
   props
 ): JSX.Element => {
-  const {
-    region,
-    name,
-    level,
-    raceId,
-    guild,
-    classId,
-    onClick,
-    realmSlug,
-  } = props
+  const { region, name, level, raceId, classId, realm, realmSlug } = props
   return (
     <div className="flex space-x-2">
       <CharacterAvatar {...props} />
-      <div>
-        <div>
-          <p className="text-lg font-bold">
-            <Link href={`/character/${region}/${realmSlug}/${name}`}>
-              {name}
-            </Link>
-          </p>
-          {guild && <p className="text-sm">&lt;{guild}&gt;</p>}
-        </div>
-
-        <p className="text-sm">
-          {CHARACTER_RACE_MAP[raceId]}{' '}
-          <span className={`font-bold text-class-${classId}`}>
-            {CHARACTER_CLASS_MAP[classId]}
-          </span>{' '}
-          Level {level}
+      <div className="min-w-0">
+        <p className="text-lg font-bold leading-relaxed truncate">
+          <Link href={`/character/${region}/${realmSlug}/${name}`}>{name}</Link>
         </p>
-        {onClick && (
-          <Button variant="secondary" onClick={() => onClick(realmSlug, name)}>
-            ADD
-          </Button>
-        )}
+        <p className="text-sm">
+          <CharacterInfo raceId={raceId} classId={classId} level={level} />
+        </p>
+
+        <p className="text-sm text-foreground-muted">{realm}</p>
       </div>
     </div>
   )

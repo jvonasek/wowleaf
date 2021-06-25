@@ -9,11 +9,12 @@ Todo:
     ☐ Create dashboard with helpful statistics (expansion based?)
   UI:
     ✔ Create layout system that doesn't re-render all page @done(21-05-15 02:34)
-    ☐ Create better color scheme / theme
+    ✔ Create better color scheme / theme @done(21-06-25 00:09)
     ✔ Rework progress bar @done(21-05-25 01:37)
     ✔ Format gold values @done(21-05-22 01:26)
-    ☐ Fix Battle.Net data refresh
-    ☐ Breadcrumb
+    ✔ Fix Battle.Net data refresh @done(21-06-25 00:09)
+    ✔ Breadcrumb @done(21-06-25 00:09)
+    ☐ Notifications
     Components:
       ✔ Tooltip @done(21-05-29 01:33)
       Filter:

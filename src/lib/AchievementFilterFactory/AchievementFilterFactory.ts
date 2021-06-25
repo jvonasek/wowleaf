@@ -85,10 +85,10 @@ export class AchievementFilterFactory {
         isCompleted: 'DESC',
       },
       {
-        percent: 'DESC',
+        completedTimestamp: 'DESC',
       },
       {
-        completedTimestamp: 'DESC',
+        percent: 'DESC',
       },
       {
         name: 'ASC',
@@ -102,11 +102,13 @@ export class AchievementFilterFactory {
         return (dir === 'DESC' ? descend : ascend)((ach) => {
           const progress = this.getProgressById(ach.id)
 
-          const values = {
-            ...pick(['name', 'id'], ach),
-            ...pick(['completedTimestamp', 'percent', 'isCompleted'], progress),
-            completedTimestamp: progress?.completedTimestamp || 0,
-          }
+          const values = Object.assign(
+            {
+              completedTimestamp: progress?.completedTimestamp || 0,
+            },
+            pick(['name', 'id'], ach),
+            pick(['completedTimestamp', 'percent', 'isCompleted'], progress)
+          )
 
           return prop(propName)(values)
         })

@@ -8,7 +8,7 @@ export const Breadcrumbs = () => {
 
   useEffect(() => {
     if (router) {
-      const linkPath = router.asPath.split('/')
+      const linkPath = router.asPath.replace(/(?:\?|#).*/, '').split('/')
       linkPath.shift()
 
       const pathArray = linkPath.map((path, i) => {

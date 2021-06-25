@@ -36,7 +36,9 @@ const handle: NextApiHandler = (req, res) => {
     callback: (result) => {
       if (result.error) return []
 
-      return normalizeBattleNetData('characterMedia')(result.data)
+      const r = normalizeBattleNetData('characterMedia')(result.data)
+      console.log(result.data)
+      return r
     },
   })
 }

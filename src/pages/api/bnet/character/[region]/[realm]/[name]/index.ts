@@ -22,6 +22,7 @@ type QueryParams = {
 
 const handle: NextApiHandler = (req, res) => {
   const { method } = req
+
   return cacheAPI<CharacterResponse>(req, res, {
     key: req.url,
     expiration: ms('1 hour'),
@@ -42,8 +43,6 @@ const handle: NextApiHandler = (req, res) => {
       if (result.error) return result
 
       const { region } = req.query as QueryParams
-
-      console.log({ points: result.data.achievement_points })
 
       switch (method) {
         case 'GET':
@@ -81,7 +80,7 @@ async function saveCharacterToDb(
   }
 
   return await prisma.character.upsert({
-    where: { id: character.id },
+    where: { key: char.key },
     update: data,
     create: data,
   })

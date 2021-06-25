@@ -23,9 +23,9 @@ const handle: NextApiHandler = (req, res) =>
     },
     callback: (result, token) => {
       if (result.error) {
-        return result
+        return []
       }
-      return normalizeBattleNetData('userProfile')(result.data)
+      return normalizeBattleNetData('userProfile')(result.data, token)
     },
   })
 

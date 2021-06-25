@@ -27,7 +27,7 @@ export const CharacterAvatar: React.FC<CharacterAvatarProps> = ({
   )
 
   return (
-    <div className="inline-block w-[84px] h-[84px]">
+    <div className="inline-block w-[84px] h-[84px] flex-shrink-0">
       <span className="w-full h-full border-2 bg-background p-0.5 rounded-xl border-secondary-3 flex items-center justify-center">
         {isLoading && <Spinner />}
         {isSuccess && avatar && (

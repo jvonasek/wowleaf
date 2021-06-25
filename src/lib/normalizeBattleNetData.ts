@@ -6,7 +6,9 @@ import {
   WoWAccountCharacter,
 } from 'battlenet-api'
 
-import { Character } from '@/types'
+import { Character, JWToken } from '@/types'
+
+import { createCharacterKey } from '@/lib/createCharacterKey'
 
 type ResponseType =
   | 'character'
@@ -52,10 +54,18 @@ function normalizeCharacter(
   region: BattleNetRegion,
   userId?: number
 ): Character {
+  const realmSlug = char.realm.slug
+  const name = char.name
+  const key = createCharacterKey({
+    region,
+    realmSlug,
+    name,
+  })
+
   return {
-    id: char.id,
+    key,
     userId,
-    name: char.name,
+    name,
     classId: char.character_class.id,
     raceId: char.race.id,
     faction: char.faction.type,
@@ -69,7 +79,7 @@ function normalizeCharacter(
   }
 }
 
-function normalizeUserProfile(res: UserProfile): Character[] {
+function normalizeUserProfile(res: UserProfile, token: JWToken): Character[] {
   const { wow_accounts } = res
 
   if (!wow_accounts && !wow_accounts.length) {
@@ -81,16 +91,31 @@ function normalizeUserProfile(res: UserProfile): Character[] {
   }, [] as WoWAccountCharacter[])
 
   return characters
-    .map((char) => ({
-      id: char.id,
-      name: char.name,
-      classId: char.playable_class.id,
-      raceId: char.playable_race.id,
-      faction: char.faction.type,
-      gender: char.gender.type,
-      realmSlug: char.realm.slug,
-      level: char.level,
-    }))
+    .map((char) => {
+      const region = token.battlenet.region
+      const realmSlug = char.realm.slug
+      const name = char.name
+      const key = createCharacterKey({
+        region,
+        realmSlug,
+        name,
+      })
+      return {
+        key,
+        region,
+        userId: token.id,
+        guild: '',
+        name,
+        classId: char.playable_class.id,
+        raceId: char.playable_race.id,
+        faction: char.faction.type,
+        gender: char.gender.type,
+        realm: char.realm.name,
+        realmSlug,
+        level: char.level,
+        covenantId: null,
+      }
+    })
     .sort((a, b) => b.level - a.level)
 }
 
@@ -118,8 +143,26 @@ function normalizeCharacterAchievements(res: any): any {
   return res.achievements
 }
 
+const defaultCharacterAssets: LocalizedCharacterMedia['assets'] = [
+  { key: 'avatar', value: '' },
+  { key: 'inset', value: '' },
+  { key: 'main', value: '' },
+  { key: 'main-raw', value: '' },
+]
+
 function normalizeCharacterMedia(
   res: LocalizedCharacterMedia
 ): LocalizedCharacterMedia['assets'] {
-  return res.assets
+  console.log(res?.avatar_url)
+  return (
+    res?.assets ||
+    defaultCharacterAssets.map((image) =>
+      image.key === 'avatar' && !!res?.avatar_url
+        ? {
+            ...image,
+            value: res?.avatar_url,
+          }
+        : image
+    )
+  )
 }
