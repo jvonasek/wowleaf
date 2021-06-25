@@ -15,14 +15,14 @@ const handle = apiHandler({ requireAuth: true }).delete(async (req, res) => {
   const token = await getJWT(req)
   const { region, realm, name } = req.query as QueryParams
 
-  const key = createCharacterKey({
+  const id = createCharacterKey({
     region,
     realmSlug: realm,
     name,
   })
 
   const character = await prisma.character.findUnique({
-    where: { key },
+    where: { id },
   })
 
   if (!character) {
@@ -32,7 +32,7 @@ const handle = apiHandler({ requireAuth: true }).delete(async (req, res) => {
 
   if (character.userId === token.id) {
     const result = await prisma.character.delete({
-      where: { key },
+      where: { id },
     })
     res.json(result)
   } else {

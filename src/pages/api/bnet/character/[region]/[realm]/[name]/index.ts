@@ -80,7 +80,7 @@ async function saveCharacterToDb(
   }
 
   return await prisma.character.upsert({
-    where: { key: char.key },
+    where: { id: char.id },
     update: data,
     create: data,
   })

@@ -3,7 +3,6 @@ import { Switch } from '@headlessui/react'
 import cx from 'classnames'
 import { useCallback } from 'react'
 import { CheckIcon } from '@heroicons/react/solid'
-import { useEffect } from 'react'
 
 const VARIANT_MAP = {
   primary: 'bg-primary-2',

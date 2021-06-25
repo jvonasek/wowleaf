@@ -1,4 +1,4 @@
-import { PrismaClient } from '../../../prisma/generated/app-client';
+import { PrismaClient } from '../../../prisma/generated/app-client'
 
 export * from '../../../prisma/generated/app-client'
 

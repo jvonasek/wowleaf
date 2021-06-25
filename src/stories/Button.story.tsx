@@ -1,5 +1,5 @@
-import { Button, ButtonProps } from '@/components/Button';
-import { Meta, Story } from '@storybook/react';
+import { Button, ButtonProps } from '@/components/Button'
+import { Meta, Story } from '@storybook/react'
 
 export default {
   title: 'Components/Button',
@@ -16,6 +16,10 @@ export const Variants: Story = () => (
   <div className="space-x-4">
     <TheButton variant="primary" />
     <TheButton variant="secondary" />
+    <TheButton variant="tertiary" />
+    <TheButton variant="positive" />
+    <TheButton variant="neutral" />
+    <TheButton variant="negative" />
   </div>
 )
 

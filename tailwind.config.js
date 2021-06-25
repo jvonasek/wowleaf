@@ -62,9 +62,9 @@ const createTheme = (theme) => {
       },
       'on-primary': colors.white,
       tertiary: {
-        1: '#14151a',
-        2: '#0a0b0c',
-        3: '#000',
+        1: '#100f14',
+        2: '#0c0c12',
+        3: '#060609',
       },
       'on-tertiary': colors.white,
       positive: {
@@ -162,6 +162,14 @@ module.exports = {
   mode: 'jit',
   darkMode: 'class',
   theme: {
+    extend: {
+      transitionTimingFunction: {
+        'in-expo': 'cubic-bezier(0.95, 0.05, 0.795, 0.035)',
+        'out-expo': 'cubic-bezier(0.19, 1, 0.22, 1)',
+        'in-back': 'cubic-bezier(0.36, 0, 0.66, -0.56)',
+        'out-back': 'cubic-bezier(0.34, 1.30, 0.70, 1)',
+      },
+    },
     fontFamily: {
       sans: [
         'Inter',

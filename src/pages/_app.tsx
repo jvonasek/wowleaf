@@ -6,6 +6,8 @@ import Head from 'next/head'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
 
+import { NotificationContainer } from '@/modules/notifications/NotificationContainer'
+
 import { createQueryFn } from '@/lib/createQueryFn'
 import { DashboardLayout } from '@/modules/layout/DashboardLayout'
 import { LayoutTree } from '@moxy/next-layout'
@@ -36,6 +38,7 @@ class RootApp extends App {
               pageProps={pageProps}
               defaultLayout={<DashboardLayout />}
             />
+            <NotificationContainer />
             <ReactQueryDevtools initialIsOpen={false} />
           </QueryClientProvider>
         </SessionProvider>

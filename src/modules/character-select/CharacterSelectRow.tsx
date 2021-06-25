@@ -1,68 +1,74 @@
-import { memo, useCallback } from 'react'
+import { memo, useCallback, useState } from 'react'
 import { useMutation } from 'react-query'
+import { Boom, isBoom } from '@hapi/boom'
 
 import { ToggleButton } from '@/components/ToggleButton'
-import { CharacterParams } from '@/modules/character/types'
 import { Character } from '@/types'
+import { createMutationFn } from '@/lib/createMutationFn'
+import {
+  useNotificationStore,
+  NotifyFn,
+} from '@/modules/notifications/store/useNotificationStore'
 
 export type CharacterSelectRowProps = Character & {
   isActive: boolean
   onMutate: () => void
 }
 
-const createCharacter = ({ region, realmSlug, name }: CharacterParams) =>
-  fetch(`/api/bnet/character/${region}/${realmSlug}/${name}`, {
-    method: 'PUT',
-  }).then((res) => {
-    if (!res.ok) throw new Error(res.statusText)
-    return res.json()
-  })
-
-const deleteCharacter = ({ region, realmSlug, name }: CharacterParams) =>
-  fetch(`/api/bnet/character/${region}/${realmSlug}/${name}/delete`, {
-    method: 'DELETE',
-  })
+const handleMutationError = (err: Boom | Error, notify: NotifyFn) => {
+  if (isBoom(err)) {
+    notify({
+      type: 'danger',
+      content: err.output.payload.message,
+    })
+  }
+}
 
 export const CharacterSelectRow: React.FC<CharacterSelectRowProps> = memo(
-  ({
-    name,
-    level,
-    classId,
-    region,
-    realm,
-    realmSlug,
-    isActive = false,
-    onMutate,
-  }) => {
-    const { mutate: add } = useMutation(createCharacter, {
-      onSettled: onMutate,
-      onError: (err, val, c) => {
-        console.log('err', err, val, c)
-      },
-    })
+  ({ id, name, level, classId, region, realm, isActive = false, onMutate }) => {
+    const [hasError, setHasError] = useState(false)
+    const notify = useNotificationStore((state) => state.notify)
 
-    const { mutate: del } = useMutation(deleteCharacter, {
-      onSuccess: onMutate,
-    })
+    const { mutate: saveToDb } = useMutation(
+      createMutationFn({
+        url: `/api/bnet/character/${id}`,
+        method: 'PUT',
+        errorMessages: {
+          404: `Character ${name} wasn't found on BattleNet. Try relogging the character in World of Warcraft.`,
+        },
+      }),
+      {
+        onSettled: () => onMutate(),
+        onError: (err: Error) => {
+          handleMutationError(err, notify)
+          setHasError(true)
+        },
+      }
+    )
+
+    const { mutate: deleteFromDb } = useMutation(
+      createMutationFn({
+        url: `/api/bnet/character/${id}/delete`,
+        method: 'DELETE',
+      }),
+      {
+        onSuccess: () => onMutate(),
+      }
+    )
 
     const onToggleChange = useCallback(
       (checked) => {
-        const params = {
-          region,
-          realmSlug,
-          name,
-        }
         if (checked) {
-          add(params)
+          saveToDb()
         } else {
-          del(params)
+          deleteFromDb()
         }
       },
-      [add, del, name, realmSlug, region]
+      [deleteFromDb, saveToDb]
     )
 
     return (
-      <tr>
+      <tr className={hasError ? 'opacity-50 pointer-events-none' : ''}>
         <td>
           <span className={`font-semibold text-class-${classId}`}>{name}</span>
         </td>
@@ -70,12 +76,14 @@ export const CharacterSelectRow: React.FC<CharacterSelectRowProps> = memo(
         <td>{realm}</td>
         <td>{region?.toUpperCase()}</td>
         <td className="text-right">
-          <ToggleButton
-            variant="positive"
-            size="small"
-            checked={isActive}
-            onChange={onToggleChange}
-          />
+          <div className={hasError ? 'opacity-0' : ''}>
+            <ToggleButton
+              variant="positive"
+              size="small"
+              checked={isActive}
+              onChange={onToggleChange}
+            />
+          </div>
         </td>
       </tr>
     )

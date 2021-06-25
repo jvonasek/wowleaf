@@ -89,7 +89,7 @@ export const Dialog: React.FC<DialogProps> = ({
               <div
                 className={cx(
                   'relative inline-block w-full text-left align-middle',
-                  'bg-surface-1 shadow-xl rounded-2xl',
+                  'bg-surface-1 dark:bg-tertiary-2 shadow-xl rounded-2xl',
                   'transition-all transform',
                   SIZE_MAP[size]
                 )}
@@ -121,7 +121,7 @@ export const Dialog: React.FC<DialogProps> = ({
                     'absolute top-0 right-0',
                     'transform translate-x-1/4 -translate-y-1/4',
                     'flex items-center justify-center',
-                    'bg-surface-1 text-foreground shadow dark:bg-gray-900',
+                    'bg-surface-1 text-foreground shadow dark:bg-tertiary-1',
                     'w-12 h-12 rounded-full',
                     'focus:outline-none hover:text-primary-2'
                   )}

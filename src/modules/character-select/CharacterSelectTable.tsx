@@ -27,12 +27,12 @@ export const CharacterSelectTable: React.FC = () => {
   }, [battletag, characters.length, userBattletag])
 
   const {
-    data: userCharacterKeys,
+    data: userCharacterIds,
     isSuccess: isUserCharactersSuccess,
     refetch,
   } = useQuery<Character[], unknown, string[]>('/api/user/characters', {
     enabled: !!userId,
-    select: (data) => data.map(({ key }) => key),
+    select: (data) => data.map(({ id }) => id),
   })
 
   const { isLoading, isSuccess, data } = useQuery<Character[]>(
@@ -91,10 +91,10 @@ export const CharacterSelectTable: React.FC = () => {
           <tbody>
             {characterList.map((character) => (
               <CharacterSelectRow
-                key={character.key}
+                key={character.id}
                 {...character}
-                isActive={userCharacterKeys.includes(character.key)}
-                onMutate={() => refetch()}
+                isActive={userCharacterIds.includes(character.id)}
+                onMutate={refetch}
               />
             ))}
           </tbody>

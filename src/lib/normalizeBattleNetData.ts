@@ -56,14 +56,14 @@ function normalizeCharacter(
 ): Character {
   const realmSlug = char.realm.slug
   const name = char.name
-  const key = createCharacterKey({
+  const id = createCharacterKey({
     region,
     realmSlug,
     name,
   })
 
   return {
-    key,
+    id,
     userId,
     name,
     classId: char.character_class.id,
@@ -95,13 +95,13 @@ function normalizeUserProfile(res: UserProfile, token: JWToken): Character[] {
       const region = token.battlenet.region
       const realmSlug = char.realm.slug
       const name = char.name
-      const key = createCharacterKey({
+      const id = createCharacterKey({
         region,
         realmSlug,
         name,
       })
       return {
-        key,
+        id,
         region,
         userId: token.id,
         guild: '',
@@ -153,7 +153,6 @@ const defaultCharacterAssets: LocalizedCharacterMedia['assets'] = [
 function normalizeCharacterMedia(
   res: LocalizedCharacterMedia
 ): LocalizedCharacterMedia['assets'] {
-  console.log(res?.avatar_url)
   return (
     res?.assets ||
     defaultCharacterAssets.map((image) =>

@@ -64,7 +64,7 @@ model VerificationRequest {
 }
 
 model Character {
-  key         String   @id
+  id          String   @id
   userId      Int?     @map("user_id")
   name        String
   raceId      Int      @map("race_id")

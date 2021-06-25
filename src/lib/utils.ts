@@ -87,3 +87,11 @@ export const sortByHighest = <T extends unknown>(
   const sorters = props.map((propName) => descend<T>(prop(propName)))
   return sortWith<T>(sorters)(arr)
 }
+
+export const randomId = (): string => {
+  if (isServer) {
+    return ''
+  }
+  const uint32 = window.crypto.getRandomValues(new Uint32Array(1))[0]
+  return uint32.toString(16)
+}

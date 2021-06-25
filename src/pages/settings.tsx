@@ -27,7 +27,7 @@ const clearBnetCharacterStorage = () =>
 const Settings: React.FC<SettingsProps> = ({ providers }) => {
   const [session] = useSession()
   const { isBrowser } = useSSR()
-  const [refreshButtonVisible, setRefreshButtonVisible] = useState(false)
+  const [refreshButtonVisible, setRefreshButtonVisible] = useState(true)
 
   const lastUpdatedAtRef = useRef(
     useBnetCharactersStore.getState().lastUpdatedAt
