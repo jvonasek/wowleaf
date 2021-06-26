@@ -1,4 +1,5 @@
 import { useSession } from 'next-auth/client'
+import dynamic from 'next/dynamic'
 import { groupBy } from 'ramda'
 import { useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
@@ -13,7 +14,7 @@ const groupByLevelThreshold = groupBy<Character>(({ level }) =>
   level >= 50 ? 'visible' : 'hidden'
 )
 
-export const CharacterSelectTable: React.FC = () => {
+const _CharacterSelectTable: React.FC = () => {
   const [session] = useSession()
   const [allRowsVisible, setAllRowsVisible] = useState(false)
 
@@ -85,7 +86,7 @@ export const CharacterSelectTable: React.FC = () => {
               <th>Level</th>
               <th>Realm</th>
               <th>Region</th>
-              <th className="text-right">Active</th>
+              <th className="text-right w-2/12">Active</th>
             </tr>
           </thead>
           <tbody>
@@ -111,3 +112,10 @@ export const CharacterSelectTable: React.FC = () => {
     )
   )
 }
+
+export const CharacterSelectTable = dynamic(
+  () => Promise.resolve(_CharacterSelectTable),
+  {
+    ssr: false,
+  }
+)

@@ -1,24 +1,29 @@
-import { memo, useCallback, useState } from 'react'
-import { useMutation } from 'react-query'
-import { Boom, isBoom } from '@hapi/boom'
+import { memo, useCallback, useState, useEffect } from 'react'
+import { useMutation, useIsMutating } from 'react-query'
 
+import { Spinner } from '@/components/Spinner'
 import { ToggleButton } from '@/components/ToggleButton'
-import { Character } from '@/types'
 import { createMutationFn } from '@/lib/createMutationFn'
+import { MAX_ALLOWED_CHARACTERS } from '@/lib/constants'
 import {
-  useNotificationStore,
   NotifyFn,
+  useNotificationStore,
 } from '@/modules/notifications/store/useNotificationStore'
+import { Character } from '@/types'
+import { Boom, isBoom } from '@hapi/boom'
 
 export type CharacterSelectRowProps = Character & {
   isActive: boolean
   onMutate: () => void
 }
 
-const handleMutationError = (err: Boom | Error, notify: NotifyFn) => {
+const handleMutationError = (err: Boom, notify: NotifyFn) => {
   if (isBoom(err)) {
+    const dangerErrors = [404]
     notify({
-      type: 'danger',
+      type: dangerErrors.includes(err.output.payload.statusCode)
+        ? 'danger'
+        : 'info',
       content: err.output.payload.message,
     })
   }
@@ -28,20 +33,42 @@ export const CharacterSelectRow: React.FC<CharacterSelectRowProps> = memo(
   ({ id, name, level, classId, region, realm, isActive = false, onMutate }) => {
     const [hasError, setHasError] = useState(false)
     const notify = useNotificationStore((state) => state.notify)
+    const isMutating =
+      useIsMutating({ mutationKey: 'SaveCharacterMutation' }) > 0
 
-    const { mutate: saveToDb } = useMutation(
+    useEffect(() => {
+      let timeout = null
+
+      if (hasError) {
+        timeout = setTimeout(() => {
+          setHasError(false)
+        }, 2000)
+      }
+
+      return () => clearTimeout(timeout)
+    }, [hasError])
+
+    const { isLoading, mutate: saveToDb } = useMutation(
       createMutationFn({
         url: `/api/bnet/character/${id}`,
         method: 'PUT',
         errorMessages: {
           404: `Character ${name} wasn't found on BattleNet. Try relogging the character in World of Warcraft.`,
+          405: `Character limit reached. You can select up to ${MAX_ALLOWED_CHARACTERS} characters.`,
         },
       }),
       {
+        mutationKey: 'SaveCharacterMutation',
         onSettled: () => onMutate(),
-        onError: (err: Error) => {
-          handleMutationError(err, notify)
+        onError: (err: Boom) => {
           setHasError(true)
+          handleMutationError(err, notify)
+        },
+        onSuccess: () => {
+          notify({
+            type: 'success',
+            content: `Character ${name} has been added.`,
+          })
         },
       }
     )
@@ -75,14 +102,18 @@ export const CharacterSelectRow: React.FC<CharacterSelectRowProps> = memo(
         <td>{level}</td>
         <td>{realm}</td>
         <td>{region?.toUpperCase()}</td>
-        <td className="text-right">
-          <div className={hasError ? 'opacity-0' : ''}>
-            <ToggleButton
-              variant="positive"
-              size="small"
-              checked={isActive}
-              onChange={onToggleChange}
-            />
+        <td>
+          <div className="flex items-center justify-end relative h-7">
+            {isLoading && <Spinner className="ml-2 absolute left-full" />}
+            {!hasError && (
+              <ToggleButton
+                variant={isLoading ? 'neutral' : 'positive'}
+                size="small"
+                checked={isActive}
+                onChange={onToggleChange}
+                disabled={isMutating}
+              />
+            )}
           </div>
         </td>
       </tr>

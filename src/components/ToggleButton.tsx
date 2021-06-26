@@ -36,8 +36,11 @@ export type ToggleButtonVariant = keyof typeof VARIANT_MAP
 export type ToggleButtonSize = keyof typeof SIZE_MAP
 
 export type ToggleButtonProps = {
-  variant?: ToggleButtonVariant
   size?: ToggleButtonSize
+  variant?: ToggleButtonVariant
+  onChange?: (checked: boolean) => void
+  checked?: boolean
+  disabled?: boolean
 }
 
 export const ToggleButton = ({
@@ -45,12 +48,13 @@ export const ToggleButton = ({
   variant = 'primary',
   onChange,
   checked = false,
+  disabled = false,
 }) => {
   const [enabled, setEnabled] = useState(checked)
 
   const onToggle = useCallback(
     (checked) => {
-      onChange(checked)
+      onChange?.(checked)
       setEnabled(checked)
     },
     [onChange]
@@ -61,12 +65,13 @@ export const ToggleButton = ({
       <Switch
         checked={enabled}
         onChange={onToggle}
+        disabled={disabled}
         className={cx(
           enabled ? VARIANT_MAP[variant] : 'bg-secondary-2',
+          disabled ? 'opacity-50' : '',
           'relative overflow-hidden inline-flex flex-shrink-0 cursor-pointer',
           'border-2 border-transparent rounded-full',
-          'transition-colors ease-in-out duration-200',
-          'focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75',
+          'transition-all ease-in-out duration-200',
           SIZE_MAP[size].body
         )}
       >

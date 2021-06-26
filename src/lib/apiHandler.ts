@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import nc from 'next-connect'
+import { isBoom } from '@hapi/boom'
 
 import { responseErrorMessage } from '@/lib/responseErrorMessage'
 import requireAuthMiddleware from '@/middlewares/requireAuth'
@@ -11,9 +12,12 @@ type ApiHandlerOptions = {
 
 export const apiHandler = ({ requireAuth = false }: ApiHandlerOptions = {}) => {
   return nc<NextApiRequest, NextApiResponse>({
-    onError(_err, _req, res) {
-      const statusCode = 500
-      res.status(statusCode).json(responseErrorMessage(statusCode))
+    onError(err, _req, res) {
+      if (isBoom(err)) {
+        res.status(err.output.payload.statusCode).json(err.output.payload)
+      } else {
+        res.status(500).json(responseErrorMessage(500))
+      }
     },
   })
     .use(cors())

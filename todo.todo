@@ -14,14 +14,18 @@ Todo:
     ✔ Format gold values @done(21-05-22 01:26)
     ✔ Fix Battle.Net data refresh @done(21-06-25 00:09)
     ✔ Breadcrumb @done(21-06-25 00:09)
-    ☐ Notifications
+    ✔ Notifications @done(21-06-25 22:23)
+    ☐ Placeholder system
     Components:
       ✔ Tooltip @done(21-05-29 01:33)
+      ✔ Toast @done(21-06-25 22:23)
       Filter:
         ☐ Expansion
         ☐ Reward type
   Auth:
     ☐ Customize auth pages
+  Backend:
+    ☐ Implement simple message queue
   Database:
     Achievement:
       ✔ Add expansion field @done(21-05-29 01:33)

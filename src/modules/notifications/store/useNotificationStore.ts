@@ -6,6 +6,7 @@ import { randomId } from '@/lib/utils'
 export type Notification = {
   id: string
   content: string
+  visible: boolean
   autoDismissAfter?: number
   type: 'info' | 'success' | 'warning' | 'danger'
 }
@@ -14,7 +15,8 @@ export type NotificationStore = {
   notifications: Notification[]
 }
 
-export type NotifyFn = (n: Omit<Notification, 'id'>) => void
+export type NotificationProps = Omit<Notification, 'id' | 'visible'>
+export type NotifyFn = (n: NotificationProps) => void
 
 export const useNotificationStore = createStore(
   combine(
@@ -24,18 +26,26 @@ export const useNotificationStore = createStore(
     (set) => ({
       dismiss: (notificationId: string) => {
         set((state) => ({
-          notifications: state.notifications.filter(
-            ({ id }) => id !== notificationId
-          ),
+          notifications: state.notifications.map((notification) => {
+            if (notification.id === notificationId) {
+              return {
+                ...notification,
+                visible: false,
+              }
+            }
+
+            return notification
+          }),
         }))
       },
-      notify: (notification: Omit<Notification, 'id'>) => {
+      notify: (notification: NotificationProps) => {
         set((state) => ({
           notifications: [
             ...state.notifications,
             {
               ...notification,
               id: randomId(),
+              visible: true,
             },
           ],
         }))

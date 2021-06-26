@@ -1,19 +1,22 @@
+import cx from 'classnames'
 import { ReactNode } from 'react'
-import ThemeSwitch from '@/components/ThemeSwitch'
-import { HeaderLogin } from '@/components/HeaderLogin'
-import { FormInput } from '@/components/FormInput'
 import { IoLeafSharp } from 'react-icons/io5'
 
+import { FormInput } from '@/components/FormInput'
+import { HeaderLogin } from '@/components/HeaderLogin'
+import ThemeSwitch from '@/components/ThemeSwitch'
 import { Breadcrumbs } from '@/modules/breadcrumbs/Breadcrumbs'
 
 export type DashboardLayoutProps = {
   children?: ReactNode
   header?: ReactNode
+  title?: string
 }
 
 export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   children,
   header,
+  title,
 }) => {
   return (
     <>
@@ -202,7 +205,18 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
           <div className="container mx-auto">
             <div className="px-4 md:px-10 mx-auto w-full">
               <div className="flex flex-wrap">
-                {header && <div className="w-full px-4">{header}</div>}
+                <div className="w-full px-4">
+                  {title && (
+                    <h1
+                      className={cx('font-bold text-4xl', {
+                        'sr-only': !!header,
+                      })}
+                    >
+                      {title}
+                    </h1>
+                  )}
+                  {header && header}
+                </div>
                 <div className="w-full px-4 mt-4">
                   <Breadcrumbs />
                 </div>

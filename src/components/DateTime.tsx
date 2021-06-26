@@ -5,7 +5,7 @@ import {
 } from 'date-fns'
 
 export type DateTimeProps = {
-  date: Date
+  date: Date | string
   format?: string
   relative?: boolean
 }

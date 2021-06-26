@@ -1,4 +1,7 @@
 import { groupBy, head, map, sortWith, descend, prop } from 'ramda'
+import Boom from '@hapi/boom'
+
+export const HTTPException = Boom
 
 export const isServer = typeof window === 'undefined'
 

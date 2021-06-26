@@ -3,6 +3,7 @@ import '../styles/base.css'
 import { Provider as SessionProvider } from 'next-auth/client'
 import App from 'next/app'
 import Head from 'next/head'
+import { NextSeo, DefaultSeo, NextSeoProps } from 'next-seo'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
 
@@ -23,20 +24,25 @@ const queryClient = new QueryClient({
 })
 
 class RootApp extends App {
-  render(): JSX.Element {
+  render() {
     const { Component, pageProps } = this.props
+
+    const seo = (pageProps?.seo || {}) as NextSeoProps
+
     return (
       <>
         <Head>
           <script>{`const whTooltips = {colorLinks: true, iconizeLinks: false, renameLinks: true, iconSize: true}`}</script>
           <script src="https://wow.zamimg.com/widgets/power.js"></script>
         </Head>
+        <DefaultSeo titleTemplate="%s | WOWLEAF" />
+        {seo && <NextSeo {...seo} />}
         <SessionProvider session={pageProps.session}>
           <QueryClientProvider client={queryClient}>
             <LayoutTree
               Component={Component}
               pageProps={pageProps}
-              defaultLayout={<DashboardLayout />}
+              defaultLayout={<DashboardLayout title={seo?.title} />}
             />
             <NotificationContainer />
             <ReactQueryDevtools initialIsOpen={false} />

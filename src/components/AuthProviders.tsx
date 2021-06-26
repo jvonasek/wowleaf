@@ -9,6 +9,7 @@ import { FaBattleNet } from 'react-icons/fa'
 export type AuthProvidersProps = {
   providers: SessionProviders
   size?: ButtonProps['size']
+  className?: string
   onClick?: () => void
 }
 
@@ -16,6 +17,7 @@ export const AuthProviders: React.FC<AuthProvidersProps> = ({
   providers,
   size,
   onClick,
+  className,
 }) => {
   const [session] = useSession()
   const [availableProviders, setAvailableProviders] = useState([])
@@ -39,6 +41,7 @@ export const AuthProviders: React.FC<AuthProvidersProps> = ({
         <div key={provider.name}>
           <Button
             size={size}
+            className={className}
             onClick={() => {
               signIn(provider.id, {
                 callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/settings`,

@@ -8,6 +8,9 @@ import ms from 'ms.macro'
 import { NextApiHandler } from 'next'
 
 import cacheAPI from '@/lib/cacheAPI'
+import { apiHandler } from '@/lib/apiHandler'
+import { MAX_ALLOWED_CHARACTERS } from '@/lib/constants'
+import { HTTPException } from '@/lib/utils'
 import getCachedAccessToken from '@/lib/getCachedAccessToken'
 import { normalizeBattleNetData } from '@/lib/normalizeBattleNetData'
 import prisma from '@/prisma/app'
@@ -20,14 +23,23 @@ type QueryParams = {
   name: string
 }
 
-const handle: NextApiHandler = (req, res) => {
+const handle: NextApiHandler = apiHandler().all((req, res) => {
   const { method } = req
 
   return cacheAPI<CharacterResponse>(req, res, {
     key: req.url,
     expiration: ms('1 hour'),
     requireAuth: method === 'PUT',
-    method: async (req) => {
+    method: async (req, _res, token) => {
+      const { _count } = await prisma.character.aggregate({
+        where: { userId: token.id },
+        _count: true,
+      })
+
+      if (_count >= MAX_ALLOWED_CHARACTERS) {
+        throw HTTPException.methodNotAllowed()
+      }
+
       const { region, realm, name } = req.query as QueryParams
 
       const accessToken = await getCachedAccessToken()
@@ -60,7 +72,7 @@ const handle: NextApiHandler = (req, res) => {
       }
     },
   })
-}
+})
 
 async function saveCharacterToDb(
   character: LocalizedCharacter,

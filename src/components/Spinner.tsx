@@ -4,12 +4,18 @@ const sizes = {
   large: 'h-5 w-5',
 }
 
-export const Spinner: React.FC<{ size?: keyof typeof sizes }> = ({
+export type SpinnerProps = {
+  size?: keyof typeof sizes
+  className?: string
+}
+
+export const Spinner: React.FC<SpinnerProps> = ({
   size = 'medium',
+  className,
 }) => {
   return (
     <svg
-      className={`animate-spin ${sizes[size]}`}
+      className={`${className} animate-spin ${sizes[size]}`}
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"

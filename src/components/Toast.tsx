@@ -22,6 +22,7 @@ export type ToastProps = {
   content: string
   type: keyof typeof TYPE_MAP
   autoDismissAfter?: number
+  visible: boolean
   onDismiss: (id: string) => void
 }
 
@@ -30,6 +31,7 @@ export const Toast: React.FC<ToastProps> = ({
   content,
   type,
   onDismiss,
+  visible = false,
   autoDismissAfter = 7000,
 }) => {
   const dismissSelf = useCallback(() => onDismiss?.(id), [id, onDismiss])
@@ -44,7 +46,7 @@ export const Toast: React.FC<ToastProps> = ({
 
   return (
     <div
-      className="w-80 flex group"
+      className="w-96 flex shadow-xl rounded-lg group"
       onMouseEnter={() => pause()}
       onMouseLeave={() => resume()}
     >
@@ -60,25 +62,27 @@ export const Toast: React.FC<ToastProps> = ({
         className={cx(
           'relative flex items-center w-full py-4 px-6',
           'bg-surface-1 text-foreground dark:bg-tertiary-3 dark:text-on-tertiary',
-          'text-sm rounded-r-lg shadow-lg'
+          'text-sm rounded-r-lg'
         )}
       >
-        <span className="leading-relaxed">{content}</span>
-        <button
-          type="button"
-          onClick={() => onDismiss(id)}
-          className={cx(
-            'absolute top-0 right-0 rounded-full',
-            'w-7 h-7 opacity-0',
-            'transform translate-x-1/4 -translate-y-1/4',
-            'flex items-center justify-center',
-            'bg-tertiary-3 text-white',
-            'dark:bg-white dark:text-tertiary-3',
-            'focus:outline-none group-hover:opacity-100'
-          )}
-        >
-          <XIcon className="w-5 h-5" />
-        </button>
+        <span className="leading-relaxed font-semibold">{content}</span>
+        {visible && (
+          <button
+            type="button"
+            onClick={() => onDismiss(id)}
+            className={cx(
+              'absolute top-0 right-0 rounded-full',
+              'w-7 h-7 opacity-0',
+              'transform translate-x-1/4 -translate-y-1/4',
+              'flex items-center justify-center',
+              'bg-tertiary-3 text-white',
+              'dark:bg-white dark:text-tertiary-3',
+              'focus:outline-none group-hover:opacity-100'
+            )}
+          >
+            <XIcon className="w-5 h-5" />
+          </button>
+        )}
       </div>
     </div>
   )

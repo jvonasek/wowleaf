@@ -1,5 +1,7 @@
 import { BattleNetRegion } from '@/types'
 
+export const MAX_ALLOWED_CHARACTERS = 10
+
 export const BNET_REGIONS: Array<BattleNetRegion> = ['us', 'eu', 'kr', 'tw']
 
 export const EXPANSION_MAP = {
