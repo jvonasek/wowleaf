@@ -30,6 +30,9 @@ const VARIANT_MAP = {
   negative: cx(
     'bg-negative hover:bg-negative-lighter active:bg-negative-darker text-on-negative focus:ring-negative-lighter'
   ),
+  battlenet: cx(
+    'bg-brand-battlenet text-white hover:brightness-105 active:bg-brand-battlenet/80'
+  ),
   transparent: cx('text-foreground bg-transparent hover:underline'),
 }
 
@@ -70,8 +73,9 @@ export const Button: React.FC<ButtonProps> = memo(
           ref={ref}
           {...props}
           className={cx(
-            'relative inline-flex items-center justify-center leading-4 font-bold uppercase whitespace-no-wrap',
-            'focus:ring-2 focus:outline-none',
+            'relative inline-flex items-center justify-center font-bold uppercase',
+            'transition-colors leading-4 tracking-wide whitespace-no-wrap',
+            'focus:ring-2 focus:ring-inset focus:outline-none',
             VARIANT_MAP[variant],
             SIZE_MAP[size],
             className

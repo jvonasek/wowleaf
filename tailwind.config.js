@@ -55,6 +55,9 @@ const createTheme = (theme) => {
         11: '#FF7D0A',
         12: '#A330C9',
       },
+      brand: {
+        battlenet: '#0074e0',
+      },
       primary: {
         1: colors.primary1,
         2: colors.primary2,

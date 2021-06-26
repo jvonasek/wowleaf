@@ -1,14 +1,16 @@
-import { signIn, signOut, useSession } from 'next-auth/client';
+import { signIn, signOut, useSession } from 'next-auth/client'
 
-import { Button } from './Button';
+import { Button } from '@/components/Button'
+import { useAuthDialogStore } from '@/modules/auth/store/useAuthDialogStore'
 
 export const HeaderLogin: React.FC = (): JSX.Element => {
   const [session, loading] = useSession()
+  const { open } = useAuthDialogStore()
 
   return (
     <div hidden={loading} className="flex align-middle">
       {!session && (
-        <Button className="inline-block" size="small" onClick={signIn}>
+        <Button className="inline-block" size="small" onClick={open}>
           Sign in
         </Button>
       )}

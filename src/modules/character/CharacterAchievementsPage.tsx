@@ -22,63 +22,65 @@ type CharacterAchievementsPageProps = {
   character: Character
 }
 
-export const _CharacterAchievementsPage: NextPage<CharacterAchievementsPageProps> =
-  ({ category, character }) => {
-    const { set } = useCharacterStore()
-    const { region, realmSlug, name } = character
+const _CharacterAchievementsPage: NextPage<CharacterAchievementsPageProps> = ({
+  category,
+  character,
+}) => {
+  const { set } = useCharacterStore()
+  const { region, realmSlug, name } = character
 
-    const characterKey = createCharacterKey({ region, realmSlug, name })
-    const characterProps = useMemo(
-      () => ({
-        region,
-        ...character,
-        characterKey,
-      }),
-      [character, characterKey, region]
-    )
+  const characterKey = createCharacterKey({ region, realmSlug, name })
+  const characterProps = useMemo(
+    () => ({
+      region,
+      ...character,
+      characterKey,
+    }),
+    [character, characterKey, region]
+  )
 
-    useEffect(() => {
-      if (characterKey) {
-        set(characterProps)
-      }
+  useEffect(() => {
+    if (characterKey) {
+      set(characterProps)
+    }
 
-      return () => {
-        set(initialCharacterState)
-      }
-    }, [character, characterKey, characterProps, region, set])
+    return () => {
+      set(initialCharacterState)
+    }
+  }, [character, characterKey, characterProps, region, set])
 
-    const { isSuccess: isAchsSuccess } = useAchievementsQuery(
-      {
-        factionId: character?.faction,
-      },
-      {
-        enabled: !!characterKey,
-      }
-    )
+  const { isSuccess: isAchsSuccess } = useAchievementsQuery(
+    {
+      factionId: character?.faction,
+    },
+    {
+      enabled: !!characterKey,
+    }
+  )
 
-    const { isSuccess: isCharAchsSuccess } = useCharacterAchievementsQuery(
-      [characterProps],
-      {
-        enabled: isAchsSuccess,
-      }
-    )
+  const { isSuccess: isCharAchsSuccess } = useCharacterAchievementsQuery(
+    [characterProps],
+    {
+      enabled: isAchsSuccess,
+    }
+  )
 
-    const isSuccess = isAchsSuccess && isCharAchsSuccess
+  const isSuccess = isAchsSuccess && isCharAchsSuccess
 
-    return (
-      <>
-        <div className="space-y-8">
-          {isSuccess && (
-            <AchievementList
-              category={category}
-              characterKey={characterKey}
-              factionId={character.faction}
-            />
-          )}
-        </div>
-      </>
-    )
-  }
+  return (
+    <>
+      <div className="space-y-8">
+        {isSuccess && (
+          <AchievementList
+            category={category}
+            characterKey={characterKey}
+            factionId={character.faction}
+          />
+        )}
+      </div>
+    </>
+  )
+}
 
 export const CharacterAchievementsPage = withLayout(
   <DashboardLayout header={<CharacterPageHeader />} />

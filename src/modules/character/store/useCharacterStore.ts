@@ -1,7 +1,7 @@
-import { combine } from 'zustand/middleware';
+import { combine } from 'zustand/middleware'
 
-import { createStore } from '@/lib/createStore';
-import { Character } from '@/types';
+import { createStore } from '@/lib/createStore'
+import { Character } from '@/types'
 
 export type CharacterStoreProps = Character & {
   characterKey: string

@@ -42,6 +42,7 @@ export const AuthProviders: React.FC<AuthProvidersProps> = ({
           <Button
             size={size}
             className={className}
+            variant="battlenet"
             onClick={() => {
               signIn(provider.id, {
                 callbackUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/settings`,

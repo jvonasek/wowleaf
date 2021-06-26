@@ -8,6 +8,7 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
 
 import { NotificationContainer } from '@/modules/notifications/NotificationContainer'
+import { AuthDialog } from '@/modules/auth/AuthDialog'
 
 import { createQueryFn } from '@/lib/createQueryFn'
 import { DashboardLayout } from '@/modules/layout/DashboardLayout'
@@ -45,6 +46,7 @@ class RootApp extends App {
               defaultLayout={<DashboardLayout title={seo?.title} />}
             />
             <NotificationContainer />
+            <AuthDialog />
             <ReactQueryDevtools initialIsOpen={false} />
           </QueryClientProvider>
         </SessionProvider>

@@ -13,9 +13,10 @@ const SIZE_MAP = {
 }
 
 export type DialogProps = {
-  title: string
-  description: string
+  title?: string
+  description?: string
   open: boolean
+  noContentPadding?: boolean
   size?: keyof typeof SIZE_MAP
   buttons?: Array<{ name: string } & ButtonProps>
   children?: ReactNode
@@ -27,6 +28,7 @@ export const Dialog: React.FC<DialogProps> = ({
   description,
   size = 'medium',
   open = false,
+  noContentPadding = false,
   buttons = [],
   children,
   onClose = noop,
@@ -91,20 +93,25 @@ export const Dialog: React.FC<DialogProps> = ({
                   'relative inline-block w-full text-left align-middle',
                   'bg-surface-1 dark:bg-tertiary-2 shadow-xl rounded-2xl',
                   'transition-all transform',
+                  noContentPadding ? '!p-0' : '',
                   SIZE_MAP[size]
                 )}
               >
-                <HeadlessDialog.Title
-                  as="h3"
-                  className="text-lg text-foreground font-medium leading-6"
-                >
-                  {title}
-                </HeadlessDialog.Title>
-                <HeadlessDialog.Description className="text-sm text-foreground-muted mt-2">
-                  {description}
-                </HeadlessDialog.Description>
+                {title && (
+                  <HeadlessDialog.Title
+                    as="h3"
+                    className="text-lg text-foreground font-medium leading-6"
+                  >
+                    {title}
+                  </HeadlessDialog.Title>
+                )}
+                {description && (
+                  <HeadlessDialog.Description className="text-sm text-foreground-muted my-2">
+                    {description}
+                  </HeadlessDialog.Description>
+                )}
 
-                <div className="mt-2">{children}</div>
+                <div>{children}</div>
 
                 {!!buttons.length && (
                   <div className="space-x-4 mt-4">
