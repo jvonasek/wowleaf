@@ -30,16 +30,7 @@ const handle: NextApiHandler = apiHandler().all((req, res) => {
     key: req.url,
     expiration: ms('1 hour'),
     requireAuth: method === 'PUT',
-    method: async (req, _res, token) => {
-      const { _count } = await prisma.character.aggregate({
-        where: { userId: token.id },
-        _count: true,
-      })
-
-      if (_count >= MAX_ALLOWED_CHARACTERS) {
-        throw HTTPException.methodNotAllowed()
-      }
-
+    method: async (req, _res) => {
       const { region, realm, name } = req.query as QueryParams
 
       const accessToken = await getCachedAccessToken()
@@ -62,11 +53,22 @@ const handle: NextApiHandler = apiHandler().all((req, res) => {
             ...result,
             data: normalizeBattleNetData('character')(result.data, region),
           }
-        case 'PUT':
+        case 'PUT': {
+          const { _count } = await prisma.character.aggregate({
+            where: { userId: token.id },
+            _count: true,
+          })
+
+          if (_count >= MAX_ALLOWED_CHARACTERS) {
+            throw HTTPException.methodNotAllowed()
+          }
+
           return {
             ...result,
             data: await saveCharacterToDb(result.data, token),
           }
+        }
+
         default:
           return result
       }

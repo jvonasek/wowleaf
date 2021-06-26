@@ -121,7 +121,7 @@ export const getServerSideProps: GetServerSideProps<{ seo?: NextSeoProps }> =
 
     return {
       props: {
-        seo: { title: 'Characters' },
+        meta: { title: 'Characters' },
       },
     }
   }

@@ -11,12 +11,14 @@ export type DashboardLayoutProps = {
   children?: ReactNode
   header?: ReactNode
   title?: string
+  breadcrumbs?: boolean
 }
 
 export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   children,
   header,
   title,
+  breadcrumbs = true,
 }) => {
   return (
     <>
@@ -217,9 +219,11 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                   )}
                   {header && header}
                 </div>
-                <div className="w-full px-4 mt-4">
-                  <Breadcrumbs />
-                </div>
+                {breadcrumbs && (
+                  <div className="w-full px-4 mt-4">
+                    <Breadcrumbs />
+                  </div>
+                )}
               </div>
             </div>
           </div>

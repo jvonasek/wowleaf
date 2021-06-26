@@ -3,6 +3,7 @@ import '../styles/base.css'
 import { Provider as SessionProvider } from 'next-auth/client'
 import App from 'next/app'
 import Head from 'next/head'
+import Error from 'next/error'
 import { NextSeo, DefaultSeo, NextSeoProps } from 'next-seo'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
@@ -28,7 +29,19 @@ class RootApp extends App {
   render() {
     const { Component, pageProps } = this.props
 
-    const seo = (pageProps?.seo || {}) as NextSeoProps
+    if (pageProps?.error) {
+      return (
+        <Error
+          statusCode={pageProps.error.code}
+          title={pageProps.error.message}
+        />
+      )
+    }
+
+    const meta = pageProps?.meta || {}
+    const seo = (pageProps?.seo || {
+      title: meta?.title,
+    }) as NextSeoProps
 
     return (
       <>
@@ -43,7 +56,12 @@ class RootApp extends App {
             <LayoutTree
               Component={Component}
               pageProps={pageProps}
-              defaultLayout={<DashboardLayout title={seo?.title} />}
+              defaultLayout={
+                <DashboardLayout
+                  title={meta?.title}
+                  breadcrumbs={pageProps?.breadcrumbs}
+                />
+              }
             />
             <NotificationContainer />
             <AuthDialog />

@@ -18,12 +18,13 @@ const Index: NextPage<{ seo: NextSeoProps }> = () => {
   )
 }
 
-export const getServerSideProps: GetServerSideProps<{ seo: NextSeoProps }> =
+export const getServerSideProps: GetServerSideProps =
   // eslint-disable-next-line require-await
   async () => {
     return {
       props: {
-        seo: { title: 'Dashboard' },
+        breadcrumbs: false,
+        meta: { title: 'Dashboard' },
       },
     }
   }

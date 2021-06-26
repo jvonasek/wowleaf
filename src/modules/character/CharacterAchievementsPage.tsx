@@ -121,9 +121,18 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const { region, realm, name, category } = query
   const characterResponse = await fetchCharacter({ region, realm, name })
 
-  if (characterResponse.error) {
+  if (characterResponse.error && characterResponse.code === 404) {
     return {
       notFound: true,
+    }
+  }
+
+  if (characterResponse.error) {
+    console.log(characterResponse)
+    return {
+      props: {
+        error: characterResponse,
+      },
     }
   }
 
