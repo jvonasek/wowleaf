@@ -1,6 +1,8 @@
 import { combine } from 'zustand/middleware'
 
+import { isServer } from '@/lib/utils'
 import { createPersistedStore } from '@/lib/createStore'
+import { cookieStorage } from '@/lib/cookieStorage'
 
 export enum Theme {
   Light = 'light',
@@ -8,7 +10,7 @@ export enum Theme {
 }
 
 export function getUserThemePreference(): Theme {
-  if (typeof window === 'undefined') {
+  if (isServer) {
     return Theme.Light
   }
 
@@ -31,5 +33,6 @@ export const useThemeStore = createPersistedStore(
   {
     name: 'theme',
     version: 1,
+    getStorage: cookieStorage,
   }
 )

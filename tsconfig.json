@@ -23,7 +23,7 @@
       "@/modules/*": ["src/modules/*"],
       "@/components/*": ["src/components/*"],
       "@/hooks/*": ["src/hooks/*"],
-      "@/store/*": ["src/store/*"],
+      "@/stores/*": ["src/stores/*"],
       "@/services/*": ["src/services/*"],
       "@/middlewares/*": ["src/middlewares/*"],
       "@/types": ["src/types/"],
