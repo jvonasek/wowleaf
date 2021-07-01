@@ -1,5 +1,5 @@
 import { pluck } from 'ramda'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useInfiniteQuery, useQueryClient, UseQueryOptions } from 'react-query'
 
 import { useHasChanged } from '@/hooks/useHasChanged'
@@ -30,9 +30,9 @@ const fetchAchievementPage = async ({ factionId, category, ids = [] }) => {
     id: isRoot ? ids : undefined,
   })
 
-  return await fetch(
-    `/api/wow/achievements/${slug}${querystring}`
-  ).then((res) => res.json())
+  return await fetch(`/api/wow/achievements/${slug}${querystring}`).then(
+    (res) => res.json()
+  )
 }
 
 export const usePaginatedAchievementsQuery = (
@@ -45,18 +45,24 @@ export const usePaginatedAchievementsQuery = (
   }: PaginatedAchievementsQueryHookProps,
   { enabled }: UseQueryOptions
 ) => {
-  const [isLoadingNext, setIsLoadingNext] = useState(false)
   const queryClient = useQueryClient()
   const [page, setPage] = useState(1)
+  const [paginator, setPaginator] = useState({
+    current: 0,
+    total: 0,
+    page: 0,
+    lastPage: 0,
+    overall: 0,
+    hasNextPage: false,
+    isLoadingNext: false,
+  })
   const [achievementIds, setAchievementIds] = useState([])
   const [data, setData] = useState<Achievement[]>([])
-
   const achievements = useAchievementsStore()
+  const overallAchievementCountRef = useRef(achievements.ids.length)
 
-  const {
-    getAggregatedAchievements,
-    getCharAchievements,
-  } = useCharacterAchievementsStore()
+  const { getAggregatedAchievements, getCharAchievements } =
+    useCharacterAchievementsStore()
 
   const progress =
     characterKey === 'aggregated'
@@ -67,30 +73,6 @@ export const usePaginatedAchievementsQuery = (
   const hasIdsChanged = useHasChanged(achievementIds)
   const hasCategoryChanged = useHasChanged(category)
   const hasFilterChanged = useHasChanged(filter)
-
-  useEffect(() => {
-    if (hasIdsChanged || hasFilterChanged) {
-      const achievmentFilterSorter = new AchievementFilterFactory({
-        achievements: achievements.byId,
-        progress: progress.byId,
-      })
-
-      const achs = achievmentFilterSorter
-        .apply(achievements.ids.map((id) => achievements.byId[id]))
-        .filter(filter)
-        .sort()
-        .get()
-
-      setAchievementIds(pluck('id', achs))
-    }
-  }, [
-    achievements.byId,
-    achievements.ids,
-    filter,
-    hasFilterChanged,
-    hasIdsChanged,
-    progress.byId,
-  ])
 
   const {
     isSuccess,
@@ -120,6 +102,31 @@ export const usePaginatedAchievementsQuery = (
   )
 
   useEffect(() => {
+    if (hasIdsChanged || hasFilterChanged) {
+      const achievmentFilterSorter = new AchievementFilterFactory({
+        achievements: achievements.byId,
+        progress: progress.byId,
+      })
+
+      const achs = achievmentFilterSorter
+        .apply(achievements.ids.map((id) => achievements.byId[id]))
+        .filter(filter)
+        .sort()
+        .get()
+
+      setAchievementIds(pluck('id', achs))
+    }
+  }, [
+    achievements.byId,
+    achievements.ids,
+    filter,
+    hasFilterChanged,
+    hasIdsChanged,
+    progress.byId,
+  ])
+
+  // reset query client on category / filter change
+  useEffect(() => {
     if (hasCategoryChanged || hasFilterChanged) {
       setPage(1)
       queryClient.setQueryData(PAGINATED_ACHIEVEMENTS_QUERY_KEY, () => ({
@@ -133,7 +140,7 @@ export const usePaginatedAchievementsQuery = (
     if (isSuccess && queryData?.pages) {
       const pages =
         queryData.pages.length > 1
-          ? [].concat(...queryData.pages)
+          ? ([].concat(...queryData.pages) as Achievement[])
           : queryData.pages[0]
 
       const sortedIds = isCategoryPage
@@ -146,32 +153,70 @@ export const usePaginatedAchievementsQuery = (
           return sortedIds.indexOf(a.id) - sortedIds.indexOf(b.id)
         })
 
-      setData(sortedPages)
-      setIsLoadingNext(false)
-    }
-  }, [achievementIds, isCategoryPage, isLoading, isSuccess, queryData])
+      const pageData = isCategoryPage
+        ? paginateArray(sortedPages, perPage, page, true)
+        : sortedPages
 
-  // everything is fetched on category page, set paginator props to have one page
-  const current = data.length
-  const total = isCategoryPage ? data.length : achievementIds.length
-  const lastPage = isCategoryPage ? 1 : Math.ceil(total / perPage)
-  const hasNextPage = isCategoryPage ? false : page < lastPage
+      setData(pageData)
+
+      setPaginator((paginator) => {
+        const total = isCategoryPage
+          ? sortedPages.length
+          : achievementIds.length
+        const lastPage = Math.ceil(total / perPage)
+        return {
+          ...paginator,
+          page,
+          lastPage,
+          current: pageData.length,
+          total,
+          overall: isCategoryPage
+            ? pages.length
+            : overallAchievementCountRef.current,
+          hasNextPage: page < lastPage,
+          isLoadingNext: false,
+        }
+      })
+    }
+  }, [
+    achievementIds,
+    isCategoryPage,
+    isLoading,
+    isSuccess,
+    page,
+    perPage,
+    queryData,
+  ])
 
   const fetchNextPageFn = useCallback(() => {
-    if (hasNextPage) {
-      setIsLoadingNext(true)
+    if (isCategoryPage) {
+      setPage(page + 1)
+    } else {
+      if (paginator.hasNextPage) {
+        setPaginator((paginator) => ({
+          ...paginator,
+          isLoadingNext: true,
+        }))
 
-      const nextPage = page + 1
+        const nextPage = page + 1
 
-      const pageIds = paginateArray(achievementIds, perPage, nextPage)
+        const pageIds = paginateArray(achievementIds, perPage, nextPage)
 
-      fetchNextPage({
-        pageParam: pageIds.length ? pageIds : undefined,
-      })
+        fetchNextPage({
+          pageParam: pageIds.length ? pageIds : undefined,
+        })
 
-      setPage(nextPage)
+        setPage(nextPage)
+      }
     }
-  }, [hasNextPage, page, achievementIds, perPage, fetchNextPage])
+  }, [
+    isCategoryPage,
+    page,
+    perPage,
+    paginator.hasNextPage,
+    achievementIds,
+    fetchNextPage,
+  ])
 
   return {
     ...queryResult,
@@ -179,13 +224,6 @@ export const usePaginatedAchievementsQuery = (
     isSuccess,
     isLoading,
     fetchNextPage: fetchNextPageFn,
-    hasNextPage,
-    paginator: {
-      current,
-      total,
-      page,
-      lastPage,
-      isLoadingNext,
-    },
+    paginator,
   }
 }

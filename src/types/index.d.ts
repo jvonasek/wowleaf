@@ -52,7 +52,7 @@ export type AchievementWithProgress = Achievement & {
 
 export type AchievementCategoryProps = Pick<
   BaseAchievementCategory,
-  'id' | 'name' | 'slug'
+  'id' | 'name' | 'slug' | 'allianceQuantity' | 'hordeQuantity'
 >
 
 export type AchievementCategory = AchievementCategoryProps & {

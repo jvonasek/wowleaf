@@ -1,5 +1,3 @@
-import { create } from 'superstruct'
-
 import { createPrismaHandler } from '@/lib/createPrismaHandler'
 import { AchCategoryApiRouteStruct } from '@/lib/structs'
 import { Achievement } from '@/modules/achievement/types'
@@ -19,9 +17,8 @@ type AchievementResult = Achievement | PlainAchievement
 
 const handle = createPrismaHandler<AchievementResult[]>({
   selector: async (req) => {
-    const { category, factionId, id } = create(
-      req.query,
-      AchCategoryApiRouteStruct
+    const { category, factionId, id } = AchCategoryApiRouteStruct.create(
+      req.query
     )
     const faction = createFactionSelector(factionId)
 

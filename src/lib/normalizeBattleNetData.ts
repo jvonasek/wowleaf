@@ -43,7 +43,8 @@ export const normalizeBattleNetData = <T extends ResponseType>(
     character: normalizeCharacter as CharacterNormalizer,
     characterMedia: normalizeCharacterMedia as CharacterMediaNormalizer,
     userProfile: normalizeUserProfile as UserProfileNormalizer,
-    characterAchievements: normalizeCharacterAchievements as CharacterAchievementsNormalizer,
+    characterAchievements:
+      normalizeCharacterAchievements as CharacterAchievementsNormalizer,
   }
 
   return normalizers[type] as Normalizers<T>
@@ -120,27 +121,17 @@ function normalizeUserProfile(res: UserProfile, token: JWToken): Character[] {
 }
 
 function normalizeCharacterAchievements(res: any): any {
-  /* const mainCategories = [
-    92,
-    96,
-    97,
-    95,
-    168,
-    169,
-    201,
-    155,
-    15117,
-    15246,
-    15301,
-    81,
-    15234,
-  ]
-  console.log({
-    sum: res.category_progress
-      .filter(({ category }) => mainCategories.includes(category.id))
-      .reduce((prev, curr) => prev + curr.points, 0),
-  }) */
-  return res.achievements
+  const categories = res.category_progress.map(
+    ({ category, quantity, points }) => ({
+      id: category.id,
+      quantity,
+      points,
+    })
+  )
+  return {
+    categories,
+    achievements: res.achievements,
+  }
 }
 
 const defaultCharacterAssets: LocalizedCharacterMedia['assets'] = [
@@ -156,9 +147,11 @@ function normalizeCharacterMedia(
   return (
     res?.assets ||
     defaultCharacterAssets.map((image) =>
+      // @ts-ignore
       image.key === 'avatar' && !!res?.avatar_url
         ? {
             ...image,
+            // @ts-ignore
             value: res?.avatar_url,
           }
         : image

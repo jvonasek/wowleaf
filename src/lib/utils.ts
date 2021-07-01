@@ -77,8 +77,13 @@ export const qs = (
   return preppendPrefix ? `?${querystring}` : querystring
 }
 
-export const paginateArray = (array: any[], perPage: number, page: number) => {
-  const start = (page - 1) * perPage
+export const paginateArray = <T>(
+  array: T[],
+  perPage: number,
+  page: number,
+  keepPrevious = false
+) => {
+  const start = keepPrevious ? 0 : (page - 1) * perPage
   const end = Math.min(page * perPage, array.length)
   return array.slice(start, end)
 }

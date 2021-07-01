@@ -10,8 +10,6 @@ export const createQueryFn = (baseUrl: string): QueryFunction => {
 
     if (!res.ok) throw new Error(res.statusText)
 
-    const r = await res.json()
-    console.log(queryKey, r)
-    return r
+    return await res.json()
   }
 }

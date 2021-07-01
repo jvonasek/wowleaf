@@ -19,6 +19,12 @@ export type CharacterAchievement = {
   criteria: CharacterAchievementCriterion
 }
 
+export type CharacterCategory = {
+  id: number
+  points: number
+  quantity: number
+}
+
 export type CharacterAchievementCriterion = {
   amount: number
   childCriteria?: CharacterAchievementCriterion[]

@@ -2,7 +2,7 @@ import { combine } from 'zustand/middleware'
 
 import { createStore } from '@/lib/createStore'
 
-import { CharacterAchievementProgress } from '../types'
+import { CharacterAchievementProgress, CharacterCategory } from '../types'
 import { CharacterStoreProps } from './useCharacterStore'
 
 export type SimpleCharacterProgres = Pick<
@@ -11,6 +11,7 @@ export type SimpleCharacterProgres = Pick<
 >[]
 export type CharacterAchievementsStoreObject = {
   character: CharacterStoreProps
+  categories: Record<string, CharacterCategory>
   characters?: Record<string, SimpleCharacterProgres>
   byId: Record<string, CharacterAchievementProgress>
   ids: number[]
@@ -121,9 +122,10 @@ function getProgressFromStore(store: CharacterAchievementsStore) {
 function getCharacterFromStore(
   characters: Record<string, CharacterAchievementsStoreObject>
 ) {
-  return (characterKey: string) =>
+  return (characterKey: string): CharacterAchievementsStoreObject =>
     characters?.[characterKey] || {
       character: null,
+      categories: {},
       byId: {},
       ids: [],
     }

@@ -13,7 +13,8 @@ import { CharacterStoreProps } from '../store/useCharacterStore'
 import { CharacterAchievement } from '../types'
 
 type AchievementCriteria = LocalizedCharacterAchievement['criteria']
-type AchievementChildCriteria = LocalizedCharacterAchievement['criteria']['child_criteria']
+type AchievementChildCriteria =
+  LocalizedCharacterAchievement['criteria']['child_criteria']
 
 type CharacterAchievementsHookProps = {
   isLoading: boolean
@@ -47,8 +48,17 @@ export const useCharacterAchievementsQuery = (
   useEffect(() => {
     if (isSuccess && achievementsData.isSuccess) {
       const characterData = queries.map(
-        ({ data: characterAchievements }, index) => ({
+        (
+          {
+            data: {
+              achievements: characterAchievements,
+              categories: characterCategories,
+            },
+          },
+          index
+        ) => ({
           characterAchievements,
+          characterCategories,
           character: characters[index],
         })
       )
@@ -73,22 +83,31 @@ export const useCharacterAchievementsQuery = (
   }
 }
 
-function transformCharacterAchievementsData(
-  data: LocalizedCharacterAchievement[]
-) {
-  const achievements = data.map(({ id, completed_timestamp, criteria }) => ({
-    id,
-    isCompleted: !!completed_timestamp || !!criteria?.is_completed,
-    completedTimestamp: completed_timestamp,
-    criteria: transformCriteriaObject(criteria),
-  }))
+function transformCharacterAchievementsData({
+  achievements,
+  categories,
+}: {
+  achievements: LocalizedCharacterAchievement[]
+  categories: any
+}) {
+  const characterAchievements = achievements.map(
+    ({ id, completed_timestamp, criteria }) => ({
+      id,
+      isCompleted: !!completed_timestamp || !!criteria?.is_completed,
+      completedTimestamp: completed_timestamp,
+      criteria: transformCriteriaObject(criteria),
+    })
+  )
 
-  const byId = groupById<CharacterAchievement>(achievements)
-  const ids = pluck('id', achievements)
+  const byId = groupById<CharacterAchievement>(characterAchievements)
+  const ids = pluck('id', characterAchievements)
 
   return {
-    byId,
-    ids,
+    categories,
+    achievements: {
+      byId,
+      ids,
+    },
   }
 
   function flattenChildCriteria(

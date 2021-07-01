@@ -7,6 +7,8 @@ const fields = {
   id: true,
   name: true,
   slug: true,
+  allianceQuantity: true,
+  hordeQuantity: true,
 }
 
 const handle = createPrismaHandler<AchievementCategory[]>({

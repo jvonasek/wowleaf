@@ -24,8 +24,6 @@ Todo:
         ☐ Reward type
   Auth:
     ☐ Customize auth pages
-  Backend:
-    ☐ Implement simple message queue
   Database:
     Achievement:
       ✔ Add expansion field @done(21-05-29 01:33)

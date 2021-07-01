@@ -20,17 +20,22 @@ type CharacterAchievementsProps = {
   isAggregated: boolean
 }
 
-const getInitialFilter = (state) => state.filter
-
 export const CharacterAchievements: React.FC<CharacterAchievementsProps> = memo(
   ({ category, characterKey, factionId, isAggregated = false }) => {
-    const initialFilter = useAchievementsFilterStore(getInitialFilter)
+    const initialFilter = useAchievementsFilterStore((state) => state.filter)
     const [filter, setFilter] = useState(initialFilter)
 
     const {
       fetchNextPage,
-      hasNextPage,
-      paginator: { current, total, page, lastPage, isLoadingNext },
+      paginator: {
+        current,
+        total,
+        overall,
+        page,
+        lastPage,
+        hasNextPage,
+        isLoadingNext,
+      },
       data: achievements,
       isLoading: isAchsLoading,
       isSuccess: isAchsSuccess,
@@ -48,30 +53,31 @@ export const CharacterAchievements: React.FC<CharacterAchievementsProps> = memo(
 
     const pageInfo = useMemo(() => {
       if (achievements.length) {
+        const hidden = overall > total ? overall - total : 0
         return (
-          <span>
-            Page {page} / {lastPage} (Showing {current} out of {total})
+          <span className="flex justify-between">
+            <span>
+              Page {page} / {lastPage} (Showing {current} out of {total})
+            </span>
+            {hidden > 0 && <span className="italic">{hidden} hidden</span>}
           </span>
         )
       }
-    }, [achievements.length, current, lastPage, page, total])
+
+      return <span>No achievements found.</span>
+    }, [achievements.length, current, lastPage, overall, page, total])
 
     const isLoading = isAchsLoading
     const isSuccess = isAchsSuccess
 
     useWowheadLinks({ refresh: isSuccess }, [achievements])
 
-    console.log({
-      isLoading,
-      isSuccess,
-    })
-
     return (
       <div>
         <div className="mb-9 relative">
           <Card
             footer={
-              pageInfo && (
+              isSuccess && (
                 <span className="text-foreground-muted">{pageInfo}</span>
               )
             }
@@ -99,7 +105,7 @@ export const CharacterAchievements: React.FC<CharacterAchievementsProps> = memo(
               Load More
             </Button>
           )}
-          {pageInfo && (
+          {isSuccess && (
             <span className="block mt-4 text-xs text-foreground-muted">
               {pageInfo}
             </span>

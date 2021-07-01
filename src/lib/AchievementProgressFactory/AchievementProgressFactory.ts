@@ -9,6 +9,7 @@ import {
 } from '@/modules/character/store/useCharacterAchievementsStore'
 import { CharacterStoreProps } from '@/modules/character/store/useCharacterStore'
 import {
+  CharacterCategory,
   CharacterAchievement,
   CharacterAchievementCriterion,
   CharacterAchievementCriterionProgress,
@@ -20,6 +21,7 @@ import { Faction } from '@/types'
 export class AchievementProgressFactory {
   private achievements: AchievementsStoreObject
   private characters: Array<{
+    characterCategories: CharacterCategory[]
     characterAchievements: CharacterAchievementsQueryResult
     character: CharacterStoreProps
   }>
@@ -36,19 +38,22 @@ export class AchievementProgressFactory {
   }
 
   getProgressArray(): Record<string, CharacterAchievementsStoreObject>[] {
-    return this.characters.map(({ characterAchievements, character }) => {
-      const data = this.create(character, characterAchievements)
-      const byId = groupById(data)
-      const ids = pluck('id', data)
+    return this.characters.map(
+      ({ characterAchievements, character, characterCategories }) => {
+        const data = this.create(character, characterAchievements)
+        const byId = groupById(data)
+        const ids = pluck('id', data)
 
-      return {
-        [character.characterKey]: {
-          character,
-          byId,
-          ids,
-        },
+        return {
+          [character.characterKey]: {
+            character,
+            categories: groupById(characterCategories),
+            byId,
+            ids,
+          },
+        }
       }
-    })
+    )
   }
 
   create(
@@ -164,9 +169,8 @@ export class AchievementProgressFactory {
       required: requiredAmount,
       showOverallProgressBar: !hasChildCriteria && requiredAmount >= 5,
       characterKey,
-      criteria: groupById<CharacterAchievementCriterionProgress>(
-        criteriaProgress
-      ),
+      criteria:
+        groupById<CharacterAchievementCriterionProgress>(criteriaProgress),
     }
   }
 
@@ -249,10 +253,12 @@ export class AchievementProgressFactory {
     return this.achievements?.byId?.[id]
   }
 
-  getFilterFn = (
-    predicateFn: (a: Achievement, p: CharacterAchievementProgress) => boolean
-  ) => (progress: CharacterAchievementProgress) => {
-    const achievement = this.getAchievementById(progress.id)
-    return predicateFn(achievement, progress)
-  }
+  getFilterFn =
+    (
+      predicateFn: (a: Achievement, p: CharacterAchievementProgress) => boolean
+    ) =>
+    (progress: CharacterAchievementProgress) => {
+      const achievement = this.getAchievementById(progress.id)
+      return predicateFn(achievement, progress)
+    }
 }
