@@ -172,6 +172,17 @@ module.exports = {
         'in-back': 'cubic-bezier(0.36, 0, 0.66, -0.56)',
         'out-back': 'cubic-bezier(0.34, 1.30, 0.70, 1)',
       },
+      animation: {
+        'pulse-subtle':
+          'pulse-subtle 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+      },
+      keyframes: {
+        'pulse-subtle': {
+          '50%': {
+            opacity: '.7',
+          },
+        },
+      },
     },
     fontFamily: {
       sans: [

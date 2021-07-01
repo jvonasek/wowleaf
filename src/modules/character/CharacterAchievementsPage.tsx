@@ -49,34 +49,22 @@ const _CharacterAchievementsPage: NextPage<CharacterAchievementsPageProps> = ({
     }
   }, [character, characterKey, characterProps, region, set])
 
-  const { isSuccess: isAchsSuccess } = useAchievementsQuery(
-    {
-      factionId: character?.faction,
-    },
-    {
-      enabled: !!characterKey,
-    }
-  )
+  useAchievementsQuery({
+    factionId: character?.faction,
+  })
 
-  const { isSuccess: isCharAchsSuccess } = useCharacterAchievementsQuery(
-    [characterProps],
-    {
-      enabled: isAchsSuccess,
-    }
-  )
-
-  const isSuccess = isAchsSuccess && isCharAchsSuccess
+  useCharacterAchievementsQuery([characterProps], {
+    enabled: !!characterKey,
+  })
 
   return (
     <>
       <div className="space-y-8">
-        {isSuccess && (
-          <AchievementList
-            category={category}
-            characterKey={characterKey}
-            factionId={character.faction}
-          />
-        )}
+        <AchievementList
+          category={category}
+          characterKey={characterKey}
+          factionId={character.faction}
+        />
       </div>
     </>
   )

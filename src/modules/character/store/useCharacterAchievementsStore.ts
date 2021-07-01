@@ -10,7 +10,7 @@ export type SimpleCharacterProgres = Pick<
   'percent' | 'characterKey'
 >[]
 export type CharacterAchievementsStoreObject = {
-  character: CharacterStoreProps
+  character: Partial<CharacterStoreProps>
   categories: Record<string, CharacterCategory>
   characters?: Record<string, SimpleCharacterProgres>
   byId: Record<string, CharacterAchievementProgress>
@@ -124,7 +124,7 @@ function getCharacterFromStore(
 ) {
   return (characterKey: string): CharacterAchievementsStoreObject =>
     characters?.[characterKey] || {
-      character: null,
+      character: {},
       categories: {},
       byId: {},
       ids: [],

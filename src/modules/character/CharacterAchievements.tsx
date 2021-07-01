@@ -1,10 +1,11 @@
 import { memo, useMemo, useState } from 'react'
 
 import { Button } from '@/components/Button'
-import { Spinner } from '@/components/Spinner'
 import { Card } from '@/components/Card'
 import { useWowheadLinks } from '@/hooks/useWowheadLinks'
 import { AchievementCard } from '@/modules/achievement/AchievementCard'
+import { AchievementCardPlaceholder } from '@/modules/placeholder/AchievementCardPlaceholder'
+import { TextRow } from '@/modules/placeholder/TextRow'
 import { Faction } from '@/types'
 
 import { CharacterAchievementsFilter } from './CharacterAchievementsFilter'
@@ -32,13 +33,14 @@ export const CharacterAchievements: React.FC<CharacterAchievementsProps> = memo(
         total,
         overall,
         page,
+        perPage,
         lastPage,
         hasNextPage,
         isLoadingNext,
       },
       data: achievements,
-      isLoading: isAchsLoading,
-      isSuccess: isAchsSuccess,
+      isLoading,
+      isSuccess,
     } = usePaginatedAchievementsQuery(
       {
         category,
@@ -67,9 +69,6 @@ export const CharacterAchievements: React.FC<CharacterAchievementsProps> = memo(
       return <span>No achievements found.</span>
     }, [achievements.length, current, lastPage, overall, page, total])
 
-    const isLoading = isAchsLoading
-    const isSuccess = isAchsSuccess
-
     useWowheadLinks({ refresh: isSuccess }, [achievements])
 
     return (
@@ -77,23 +76,27 @@ export const CharacterAchievements: React.FC<CharacterAchievementsProps> = memo(
         <div className="mb-9 relative">
           <Card
             footer={
-              isSuccess && (
+              isSuccess ? (
                 <span className="text-foreground-muted">{pageInfo}</span>
+              ) : (
+                <TextRow className="max-w-xs" />
               )
             }
           >
             <CharacterAchievementsFilter onChange={debounce(setFilter, 1)} />
           </Card>
         </div>
-        {isLoading ? <Spinner /> : ''}
         <div className="space-y-7">
-          {isSuccess &&
-            !isLoading &&
-            achievements.map((ach) => (
+          <AchievementCardPlaceholder
+            ready={!isLoading && isSuccess}
+            count={perPage}
+          >
+            {achievements.map((ach) => (
               <Card key={ach.id}>
                 <AchievementCard {...ach} isProgressAggregated={isAggregated} />
               </Card>
             ))}
+          </AchievementCardPlaceholder>
         </div>
         <div className="text-center mt-7">
           {hasNextPage && (

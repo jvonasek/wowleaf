@@ -35,6 +35,17 @@ const fetchAchievementPage = async ({ factionId, category, ids = [] }) => {
   )
 }
 
+const defaultPaginatorProps = {
+  perPage: 0,
+  current: 0,
+  total: 0,
+  page: 0,
+  lastPage: 0,
+  overall: 0,
+  hasNextPage: false,
+  isLoadingNext: false,
+}
+
 export const usePaginatedAchievementsQuery = (
   {
     category,
@@ -46,23 +57,23 @@ export const usePaginatedAchievementsQuery = (
   { enabled }: UseQueryOptions
 ) => {
   const queryClient = useQueryClient()
+
   const [page, setPage] = useState(1)
-  const [paginator, setPaginator] = useState({
-    current: 0,
-    total: 0,
-    page: 0,
-    lastPage: 0,
-    overall: 0,
-    hasNextPage: false,
-    isLoadingNext: false,
-  })
   const [achievementIds, setAchievementIds] = useState([])
   const [data, setData] = useState<Achievement[]>([])
+  const [paginator, setPaginator] = useState({
+    ...defaultPaginatorProps,
+    perPage,
+  })
+
   const achievements = useAchievementsStore()
   const overallAchievementCountRef = useRef(achievements.ids.length)
 
-  const { getAggregatedAchievements, getCharAchievements } =
-    useCharacterAchievementsStore()
+  const {
+    getAggregatedAchievements,
+    getCharAchievements,
+    isSuccess: isCharacterAchievementsSuccess,
+  } = useCharacterAchievementsStore()
 
   const progress =
     characterKey === 'aggregated'
@@ -73,6 +84,10 @@ export const usePaginatedAchievementsQuery = (
   const hasIdsChanged = useHasChanged(achievementIds)
   const hasCategoryChanged = useHasChanged(category)
   const hasFilterChanged = useHasChanged(filter)
+  const hasFilterOrCategoryChanged = hasIdsChanged || hasCategoryChanged
+
+  const queryEnabled =
+    enabled && hasFilterOrCategoryChanged && achievementIds.length > 0
 
   const {
     isSuccess,
@@ -94,15 +109,12 @@ export const usePaginatedAchievementsQuery = (
       })
     },
     {
-      enabled:
-        enabled &&
-        !!achievementIds.length &&
-        (hasIdsChanged || hasCategoryChanged),
+      enabled: queryEnabled,
     }
   )
 
   useEffect(() => {
-    if (hasIdsChanged || hasFilterChanged) {
+    if (achievements.isSuccess && isCharacterAchievementsSuccess) {
       const achievmentFilterSorter = new AchievementFilterFactory({
         achievements: achievements.byId,
         progress: progress.byId,
@@ -117,12 +129,12 @@ export const usePaginatedAchievementsQuery = (
       setAchievementIds(pluck('id', achs))
     }
   }, [
+    filter,
+    progress.byId,
     achievements.byId,
     achievements.ids,
-    filter,
-    hasFilterChanged,
-    hasIdsChanged,
-    progress.byId,
+    achievements.isSuccess,
+    isCharacterAchievementsSuccess,
   ])
 
   // reset query client on category / filter change

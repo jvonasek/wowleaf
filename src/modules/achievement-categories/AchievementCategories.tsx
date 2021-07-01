@@ -19,8 +19,10 @@ import { useQuery } from 'react-query'
 
 import { ActiveLink } from '@/components/ActiveLink'
 import { useCharacterAchievementsStore } from '@/modules/character/store/useCharacterAchievementsStore'
+import { CategoryLinkPlaceholder } from '@/modules/placeholder/CategoryLinkPlaceholder'
 import { AchievementCategory } from '@/types'
-import { percentage, getHslColorByPercent } from '@/lib/utils'
+import { percentage } from '@/lib/utils'
+import { Faction } from '@/lib/constants'
 
 export type AchievementCategoriesProps = {
   basePath: string
@@ -82,42 +84,81 @@ const CategoryLink = ({
   const isMainCategoryActive = router.asPath.startsWith(href)
   const [text, bg] = LINK_ICON_COLOR_MAP[slug] || []
   const Icon = LINK_ICONS_MAP[slug] || ''
-  const percent = percentage(currentQuantity, totalQuantity, 0)
+
+  // force FoS type categories to 100%
+  const isFoSCategory = ['feats-of-strength', 'legacy'].includes(slug)
+  const percent = isFoSCategory
+    ? 0
+    : percentage(Math.min(currentQuantity, totalQuantity), totalQuantity, 0)
+
+  const isPercentValid = Number.isFinite(percent)
+
   return (
     <>
       <ActiveLink href={`${basePath}/achievements/${slug}`}>
         {(isActive) => (
           <a
             className={cx(
-              'flex items-center w-full rounded-xl text-sm hover:text-foreground hover:bg-surface-1',
+              'group',
+              'relative flex items-center w-full rounded-xl text-sm',
+              'hover:text-foreground hover:bg-surface-1',
               {
                 [`bg-surface-1 text-foreground`]: isActive,
               }
             )}
           >
             <span
-              className={`flex flex-shrink-0 items-center justify-center w-12 h-12 rounded-xl ${bg} !bg-opacity-10`}
+              className={cx(
+                'absolute bottom-0 left-0 w-12',
+                'transition-all rounded-b-xl !bg-opacity-[0.15]',
+                bg,
+                {
+                  'rounded-t-xl': percent >= 99,
+                }
+              )}
+              style={{
+                height: isPercentValid ? `${percent}%` : '0%',
+              }}
+            ></span>
+            {isPercentValid && !isFoSCategory && (
+              <span
+                className={cx(
+                  'absolute w-12 h-12 top-0 left-0',
+                  'flex items-center justify-center',
+                  'font-semibold',
+                  'transition-all opacity-0 group-hover:opacity-100',
+                  text
+                )}
+              >
+                {percent}%
+              </span>
+            )}
+            <span
+              className={cx(
+                'relative flex flex-shrink-0 items-center justify-center',
+                'w-12 h-12 rounded-xl !bg-opacity-10',
+                bg
+              )}
             >
               <Icon
-                className={`${text} ${
-                  slug === 'quests' ? 'w-9 h-9' : 'w-6 h-6'
-                }`}
+                className={cx(
+                  !isFoSCategory
+                    ? 'transition-opacity opacity-100 group-hover:opacity-0'
+                    : '',
+                  slug === 'quests' ? 'w-9 h-9' : 'w-6 h-6',
+                  text
+                )}
               />
             </span>
             <span
               className={cx(
+                'relative',
                 'px-5 font-semibold',
                 'transition-all rounded-xl',
                 'flex items-center w-full h-6'
               )}
             >
               {children}
-            </span>
-            <span
-              className="pr-5"
-              style={{ color: getHslColorByPercent(percent) }}
-            >
-              {percent}%
             </span>
           </a>
         )}
@@ -148,17 +189,19 @@ export const AchievementCategories: React.FC<AchievementCategoriesProps> = ({
   basePath,
   characterKey,
 }) => {
-  const { isSuccess, data } = useQuery<AchievementCategory[]>(
+  const { isSuccess, data: categories = [] } = useQuery<AchievementCategory[]>(
     '/api/wow/categories/'
   )
 
-  const { getCharAchievements } = useCharacterAchievementsStore()
-  const { categories } = getCharAchievements(characterKey)
+  const { getCharAchievements, getCharacterInfo } =
+    useCharacterAchievementsStore()
+  const { categories: characterCategories } = getCharAchievements(characterKey)
+  const { faction } = getCharacterInfo(characterKey)
 
   return (
     <div className="space-y-3 sticky top-7 border-surface-1">
-      {isSuccess &&
-        data.map(
+      <CategoryLinkPlaceholder ready={isSuccess} count={13}>
+        {categories.map(
           ({
             id,
             name,
@@ -170,8 +213,12 @@ export const AchievementCategories: React.FC<AchievementCategoriesProps> = ({
             <div key={id}>
               <CategoryLink
                 basePath={basePath}
-                currentQuantity={categories[id]?.quantity}
-                totalQuantity={allianceQuantity}
+                currentQuantity={characterCategories[id]?.quantity}
+                totalQuantity={
+                  faction === Faction.Alliance
+                    ? allianceQuantity
+                    : hordeQuantity
+                }
                 slug={slug}
                 nestedCategories={otherAchievementCategories}
               >
@@ -180,6 +227,7 @@ export const AchievementCategories: React.FC<AchievementCategoriesProps> = ({
             </div>
           )
         )}
+      </CategoryLinkPlaceholder>
     </div>
   )
 }
