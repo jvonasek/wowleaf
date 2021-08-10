@@ -1,3 +1,5 @@
+![](https://i.imgur.com/a0MTV2r.png)
+
 ## Running Docker
 
 - [PostgreSQL](https://www.postgresql.org/) at port **5432**
